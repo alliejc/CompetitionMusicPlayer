@@ -1,11 +1,23 @@
 package com.example.alisonjc.compmusicplayer;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.alisonjc.compmusicplayer.spotify.Item;
+import com.example.alisonjc.compmusicplayer.spotify.Playlists;
+import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.example.alisonjc.compmusicplayer.spotify.SpotifyUser;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -16,6 +28,12 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
 
@@ -24,43 +42,156 @@ public class MainActivity extends Activity implements
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private Player mPlayer;
-    private View mLoginButton;
+
+    private static ArrayAdapter<String> mArrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLoginButton = (View) findViewById(R.id.spotifyLoginButton);
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        mArrayAdapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
+        ListView listView = (ListView) findViewById(R.id.playListView);
+        listView.setAdapter(mArrayAdapter);
+
+        if (savedInstanceState == null) {
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            DialogFragment newFragment = MySignInDialog.newInstance();
+            newFragment.show(ft, "dialog");
+        } else {
+            Toast.makeText(MainActivity.this,
+                    "Your Message", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+    private void getUserInfo(final String token) {
+
+        getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
-            public void onClick(View v) {
-                onLoginClicked();
+            public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
+                getUserPlaylists(token, response.body().getId());
+
+            }
+
+            @Override
+            public void onFailure(Call<SpotifyUser> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void getCurrentUserPlaylists(String token) {
+        getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<Playlists>() {
+            @Override
+            public void onResponse(Call<Playlists> call, Response<Playlists> response) {
+
+                mArrayAdapter.clear();
+                for(Item item : response.body().getItems()) {
+                    mArrayAdapter.add(item.getName());
+                }
+                mArrayAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<Playlists> call, Throwable t) {
+
             }
         });
 
     }
 
-    public void onLoginClicked () {
+    private void getUserPlaylists(String token, String userId){
+        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<Playlists>() {
+            @Override
+            public void onResponse(Call<Playlists> call, Response<Playlists> response) {
 
-        AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
-                AuthenticationResponse.Type.TOKEN,
-                REDIRECT_URI);
-        builder.setScopes(new String[]{"user-read-private", "streaming", "playlist-read-collaborative", "user-library-read" , });
-        builder.setShowDialog(true);
-        AuthenticationRequest request = builder.build();
+                mArrayAdapter.clear();
+                for(Item item : response.body().getItems()) {
+                    mArrayAdapter.add(item.getName());
+                }
+                mArrayAdapter.notifyDataSetChanged();
 
-       AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+            }
 
+            @Override
+            public void onFailure(Call<Playlists> call, Throwable t) {
+
+            }
+        });
+    }
+    private SpotifyService getSpotifyService() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.spotify.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+
+                return retrofit.create(SpotifyService.class);
+    }
+
+    public void onLoginClicked() {
+
+
+
+    }
+
+    public static class MySignInDialog extends DialogFragment {
+
+        static MySignInDialog newInstance() {
+            return new MySignInDialog();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.activity_login, container, false);
+
+            TextView tv = (TextView) v.findViewById(R.id.text);
+            getDialog().setTitle("Login Using Spotify");
+
+
+            View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
+            mLoginButton.setVisibility(View.VISIBLE);
+
+            mLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //onLoginClicked();
+
+                    AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
+                            AuthenticationResponse.Type.TOKEN,
+                            REDIRECT_URI);
+                    builder.setScopes(new String[]{"user-read-private", "streaming", "playlist-read-collaborative", "user-library-read" , });
+                    builder.setShowDialog(true);
+                    AuthenticationRequest request = builder.build();
+
+                    AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+
+                    onDestroyView();
+
+
+
+                }
+            });
+
+            return v;
+        }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
-
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
@@ -69,6 +200,9 @@ public class MainActivity extends Activity implements
                     // Response was successful and contains auth token
                     case TOKEN:
                         String token = response.getAccessToken();
+//                        getCurrentUserPlaylists(token);
+                        getUserInfo(token);
+
 
                         Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
                         Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {

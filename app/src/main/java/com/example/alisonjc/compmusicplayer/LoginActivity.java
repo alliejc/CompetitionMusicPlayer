@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionStateC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,

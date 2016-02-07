@@ -6,13 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageButton
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/spotifyLoginButton"
-        android:src="@drawable/spotify_login_button_image"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="177dp"
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/playListView"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentStart="false"
         />
 </RelativeLayout>
