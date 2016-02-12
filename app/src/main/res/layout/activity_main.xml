@@ -10,7 +10,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/playListView"
+        android:id="@+id/playlistview"
         android:layout_alignParentBottom="false"
         android:layout_alignParentStart="false"
         />

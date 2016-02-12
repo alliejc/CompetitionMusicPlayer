@@ -1,13 +1,14 @@
 package com.example.alisonjc.compmusicplayer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.alisonjc.compmusicplayer.spotify.Item;
+import com.example.alisonjc.compmusicplayer.spotify.PlaylistTracksList;
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.spotify.sdk.android.player.Player;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,9 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PlaylistTracksActivity extends Activity {
 
     private static final int REQUEST_CODE = 1337;
-    //private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private Player mPlayer;
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -28,6 +27,11 @@ public class PlaylistTracksActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        String s = b.getString("playlistId");
+        String string = b.getString("playlistUri");
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -37,9 +41,9 @@ public class PlaylistTracksActivity extends Activity {
 
     private void getPlaylistTracks(String token, String userId, String playlistId) {
 
-        getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksActivity>() {
+        getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
             @Override
-            public void onResponse(Call<PlaylistTracksActivity> call, Response<PlaylistTracksActivity> response) {
+            public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
                 mArrayAdapter.clear();
                 for(Item item : response.body().getItems()) {
@@ -51,7 +55,7 @@ public class PlaylistTracksActivity extends Activity {
             }
 
             @Override
-            public void onFailure(Call<PlaylistTracksActivity> call, Throwable t) {
+            public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
 
             }
         });
