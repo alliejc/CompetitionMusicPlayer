@@ -41,7 +41,9 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private List<Item> mItems;
-    //public String token = AuthenticationResponse.Type.TOKEN.toString();
+    public String token = AuthenticationResponse.Type.TOKEN.toString();
+    public String userId;
+    public String playlistId;
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -68,18 +70,20 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String playlistId = mItems.get(position).getId();
-                String playlistUri = mItems.get(position).getUri();
-                String spotifyToken = AuthenticationResponse.Type.TOKEN.toString();
+                String playlistId = mItems.get(position).getId().toString();
+                String playlistUri = mItems.get(position).getUri().toString();
 
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
                 b.putString("playlistUri", playlistUri);
-                b.putString("spotifyToken", spotifyToken);
+                b.putString("spotifyToken", token);
+                b.putString("userId", userId);
+
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
+
 
                 startActivity(intent);
             }
@@ -216,8 +220,11 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                     // Response was successful and contains auth token
                     case TOKEN:
                         String token = response.getAccessToken();
+                        String userId = response.getType().toString();
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
+                        getUserPlaylists(token, userId);
+
 
 //                        Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
 //                        Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
