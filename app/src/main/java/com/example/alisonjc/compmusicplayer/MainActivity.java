@@ -23,7 +23,6 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 
@@ -41,12 +40,11 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private Player mPlayer;
     private List<Item> mItems;
+    //public String token = AuthenticationResponse.Type.TOKEN.toString();
 
     private static ArrayAdapter<String> mArrayAdapter;
 
-    private SpotifyService token = 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +70,13 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String playlistId = mItems.get(position).getId();
                 String playlistUri = mItems.get(position).getUri();
+                String spotifyToken = AuthenticationResponse.Type.TOKEN.toString();
 
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
                 b.putString("playlistUri", playlistUri);
-
-
+                b.putString("spotifyToken", spotifyToken);
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
@@ -92,12 +90,15 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     }
 
 
+
     private void getUserInfo(final String token) {
 
         getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
                 getUserPlaylists(token, response.body().getId());
+
+                //String spotifyToken = response.body().getId().toString();
 
             }
 
@@ -130,6 +131,7 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         });
 
     }
+
 
     private void getUserPlaylists(String token, String userId){
         getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
@@ -184,9 +186,7 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                 @Override
                 public void onClick(View v) {
 
-                    AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
-                            AuthenticationResponse.Type.TOKEN,
-                            REDIRECT_URI);
+                    AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
                     builder.setScopes(new String[]{"user-read-private", "streaming", "playlist-read-collaborative", "user-library-read" , });
                     builder.setShowDialog(true);
                     AuthenticationRequest request = builder.build();

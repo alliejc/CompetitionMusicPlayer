@@ -21,6 +21,7 @@ public class PlaylistTracksActivity extends Activity {
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
 
+
     private static ArrayAdapter<String> mArrayAdapter;
 
     @Override
@@ -32,6 +33,7 @@ public class PlaylistTracksActivity extends Activity {
         Bundle b = intent.getExtras();
         String s = b.getString("playlistId");
         String string = b.getString("playlistUri");
+        String token = b.getString("spotifyToken");
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
