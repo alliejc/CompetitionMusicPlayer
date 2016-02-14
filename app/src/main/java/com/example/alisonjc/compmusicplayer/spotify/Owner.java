@@ -1,16 +1,17 @@
 
 package com.example.alisonjc.compmusicplayer.spotify;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Owner {
 
     @SerializedName("external_urls")
     @Expose
-    private ExternalUrls_ externalUrls;
+    private ExternalUrls externalUrls;
     @SerializedName("href")
     @Expose
     private String href;
@@ -29,7 +30,7 @@ public class Owner {
      * @return
      *     The externalUrls
      */
-    public ExternalUrls_ getExternalUrls() {
+    public ExternalUrls getExternalUrls() {
         return externalUrls;
     }
 
@@ -38,7 +39,7 @@ public class Owner {
      * @param externalUrls
      *     The external_urls
      */
-    public void setExternalUrls(ExternalUrls_ externalUrls) {
+    public void setExternalUrls(ExternalUrls externalUrls) {
         this.externalUrls = externalUrls;
     }
 

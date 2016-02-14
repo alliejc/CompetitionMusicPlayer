@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.alisonjc.compmusicplayer.spotify.Item;
-import com.example.alisonjc.compmusicplayer.spotify.PlaylistTracksList;
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.example.alisonjc.compmusicplayer.spotify.tracklist.Item;
+import com.example.alisonjc.compmusicplayer.spotify.tracklist.PlaylistTracksList;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,7 +26,7 @@ public class PlaylistTracksActivity extends Activity {
     public String playlistUri = "";
     public String playlistId = "";
     public String userId = "";
-    
+
     private static ArrayAdapter<String> mArrayAdapter;
 
     @Override
@@ -44,6 +46,9 @@ public class PlaylistTracksActivity extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.playlisttracksview);
         listView.setAdapter(mArrayAdapter);
+        mArrayAdapter.add("Hello");
+
+        mArrayAdapter.notifyDataSetChanged();
 
         getPlaylistTracks(token, userId, playlistId);
 
@@ -51,15 +56,17 @@ public class PlaylistTracksActivity extends Activity {
 
     private void getPlaylistTracks(String token, String userId, String playlistId) {
 
+
         getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
+
                 mArrayAdapter.clear();
                 for(Item item : response.body().getItems()) {
 
-                    if(item.getName() != null) {
-                        mArrayAdapter.add(item.getName());
+                    if(item.getTrack().getName() != null) {
+                        mArrayAdapter.add(item.getTrack().getName());
                     }
                 }
                 mArrayAdapter.notifyDataSetChanged();
@@ -79,9 +86,14 @@ public class PlaylistTracksActivity extends Activity {
 
     private SpotifyService getSpotifyService() {
 
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.spotify.com")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
 

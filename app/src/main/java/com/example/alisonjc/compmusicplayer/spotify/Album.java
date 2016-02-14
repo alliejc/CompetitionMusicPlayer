@@ -1,11 +1,13 @@
 
 package com.example.alisonjc.compmusicplayer.spotify;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Album {
@@ -18,7 +20,7 @@ public class Album {
     private List<String> availableMarkets = new ArrayList<String>();
     @SerializedName("external_urls")
     @Expose
-    private ExternalUrls_ externalUrls;
+    private ExternalUrls externalUrls;
     @SerializedName("href")
     @Expose
     private String href;
@@ -79,7 +81,7 @@ public class Album {
      * @return
      *     The externalUrls
      */
-    public ExternalUrls_ getExternalUrls() {
+    public ExternalUrls getExternalUrls() {
         return externalUrls;
     }
 
@@ -88,7 +90,7 @@ public class Album {
      * @param externalUrls
      *     The external_urls
      */
-    public void setExternalUrls(ExternalUrls_ externalUrls) {
+    public void setExternalUrls(ExternalUrls externalUrls) {
         this.externalUrls = externalUrls;
     }
 
