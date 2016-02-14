@@ -20,6 +20,11 @@ public class PlaylistTracksActivity extends Activity {
 
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
+    private String token = "";
+    private String playlistUri = "";
+    private String playlistId = "";
+    private String userId = "";
+
 
 
     private static ArrayAdapter<String> mArrayAdapter;
@@ -31,9 +36,11 @@ public class PlaylistTracksActivity extends Activity {
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        String s = b.getString("playlistId");
-        String string = b.getString("playlistUri");
-        String token = b.getString("spotifyToken");
+        token = b.getString("spotifyToken");
+        playlistUri = b.getString("playlistUri");
+        playlistId = b.getString("playlistId");
+        userId = b.getString("userId");
+
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -50,7 +57,7 @@ public class PlaylistTracksActivity extends Activity {
                 mArrayAdapter.clear();
                 for(Item item : response.body().getItems()) {
                     mArrayAdapter.add(item.getName());
-                   mArrayAdapter.getCount();
+                    mArrayAdapter.getCount();
                 }
                 mArrayAdapter.notifyDataSetChanged();
 
@@ -75,6 +82,10 @@ public class PlaylistTracksActivity extends Activity {
         return retrofit.create(SpotifyService.class);
 
     }
+
+
+
+
 
 
 }

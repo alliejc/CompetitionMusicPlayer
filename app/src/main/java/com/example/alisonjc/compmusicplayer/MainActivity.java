@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private List<Item> mItems;
-    public String token = AuthenticationResponse.Type.TOKEN.toString();
+    public String token = "";
     public String userId;
     public String playlistId;
 
@@ -219,8 +219,8 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                 switch (response.getType()) {
                     // Response was successful and contains auth token
                     case TOKEN:
-                        String token = response.getAccessToken();
-                        String userId = response.getType().toString();
+                        token = response.getAccessToken();
+                        userId = response.getType().toString();
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
                         getUserPlaylists(token, userId);
