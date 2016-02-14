@@ -42,8 +42,9 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private List<Item> mItems;
     public String token = "";
-    public String userId;
-    public String playlistId;
+    public String userId = "";
+    public String playlistId = "";
+    public String playlistUri = "";
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -70,8 +71,8 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String playlistId = mItems.get(position).getId().toString();
-                String playlistUri = mItems.get(position).getUri().toString();
+                playlistId = mItems.get(position).getId();
+                playlistUri = mItems.get(position).getUri();
 
 
                 Bundle b = new Bundle();
@@ -100,9 +101,11 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
-                getUserPlaylists(token, response.body().getId());
 
-                //String spotifyToken = response.body().getId().toString();
+                userId = response.body().getId();
+                //getUserPlaylists(token, response.body().getId());
+
+
 
             }
 
@@ -136,26 +139,26 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
 
     }
 
-
-    private void getUserPlaylists(String token, String userId){
-        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
-            @Override
-            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-
-                mArrayAdapter.clear();
-                for(Item item : response.body().getItems()) {
-                    mArrayAdapter.add(item.getName());
-                }
-                mArrayAdapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onFailure(Call<UserPlaylists> call, Throwable t) {
-
-            }
-        });
-    }
+//
+//    private void getUserPlaylists(String token, String userId){
+//        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
+//            @Override
+//            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
+//
+//                mArrayAdapter.clear();
+//                for(Item item : response.body().getItems()) {
+//                    mArrayAdapter.add(item.getName());
+//                }
+//                mArrayAdapter.notifyDataSetChanged();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserPlaylists> call, Throwable t) {
+//
+//            }
+//        });
+//    }
     private SpotifyService getSpotifyService() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -220,10 +223,10 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                     // Response was successful and contains auth token
                     case TOKEN:
                         token = response.getAccessToken();
-                        userId = response.getType().toString();
+                        //userId = response.getType().toString();
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
-                        getUserPlaylists(token, userId);
+                        //getUserPlaylists(token, userId);
 
 
 //                        Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);

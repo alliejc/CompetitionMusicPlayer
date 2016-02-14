@@ -20,13 +20,11 @@ public class PlaylistTracksActivity extends Activity {
 
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private String token = "";
-    private String playlistUri = "";
-    private String playlistId = "";
-    private String userId = "";
-
-
-
+    public String token = "";
+    public String playlistUri = "";
+    public String playlistId = "";
+    public String userId = "";
+    
     private static ArrayAdapter<String> mArrayAdapter;
 
     @Override
@@ -46,6 +44,9 @@ public class PlaylistTracksActivity extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.playlisttracksview);
         listView.setAdapter(mArrayAdapter);
+
+        getPlaylistTracks(token, userId, playlistId);
+
     }
 
     private void getPlaylistTracks(String token, String userId, String playlistId) {
@@ -56,8 +57,10 @@ public class PlaylistTracksActivity extends Activity {
 
                 mArrayAdapter.clear();
                 for(Item item : response.body().getItems()) {
-                    mArrayAdapter.add(item.getName());
-                    mArrayAdapter.getCount();
+
+                    if(item.getName() != null) {
+                        mArrayAdapter.add(item.getName());
+                    }
                 }
                 mArrayAdapter.notifyDataSetChanged();
 
@@ -70,6 +73,9 @@ public class PlaylistTracksActivity extends Activity {
         });
 
     }
+
+
+
 
     private SpotifyService getSpotifyService() {
 
