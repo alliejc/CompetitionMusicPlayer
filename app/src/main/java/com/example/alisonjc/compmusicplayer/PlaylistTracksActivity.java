@@ -81,7 +81,8 @@ public class PlaylistTracksActivity extends Activity implements PlayerNotificati
 
                     @Override
                     public void onInitialized(Player player) {
-                        //mPlayer.play("spotify:track:" + songId);
+                        mPlayer.addConnectionStateCallback(player);
+                        mPlayer.play("spotify:track:" + songId);
 
                     }
 
@@ -107,22 +108,24 @@ public class PlaylistTracksActivity extends Activity implements PlayerNotificati
 
 
                 mArrayAdapter.clear();
-                //mItems = response.body().getItems();
-                for(Item item : response.body().getItems()) {
+                if(response.body() != null) {
+                    mItems = response.body().getItems();
+                    for (Item item : response.body().getItems()) {
 
-                    if(item.getTrack().getName() != null) {
-                        mArrayAdapter.add(item.getTrack().getName());
+                        if (item.getTrack().getName() != null) {
+                            mArrayAdapter.add(item.getTrack().getName());
+                        }
                     }
                 }
+
                 mArrayAdapter.notifyDataSetChanged();
-
             }
-
             @Override
             public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
 
             }
         });
+
 
     }
 

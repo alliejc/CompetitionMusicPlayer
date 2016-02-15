@@ -32,8 +32,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.spotify.sdk.android.authentication.LoginActivity"/>
-        <activity android:name=".PlaylistTracksActivity" >
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            />
+        <activity android:name=".PlaylistTracksActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
