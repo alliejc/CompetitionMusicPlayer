@@ -3,12 +3,22 @@ package com.example.alisonjc.compmusicplayer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.tracklist.Item;
 import com.example.alisonjc.compmusicplayer.spotify.tracklist.PlaylistTracksList;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.PlayerNotificationCallback;
+import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.Spotify;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -18,14 +28,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlaylistTracksActivity extends Activity {
+public class PlaylistTracksActivity extends Activity implements PlayerNotificationCallback {
 
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    public String token = "";
-    public String playlistUri = "";
-    public String playlistId = "";
-    public String userId = "";
+    private String token = "";
+    //public String playlistUri = "";
+    private String playlistId = "";
+    private String userId = "";
+    private Player mPlayer;
+    private List<Item> mItems;
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -35,26 +47,58 @@ public class PlaylistTracksActivity extends Activity {
         setContentView(R.layout.activity_playlist_tracks_list);
 
         Intent intent = getIntent();
-        Bundle b = intent.getExtras();
+        final Bundle b = intent.getExtras();
         token = b.getString("spotifyToken");
-        playlistUri = b.getString("playlistUri");
+        //playlistUri = b.getString("playlistUri");
         playlistId = b.getString("playlistId");
         userId = b.getString("userId");
 
 
+
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
-        ListView listView = (ListView) findViewById(R.id.playlisttracksview);
+        final ListView listView = (ListView) findViewById(R.id.playlisttracksview);
         listView.setAdapter(mArrayAdapter);
-        mArrayAdapter.add("Hello");
-
-        mArrayAdapter.notifyDataSetChanged();
 
         getPlaylistTracks(token, userId, playlistId);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                playSong(mItems.get(position).getTrack().getId());
+
+            }
+        });
     }
 
-    private void getPlaylistTracks(String token, String userId, String playlistId) {
+    private void playSong(final String songId) {
+
+        final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
+
+
+        mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
+
+                    @Override
+                    public void onInitialized(Player player) {
+                        //mPlayer.play("spotify:track:" + songId);
+
+                    }
+
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                    }
+                }
+        );
+        mPlayer.isInitialized();
+
+    }
+
+
+
+    public void getPlaylistTracks(String token, String userId, String playlistId) {
 
 
         getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
@@ -63,6 +107,7 @@ public class PlaylistTracksActivity extends Activity {
 
 
                 mArrayAdapter.clear();
+                //mItems = response.body().getItems();
                 for(Item item : response.body().getItems()) {
 
                     if(item.getTrack().getName() != null) {
@@ -102,9 +147,14 @@ public class PlaylistTracksActivity extends Activity {
     }
 
 
+    @Override
+    public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
 
+    }
 
+    @Override
+    public void onPlaybackError(ErrorType errorType, String s) {
 
-
+    }
 }
 

@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     public String token = "";
     public String userId = "";
     public String playlistId = "";
-    public String playlistUri = "";
+    //public String playlistUri = "";
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -72,14 +72,15 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 playlistId = mItems.get(position).getId();
-                playlistUri = mItems.get(position).getUri();
+                //playlistUri = mItems.get(position).getUri();
 
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
-                b.putString("playlistUri", playlistUri);
+                //b.putString("playlistUri", playlistUri);
                 b.putString("spotifyToken", token);
                 b.putString("userId", userId);
+                //b.putString("clientId", CLIENT_ID);
 
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
@@ -194,7 +195,8 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                 public void onClick(View v) {
 
                     AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
-                    builder.setScopes(new String[]{"user-read-private", "streaming", "playlist-read-collaborative", "user-library-read" , });
+                    builder.setScopes(new String[]{"playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "streaming",
+                            "user-follow-modify", "user-follow-read", "user-library-read", "user-library-modify", "user-read-private", "user-read-birthdate", "user-read-email"});
                     builder.setShowDialog(true);
                     AuthenticationRequest request = builder.build();
 
@@ -228,22 +230,6 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                         getUserInfo(token);
                         //getUserPlaylists(token, userId);
 
-
-//                        Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
-//                        Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
-//                            @Override
-//                            public void onInitialized(Player player) {
-//                                mPlayer = player;
-//                                mPlayer.addConnectionStateCallback(MainActivity.this);
-//                                mPlayer.addPlayerNotificationCallback(MainActivity.this);
-//                                //mPlayer.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V");
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable throwable) {
-//                                Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-//                            }
-//                        });
 
                             break;
 
