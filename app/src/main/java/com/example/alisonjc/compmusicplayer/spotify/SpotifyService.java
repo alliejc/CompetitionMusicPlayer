@@ -18,8 +18,8 @@ public interface SpotifyService {
     @GET("v1/me/playlists")
     Call<UserPlaylists> getCurrentUserPlaylists(@Header("Authorization") String bearerToken);
 
-   // @GET("v1/users/{user_id}/playlists")
-    //Call<UserPlaylists> getUserPlayLists(@Header("Authorization") String bearerToken, @Path("user_id") String userId);
+    @GET("v1/users/{user_id}/playlists")
+    Call<UserPlaylists> getUserPlayLists(@Header("Authorization") String bearerToken, @Path("user_id") String userId);
 
     @GET("/v1/users/{user_id}/playlists/{playlist_id}/tracks")
     Call<PlaylistTracksList> getPlaylistTracks(@Header("Authorization") String bearerToken, @Path("user_id") String userId, @Path("playlist_id") String playlistId);

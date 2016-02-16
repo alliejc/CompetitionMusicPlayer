@@ -1,10 +1,11 @@
 package com.example.alisonjc.compmusicplayer;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.alisonjc.compmusicplayer.spotify.Item;
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
@@ -34,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends Activity implements PlayerNotificationCallback, ConnectionStateCallback {
+public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
 
     private static final int REQUEST_CODE = 1337;
@@ -43,8 +43,6 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
     private List<Item> mItems;
     public String token = "";
     public String userId = "";
-    public String playlistId = "";
-    //public String playlistUri = "";
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -54,15 +52,16 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+
         if (savedInstanceState == null) {
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             DialogFragment newFragment = MySignInDialog.newInstance();
             newFragment.show(ft, "dialog");
-        } else {
-            Toast.makeText(MainActivity.this,
-                    "Your Message", Toast.LENGTH_LONG).show();
-        }
+        } 
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -71,17 +70,14 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                playlistId = mItems.get(position).getId();
-                //playlistUri = mItems.get(position).getUri();
 
+                String playlistId = mItems.get(position).getId();
+                String ownerId = mItems.get(position).getOwner().getId();
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
-                //b.putString("playlistUri", playlistUri);
                 b.putString("spotifyToken", token);
-                b.putString("userId", userId);
-                //b.putString("clientId", CLIENT_ID);
-
+                b.putString("ownerId", ownerId);
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
@@ -103,10 +99,10 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
             @Override
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
 
-                userId = response.body().getId();
-                //getUserPlaylists(token, response.body().getId());
-
-
+                if(response.body() != null) {
+                    userId = response.body().getId();
+                    getUserPlaylists(token, response.body().getId());
+                }
 
             }
 
@@ -124,9 +120,11 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
 
                 mArrayAdapter.clear();
-                mItems = response.body().getItems();
-                for(Item item : response.body().getItems()) {
-                    mArrayAdapter.add(item.getName());
+                if(response.body() != null) {
+                    mItems = response.body().getItems();
+                    for (Item item : response.body().getItems()) {
+                        mArrayAdapter.add(item.getName());
+                    }
                 }
                 mArrayAdapter.notifyDataSetChanged();
 
@@ -140,26 +138,28 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
 
     }
 
-//
-//    private void getUserPlaylists(String token, String userId){
-//        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
-//            @Override
-//            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-//
-//                mArrayAdapter.clear();
-//                for(Item item : response.body().getItems()) {
-//                    mArrayAdapter.add(item.getName());
-//                }
-//                mArrayAdapter.notifyDataSetChanged();
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserPlaylists> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+
+    private void getUserPlaylists(String token, String userId){
+        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
+            @Override
+            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
+
+                mArrayAdapter.clear();
+                if(response.body() != null) {
+                    for (Item item : response.body().getItems()) {
+                        mArrayAdapter.add(item.getName());
+                    }
+                }
+                mArrayAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onFailure(Call<UserPlaylists> call, Throwable t) {
+
+            }
+        });
+    }
     private SpotifyService getSpotifyService() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -225,10 +225,10 @@ public class MainActivity extends Activity implements PlayerNotificationCallback
                     // Response was successful and contains auth token
                     case TOKEN:
                         token = response.getAccessToken();
-                        //userId = response.getType().toString();
+                        userId = response.getType().toString();
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
-                        //getUserPlaylists(token, userId);
+                        getUserPlaylists(token, userId);
 
 
                             break;

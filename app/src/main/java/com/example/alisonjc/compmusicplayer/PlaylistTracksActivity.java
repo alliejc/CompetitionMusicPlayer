@@ -1,8 +1,9 @@
 package com.example.alisonjc.compmusicplayer;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,12 +29,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlaylistTracksActivity extends Activity implements PlayerNotificationCallback {
+public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback {
 
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private String token = "";
-    //public String playlistUri = "";
     private String playlistId = "";
     private String userId = "";
     private Player mPlayer;
@@ -46,12 +46,15 @@ public class PlaylistTracksActivity extends Activity implements PlayerNotificati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
         token = b.getString("spotifyToken");
-        //playlistUri = b.getString("playlistUri");
         playlistId = b.getString("playlistId");
-        userId = b.getString("userId");
+        userId = b.getString("ownerId");
 
 
 
@@ -81,7 +84,7 @@ public class PlaylistTracksActivity extends Activity implements PlayerNotificati
 
                     @Override
                     public void onInitialized(Player player) {
-                        mPlayer.addConnectionStateCallback(player);
+                        //mPlayer.addConnectionStateCallback(player);
                         mPlayer.play("spotify:track:" + songId);
 
                     }
@@ -96,6 +99,7 @@ public class PlaylistTracksActivity extends Activity implements PlayerNotificati
         mPlayer.isInitialized();
 
     }
+
 
 
 
