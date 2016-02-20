@@ -38,6 +38,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String userId = "";
     private Player mPlayer;
     private List<Item> mItems;
+    private Integer mTrackLength;
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -46,16 +47,11 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
-
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
         token = b.getString("spotifyToken");
         playlistId = b.getString("playlistId");
         userId = b.getString("ownerId");
-
 
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -70,35 +66,48 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 playSong(mItems.get(position).getTrack().getId());
+                //mTrackLength = mItems.get(position).getTrack().getDurationMs();
 
             }
         });
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(myToolbar);
     }
 
     private void playSong(final String songId) {
 
         final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
 
+        if(mPlayer == null) {
+            mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
 
-        mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
+                        @Override
+                        public void onInitialized(Player player) {
+                            //mPlayer.addConnectionStateCallback(player);
+                            mPlayer.play("spotify:track:" + songId);
 
-                    @Override
-                    public void onInitialized(Player player) {
-                        //mPlayer.addConnectionStateCallback(player);
-                        mPlayer.play("spotify:track:" + songId);
+                        }
 
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                        }
                     }
-
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-                    }
-                }
-        );
-        mPlayer.isInitialized();
+            );
+            mPlayer.isInitialized();
+        }
 
     }
+
+//    public void endPlaybackAuto(Integer duration) {
+//        if(mTrackLength >= 120000 ) {
+//            Spotify.destroyPlayer(this);
+//        }
+//
+//    }
+
 
 
 

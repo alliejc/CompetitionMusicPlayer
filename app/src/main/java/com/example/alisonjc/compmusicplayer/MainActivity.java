@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
-
+    private Toolbar toolbar;
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
@@ -52,16 +52,12 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
-
         if (savedInstanceState == null) {
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             DialogFragment newFragment = MySignInDialog.newInstance();
             newFragment.show(ft, "dialog");
-        } 
+        }
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -88,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         });
 
         listView.setAdapter(mArrayAdapter);
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
     }
 
@@ -247,6 +246,28 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
 
         }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.toolbar, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
 
@@ -289,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         protected void onDestroy() {
             super.onDestroy();
         }
+
     }
 
 
