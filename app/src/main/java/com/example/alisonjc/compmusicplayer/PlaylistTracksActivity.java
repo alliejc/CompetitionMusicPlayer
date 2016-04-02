@@ -2,6 +2,7 @@ package com.example.alisonjc.compmusicplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -56,6 +57,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         userId = b.getString("ownerId");
 
         toolbarSetup();
+
+
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -216,13 +219,23 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void toolbarSetup() {
-        final Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("CompMusicPlayer");
-        getSupportActionBar().isShowing();
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("CompMusicPlayer");
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
 
         myToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,5 +282,10 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     }
 
+    @Override
+    protected void onDestroy() {
+        Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }
 }
 

@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -86,15 +87,17 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         listView.setAdapter(mArrayAdapter);
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("CompMusicPlayer");
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        toolbarSetup();
 
 
     }
 
+    private void toolbarSetup() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(myToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("CompMusicPlayer");
+    }
 
 
     private void getUserInfo(final String token) {
