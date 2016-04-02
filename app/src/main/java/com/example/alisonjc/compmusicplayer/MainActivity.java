@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     public String token = "";
     public String userId = "";
 
+
     private static ArrayAdapter<String> mArrayAdapter;
 
 
@@ -87,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("CompMusicPlayer");
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
 
     }
 

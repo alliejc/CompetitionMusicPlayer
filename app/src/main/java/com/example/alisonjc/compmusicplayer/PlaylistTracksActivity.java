@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.tracklist.Item;
@@ -38,6 +39,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String userId = "";
     private Player mPlayer;
     private List<Item> mItems;
+    private Toolbar myToolbar;
     private Integer mTrackLength;
 
     private static ArrayAdapter<String> mArrayAdapter;
@@ -53,6 +55,46 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistId = b.getString("playlistId");
         userId = b.getString("ownerId");
 
+        final Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("CompMusicPlayer");
+        getSupportActionBar().isShowing();
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        myToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPreviousClicked();
+
+            }
+        });
+
+        myToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onPlayClicked();
+            }
+        });
+
+        myToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onPauseClicked();
+            }
+        });
+
+        myToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onSkipNextClicked();
+            }
+        });
+
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -66,15 +108,48 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 playSong(mItems.get(position).getTrack().getId());
+                myToolbar.setSubtitle(mItems.get(position).getTrack().getName());
+                getSupportActionBar().getSubtitle();
                 //mTrackLength = mItems.get(position).getTrack().getDurationMs();
 
             }
         });
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(myToolbar);
+
     }
 
+    private void onPauseClicked() {
+
+        if(mPlayer != null) {
+            mPlayer.pause();
+
+        }
+
+    }
+
+    private void onPlayClicked() {
+
+        if(mPlayer == null) {
+
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+
+        } else {
+            mPlayer.resume();
+
+
+        }
+    }
+
+    private void onSkipNextClicked() {
+        mPlayer.skipToNext();
+
+    }
+
+    private void onPreviousClicked() {
+        mPlayer.skipToPrevious();
+    }
+
+    
     private void playSong(final String songId) {
 
         final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
@@ -84,8 +159,9 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
                         @Override
                         public void onInitialized(Player player) {
-                            //mPlayer.addConnectionStateCallback(player);
+                            mPlayer.addConnectionStateCallback(player);
                             mPlayer.play("spotify:track:" + songId);
+                            //myToolbar.setSubtitle(songId);
 
                         }
 
