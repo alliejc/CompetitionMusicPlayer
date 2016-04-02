@@ -41,6 +41,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private List<Item> mItems;
     private Toolbar myToolbar;
     private Integer mTrackLength;
+    private int itemPosition = 0;
 
     private static ArrayAdapter<String> mArrayAdapter;
 
@@ -66,8 +67,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         myToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onPreviousClicked();
 
+                onPreviousClicked();
             }
         });
 
@@ -107,10 +108,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                playSong(mItems.get(position).getTrack().getId());
-                myToolbar.setSubtitle(mItems.get(position).getTrack().getName());
-                getSupportActionBar().getSubtitle();
-                //mTrackLength = mItems.get(position).getTrack().getDurationMs();
+                playSong(mItems.get(itemPosition).getTrack().getId());
+                setCurrentPlayingSong(position);
 
             }
         });
@@ -118,11 +117,27 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     }
 
+    private void setCurrentPlayingSong(int itemPosition){
+        myToolbar.setSubtitle(mItems.get(itemPosition).getTrack().getName());
+        getSupportActionBar().getSubtitle();
+        this.itemPosition = itemPosition;
+        //mTrackLength = mItems.get(position).getTrack().getDurationMs();
+
+    }
+
+    private int getCurrenPlayingSongLocation() {
+        return itemPosition;
+    }
+
+
+
     private void onPauseClicked() {
 
         if(mPlayer != null) {
             mPlayer.pause();
 
+        } else {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -135,21 +150,30 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         } else {
             mPlayer.resume();
-
-
         }
     }
 
     private void onSkipNextClicked() {
-        mPlayer.skipToNext();
 
+        if(mPlayer != null) {
+            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() + 1);
+            mPlayer.skipToNext();
+        } else {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onPreviousClicked() {
-        mPlayer.skipToPrevious();
+
+        if(mPlayer != null) {
+            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
+            mPlayer.skipToPrevious();
+        } else {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    
+
     private void playSong(final String songId) {
 
         final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
@@ -185,9 +209,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 //    }
 
 
-
-
-
     public void getPlaylistTracks(String token, String userId, String playlistId) {
 
 
@@ -215,11 +236,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             }
         });
 
-
     }
-
-
-
 
     private SpotifyService getSpotifyService() {
 
