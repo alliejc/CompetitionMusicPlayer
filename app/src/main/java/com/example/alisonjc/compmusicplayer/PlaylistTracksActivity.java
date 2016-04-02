@@ -39,7 +39,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String userId = "";
     private Player mPlayer;
     private List<Item> mItems;
-    private Toolbar myToolbar;
     private Integer mTrackLength;
     private int itemPosition = 0;
 
@@ -56,46 +55,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistId = b.getString("playlistId");
         userId = b.getString("ownerId");
 
-        final Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("CompMusicPlayer");
-        getSupportActionBar().isShowing();
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-        myToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onPreviousClicked();
-            }
-        });
-
-        myToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onPlayClicked();
-            }
-        });
-
-        myToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onPauseClicked();
-            }
-        });
-
-        myToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onSkipNextClicked();
-            }
-        });
-
+        toolbarSetup();
 
         mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
@@ -108,28 +68,26 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                playSong(mItems.get(itemPosition).getTrack().getId());
                 setCurrentPlayingSong(position);
+                playSong(mItems.get(position).getTrack().getId());
+                //mTrackLength = mItems.get(position).getTrack().getDurationMs();
+                //endSong();
 
             }
         });
 
-
     }
 
     private void setCurrentPlayingSong(int itemPosition){
-        myToolbar.setSubtitle(mItems.get(itemPosition).getTrack().getName());
-        getSupportActionBar().getSubtitle();
+        getSupportActionBar().setSubtitle(mItems.get(itemPosition).getTrack().getName());
         this.itemPosition = itemPosition;
-        //mTrackLength = mItems.get(position).getTrack().getDurationMs();
 
     }
 
     private int getCurrenPlayingSongLocation() {
+        getSupportActionBar().getSubtitle();
         return itemPosition;
     }
-
-
 
     private void onPauseClicked() {
 
@@ -145,7 +103,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private void onPlayClicked() {
 
         if(mPlayer == null) {
-
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
 
         } else {
@@ -155,21 +112,25 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void onSkipNextClicked() {
 
-        if(mPlayer != null) {
-            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() + 1);
-            mPlayer.skipToNext();
-        } else {
+        if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+
+        } else {
+            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() + 1);
+            playSong(mItems.get(itemPosition).getTrack().getId());
+
+
         }
     }
 
     private void onPreviousClicked() {
 
-        if(mPlayer != null) {
-            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
-            mPlayer.skipToPrevious();
-        } else {
+        if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+
+        } else {
+            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
+            playSong(mItems.get(itemPosition).getTrack().getId());
         }
     }
 
@@ -178,17 +139,12 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
 
-        if(mPlayer == null) {
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
 
                         @Override
                         public void onInitialized(Player player) {
-                            mPlayer.addConnectionStateCallback(player);
                             mPlayer.play("spotify:track:" + songId);
-                            //myToolbar.setSubtitle(songId);
-
                         }
-
 
                         @Override
                         public void onError(Throwable throwable) {
@@ -199,8 +155,12 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             mPlayer.isInitialized();
         }
 
-    }
 
+//    private void endSong() {
+//        if(mTrackLength >= 120000) {
+//            mPlayer.clearQueue();
+//        }
+//    }
 //    public void endPlaybackAuto(Integer duration) {
 //        if(mTrackLength >= 120000 ) {
 //            Spotify.destroyPlayer(this);
@@ -255,6 +215,49 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     }
 
+    private void toolbarSetup() {
+        final Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("CompMusicPlayer");
+        getSupportActionBar().isShowing();
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        myToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onPreviousClicked();
+            }
+        });
+
+        myToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onPlayClicked();
+            }
+        });
+
+        myToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onPauseClicked();
+            }
+        });
+
+        myToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onSkipNextClicked();
+            }
+        });
+
+    }
+
 
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
@@ -265,5 +268,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     public void onPlaybackError(ErrorType errorType, String s) {
 
     }
+
 }
 
