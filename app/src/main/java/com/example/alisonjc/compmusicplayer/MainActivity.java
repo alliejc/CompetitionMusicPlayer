@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 String ownerId = mItems.get(position).getOwner().getId();
                 String playlistName = mItems.get(position).getName();
 
-
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
                 b.putString("spotifyToken", token);

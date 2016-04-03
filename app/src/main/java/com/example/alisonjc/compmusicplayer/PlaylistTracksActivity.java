@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
@@ -19,9 +20,12 @@ import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -44,13 +48,33 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private Integer mTrackLength;
     private int itemPosition = 0;
     private int currentPlayingSongPosition;
-
     private static ArrayAdapter<String> mArrayAdapter;
+    private int pauseTimeAt = 2000;
+    private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
+
+        TimerTask mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(mPlayer != null) {
+                    mPlayer.getPlayerState(new PlayerStateCallback() {
+                        @Override
+                        public void onPlayerState(PlayerState playerState) {
+                            if(playerState.positionInMs > pauseTimeAt) {
+                                mPlayer.pause();
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        mTimer = new Timer();
+        mTimer.schedule(mTimerTask, 1000, 1000);
 
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
@@ -90,11 +114,31 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 setCurrentPlayingSong(position);
                 playSong(mItems.get(position).getTrack().getId());
-                //mTrackLength = mItems.get(position).getTrack().getDurationMs();
-                //endSong();
             }
         });
+
+
     }
+
+    public void onRadioButtonClicked(View view) {
+
+        boolean checked = ((RadioButton) view).isChecked();
+
+            switch (view.getId()) {
+
+                case R.id.oneMinuteThirty:
+                    if (checked){
+                        pauseTimeAt = 2000;
+                    }
+                    break;
+                case R.id.twoMinutes:
+                    if (checked) {
+                        pauseTimeAt = 5000;
+                    }
+                        break;
+            }
+        }
+
 
     private void setCurrentPlayingSong(int itemPosition){
             getSupportActionBar().setSubtitle(mItems.get(itemPosition).getTrack().getName());
@@ -135,8 +179,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             } else {
                 this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() + 1);
                 playSong(mItems.get(itemPosition).getTrack().getId());
-            }
-            if(mPlayer == null) {
+
+            } if(mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
             }
@@ -144,12 +188,21 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
 
     private void onPreviousClicked() {
-        if(mPlayer == null) {
-            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
 
-        } else {
-            this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
-            playSong(mItems.get(itemPosition).getTrack().getId());
+        if (mPlayer != null) {
+
+            if (itemPosition < 1) {
+                itemPosition = 0;
+                this.setCurrentPlayingSong(itemPosition);
+                playSong(mItems.get(itemPosition).getTrack().getId());
+
+            } else {
+                this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
+                playSong(mItems.get(itemPosition).getTrack().getId());
+
+            } if (mPlayer == null) {
+                Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -162,8 +215,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                         @Override
                         public void onInitialized(Player player) {
                             mPlayer.play("spotify:track:" + songId);
-                        }
 
+                        }
                         @Override
                         public void onError(Throwable throwable) {
                             Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
@@ -172,20 +225,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             );
             mPlayer.isInitialized();
         }
-
-
-//    private void endSong() {
-//
-//        if(mTrackLength >= 120000) {
-//                if(currentPlayingSongPosition == 120000){
-//                    mPlayer.pause();
-//                }
-//        } else {
-//            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
-//
-//        }
-//    }
-
 
     public void getPlaylistTracks(String token, String userId, String playlistId) {
 
@@ -284,6 +323,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     @Override
     protected void onDestroy() {
         Spotify.destroyPlayer(this);
+        mTimer.cancel();
         super.onDestroy();
     }
 }
