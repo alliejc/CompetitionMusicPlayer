@@ -10,8 +10,11 @@
 
     <include
         android:id="@+id/tool_bar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar_main"/>
 
+    <include
+        android:id="@+id/tool_bar_player"
+        layout="@layout/toolbar_player"/>
 
     <ListView
         android:layout_width="match_parent"

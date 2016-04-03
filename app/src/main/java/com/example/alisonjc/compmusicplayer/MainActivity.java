@@ -71,11 +71,14 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 String playlistId = mItems.get(position).getId();
                 String ownerId = mItems.get(position).getOwner().getId();
+                String playlistName = mItems.get(position).getName();
+
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
                 b.putString("spotifyToken", token);
                 b.putString("ownerId", ownerId);
+                b.putString("playlistName", playlistName);
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
@@ -174,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
                 return retrofit.create(SpotifyService.class);
     }
 
@@ -236,8 +238,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
                         getUserPlaylists(token, userId);
-
-
                             break;
 
                     // Auth flow returned an error
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.toolbar, menu);
+//        getMenuInflater().inflate(R.menu.toolbar_main, menu);
 //        return true;
 //    }
 //
