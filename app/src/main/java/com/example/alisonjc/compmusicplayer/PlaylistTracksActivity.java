@@ -45,36 +45,15 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String playlistName = "";
     private Player mPlayer;
     private List<Item> mItems;
-    private Integer mTrackLength;
     private int itemPosition = 0;
-    private int currentPlayingSongPosition;
     private static ArrayAdapter<String> mArrayAdapter;
-    private int pauseTimeAt = 2000;
+    private int pauseTimeAt = 120000;
     private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
-
-        TimerTask mTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                if(mPlayer != null) {
-                    mPlayer.getPlayerState(new PlayerStateCallback() {
-                        @Override
-                        public void onPlayerState(PlayerState playerState) {
-                            if(playerState.positionInMs > pauseTimeAt) {
-                                mPlayer.pause();
-                            }
-                        }
-                    });
-                }
-            }
-        };
-
-        mTimer = new Timer();
-        mTimer.schedule(mTimerTask, 1000, 1000);
 
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
@@ -117,7 +96,25 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             }
         });
 
+        TimerTask mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if(mPlayer != null) {
+                    mPlayer.getPlayerState(new PlayerStateCallback() {
+                        @Override
+                        public void onPlayerState(PlayerState playerState) {
+                            if(playerState.positionInMs > pauseTimeAt) {
+                                mPlayer.pause();
+                                //playSong(getPlayer(), getPlaylist().currentsong().Next())
+                            }
+                        }
+                    });
+                }
+            }
+        };
 
+        mTimer = new Timer();
+        mTimer.schedule(mTimerTask, 1000, 1000);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -126,14 +123,14 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
             switch (view.getId()) {
 
-                case R.id.oneMinuteThirty:
+                case R.id.one_minute_thirty:
                     if (checked){
-                        pauseTimeAt = 2000;
+                        pauseTimeAt = 90000;
                     }
                     break;
-                case R.id.twoMinutes:
+                case R.id.two_minutes:
                     if (checked) {
-                        pauseTimeAt = 5000;
+                        pauseTimeAt = 120000;
                     }
                         break;
             }
@@ -209,7 +206,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void playSong(final String songId) {
         final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
-
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
 
                         @Override
@@ -326,5 +322,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         mTimer.cancel();
         super.onDestroy();
     }
+
 }
 

@@ -13,44 +13,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1"
-        android:layout_gravity="center"
-        android:gravity="center">
+        android:weightSum="100">
 
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_skip_previous_white_36dp"
-            android:layout_weight="0.25"
             android:id="@+id/skip_previous"
-            />
+            android:layout_weight="20"/>
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_play_arrow_white_36dp"
-            android:layout_weight="0.25"
             android:id="@+id/play"
-            />
+            android:layout_weight="20"/>
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_pause_white_36dp"
-            android:layout_weight="0.25"
             android:id="@+id/pause"
-            />
+            android:layout_weight="20"/>
+
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_skip_next_white_36dp"
-            android:layout_weight="0.25"
             android:id="@+id/skip_next"
-            />
+            android:layout_weight="20"/>
 
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/one_minute_thirty"
+            android:layout_margin="10dp"
+            android:layout_weight="20">
 
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1:30"
+                android:onClick="onRadioButtonClicked"
+                android:id="@+id/one_minute_thirty"
+                android:checked="true"
+                android:gravity="center"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2:00"
+                android:onClick="onRadioButtonClicked"
+                android:id="@+id/two_minutes"
+                android:gravity="center"/>
+
+        </RadioGroup>
     </LinearLayout>
 
 

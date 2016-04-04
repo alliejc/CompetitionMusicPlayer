@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.alisonjc.compmusicplayer.spotify.Item;
 import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("CompMusicPlayer");
+        actionBar.setDisplayShowTitleEnabled(true);
+
     }
 
 
@@ -191,9 +194,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                                  Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.activity_login, container, false);
 
-            TextView tv = (TextView) v.findViewById(R.id.text);
-            getDialog().setTitle("Login Using Spotify");
-
+            getDialog().setTitle("Login");
 
             View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
             mLoginButton.setVisibility(View.VISIBLE);
@@ -211,16 +212,12 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                     AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
 
                     onDestroyView();
-
-
-
                 }
             });
 
             return v;
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -253,29 +250,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
 
         }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.toolbar_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
 
 
         @Override
@@ -318,7 +292,28 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             super.onDestroy();
         }
 
+    public void onRadioButtonClicked(View view) {
+
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch (view.getId()) {
+
+            case R.id.one_minute_thirty:
+                if (checked){
+                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.two_minutes:
+                if (checked) {
+                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+        }
     }
+
+}
 
 
 

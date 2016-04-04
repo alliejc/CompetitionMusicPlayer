@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".PlaylistTracksActivity">
 
-
     <include
         android:id="@+id/tool_bar"
         layout="@layout/toolbar_main"/>
@@ -21,6 +20,5 @@
         android:layout_height="match_parent"
         android:id="@+id/playlisttracksview"
         />
-
 
 </LinearLayout>

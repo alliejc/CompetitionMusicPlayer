@@ -8,29 +8,7 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:paddingEnd="10dp">
+    android:fitsSystemWindows="true">
 
-   <RadioGroup
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:gravity="end">
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1:30"
-            android:gravity="end"
-            android:onClick="onRadioButtonClicked"
-            android:id="@+id/oneMinuteThirty"
-            android:checked="true"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2:00"
-            android:gravity="end"
-            android:onClick="onRadioButtonClicked"
-            android:id="@+id/twoMinutes"/>
-
-   </RadioGroup>
     </android.support.v7.widget.Toolbar>
