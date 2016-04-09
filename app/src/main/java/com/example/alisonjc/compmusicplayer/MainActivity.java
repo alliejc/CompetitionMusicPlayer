@@ -265,6 +265,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             Log.d("MainActivity", "Playback error received: " + errorType.name());
         }
 
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+        }
+
     public void onRadioButtonClicked(View view) {
 
         boolean checked = ((RadioButton) view).isChecked();

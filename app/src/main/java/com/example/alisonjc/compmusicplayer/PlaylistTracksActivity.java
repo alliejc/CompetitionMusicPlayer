@@ -118,7 +118,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
 
     private void setCurrentPlayingSong(int itemPosition){
-            getSupportActionBar().setSubtitle(mItems.get(itemPosition).getTrack().getName());
             this.itemPosition = itemPosition;
     }
 
@@ -154,7 +153,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             }
 
     private void onPreviousClicked() {
-
             if (itemPosition < 1) {
                 itemPosition = 0;
                 playSong(itemPosition);
@@ -169,7 +167,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void playSong(int locationid) {
         setCurrentPlayingSong(locationid);
-       getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
+        getSupportActionBar().setSubtitle(mItems.get(locationid).getTrack().getName());
+        getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
     }
 
     private Player getPlayer() {
