@@ -95,7 +95,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         mTimer = new Timer();
         mTimer.schedule(mTimerTask, 1000, 1000);
-
     }
 
     public void onRadioButtonClicked(View view) {
@@ -105,7 +104,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
                 case R.id.one_minute_thirty:
                     if (checked){
-                        pauseTimeAt = 5000;
+                        pauseTimeAt = 10000;
                     }
                     break;
                 case R.id.two_minutes:
@@ -115,7 +114,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                         break;
             }
         }
-
 
     private void setCurrentPlayingSong(int itemPosition){
             this.itemPosition = itemPosition;
@@ -172,8 +170,10 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private Player getPlayer() {
+
         if(mPlayer != null) {
             return mPlayer;
+
         } else {
             final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
@@ -182,7 +182,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                         public void onInitialized(Player player) {
                         }
 
-                @Override
+                        @Override
                         public void onError(Throwable throwable) {
                             Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
                         }
