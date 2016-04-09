@@ -37,7 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback {
 
-    private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private String token = "";
     private String playlistId = "";
@@ -47,7 +46,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private List<Item> mItems;
     private int itemPosition = 0;
     private static ArrayAdapter<String> mArrayAdapter;
-    private int pauseTimeAt = 120000;
+    private int pauseTimeAt = 13000;
     private Timer mTimer;
 
     @Override
@@ -64,23 +63,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         toolbarPlayerSetup();
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(myToolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setTitle(playlistName);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         final ListView listView = (ListView) findViewById(R.id.playlisttracksview);
         listView.setAdapter(mArrayAdapter);
@@ -92,45 +75,44 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 setCurrentPlayingSong(position);
-                playSong(mItems.get(position).getTrack().getId());
+                playSong(position);
             }
         });
 
         TimerTask mTimerTask = new TimerTask() {
             @Override
             public void run() {
-                if(mPlayer != null) {
-                    mPlayer.getPlayerState(new PlayerStateCallback() {
-                        @Override
-                        public void onPlayerState(PlayerState playerState) {
-                            if(playerState.positionInMs > pauseTimeAt) {
-                                mPlayer.pause();
-                                //playSong(getPlayer(), getPlaylist().currentsong().Next())
-                            }
+                getPlayer().getPlayerState(new PlayerStateCallback() {
+                    @Override
+                    public void onPlayerState(PlayerState playerState) {
+
+                        if (playerState.positionInMs > pauseTimeAt) {
+                            mPlayer.pause();
+                            onSkipNextClicked();
                         }
-                    });
-                }
+                    }
+                });
             }
         };
 
         mTimer = new Timer();
         mTimer.schedule(mTimerTask, 1000, 1000);
+
     }
 
     public void onRadioButtonClicked(View view) {
-
         boolean checked = ((RadioButton) view).isChecked();
 
             switch (view.getId()) {
 
                 case R.id.one_minute_thirty:
                     if (checked){
-                        pauseTimeAt = 90000;
+                        pauseTimeAt = 5000;
                     }
                     break;
                 case R.id.two_minutes:
                     if (checked) {
-                        pauseTimeAt = 120000;
+                        pauseTimeAt = 130000;
                     }
                         break;
             }
@@ -140,10 +122,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private void setCurrentPlayingSong(int itemPosition){
             getSupportActionBar().setSubtitle(mItems.get(itemPosition).getTrack().getName());
             this.itemPosition = itemPosition;
-    }
-
-    private int getCurrenPlayingSongLocation() {
-        return itemPosition;
     }
 
     private void onPauseClicked() {
@@ -165,70 +143,65 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onSkipNextClicked() {
-
-        if (mPlayer != null) {
-            if (mItems.size() < itemPosition + 2) {
-
+        if (mItems.size() < itemPosition + 2) {
                 itemPosition = 0;
-                this.setCurrentPlayingSong(itemPosition);
-                playSong(mItems.get(itemPosition).getTrack().getId());
+                playSong(itemPosition);
 
             } else {
-                this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() + 1);
-                playSong(mItems.get(itemPosition).getTrack().getId());
+                playSong(itemPosition + 1);
 
             } if(mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
             }
-        }
-
 
     private void onPreviousClicked() {
 
-        if (mPlayer != null) {
-
             if (itemPosition < 1) {
                 itemPosition = 0;
-                this.setCurrentPlayingSong(itemPosition);
-                playSong(mItems.get(itemPosition).getTrack().getId());
+                playSong(itemPosition);
 
             } else {
-                this.setCurrentPlayingSong(this.getCurrenPlayingSongLocation() - 1);
-                playSong(mItems.get(itemPosition).getTrack().getId());
+                playSong(itemPosition - 1);
 
             } if (mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
         }
+
+    private void playSong(int locationid) {
+        setCurrentPlayingSong(locationid);
+       getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
     }
 
-
-    private void playSong(final String songId) {
-        final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
+    private Player getPlayer() {
+        if(mPlayer != null) {
+            return mPlayer;
+        } else {
+            final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
 
                         @Override
                         public void onInitialized(Player player) {
-                            mPlayer.play("spotify:track:" + songId);
-
                         }
-                        @Override
+
+                @Override
                         public void onError(Throwable throwable) {
                             Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
                         }
                     }
             );
             mPlayer.isInitialized();
+
+            return mPlayer;
+        }
         }
 
     public void getPlaylistTracks(String token, String userId, String playlistId) {
 
-
         getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
-
 
                 mArrayAdapter.clear();
                 if(response.body() != null) {
@@ -269,6 +242,22 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void toolbarPlayerSetup() {
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(myToolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setTitle(playlistName);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
 
         myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
@@ -304,7 +293,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         });
 
     }
-
 
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
