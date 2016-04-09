@@ -7,9 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
 
-/**
- * Created by alisonjc on 2/7/16.
- */
 public interface SpotifyService {
 
     @GET("v1/me")

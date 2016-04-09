@@ -38,17 +38,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
-    private Toolbar toolbar;
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private List<Item> mItems;
     public String token = "";
     public String userId = "";
-
-
     private static ArrayAdapter<String> mArrayAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             newFragment.show(ft, "dialog");
         }
 
-        mArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         ListView listView = (ListView) findViewById(R.id.playlistview);
 
@@ -83,19 +79,12 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
 
-
                 startActivity(intent);
             }
         });
 
         listView.setAdapter(mArrayAdapter);
 
-        toolbarSetup();
-
-
-    }
-
-    private void toolbarSetup() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -103,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         actionBar.setDisplayShowTitleEnabled(true);
 
     }
-
 
     private void getUserInfo(final String token) {
 
@@ -115,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                     userId = response.body().getId();
                     getUserPlaylists(token, response.body().getId());
                 }
-
             }
 
             @Override
@@ -124,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
     }
-
 
     private void getCurrentUserPlaylists(String token) {
         getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<UserPlaylists>() {
@@ -139,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                     }
                 }
                 mArrayAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -149,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         });
 
     }
-
 
     private void getUserPlaylists(String token, String userId){
         getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
@@ -163,15 +147,14 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                     }
                 }
                 mArrayAdapter.notifyDataSetChanged();
-
             }
-
             @Override
             public void onFailure(Call<UserPlaylists> call, Throwable t) {
 
             }
         });
     }
+
     private SpotifyService getSpotifyService() {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -192,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.activity_login, container, false);
+            View v = inflater.inflate(R.layout.dialog_login, container, false);
 
             getDialog().setTitle("Login");
 
@@ -222,12 +205,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        // Check if result comes from the correct activity
+
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 switch (response.getType()) {
-                    // Response was successful and contains auth token
                     case TOKEN:
                         token = response.getAccessToken();
                         userId = response.getType().toString();
@@ -243,14 +225,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                     // Most likely auth flow was cancelled
                     default:
-                        // Handle other cases
                 }
             }
-
             }
-
         }
-
 
         @Override
         public void onLoggedIn() {
@@ -285,11 +263,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         @Override
         public void onPlaybackError(ErrorType errorType, String errorDetails) {
             Log.d("MainActivity", "Playback error received: " + errorType.name());
-        }
-
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
         }
 
     public void onRadioButtonClicked(View view) {

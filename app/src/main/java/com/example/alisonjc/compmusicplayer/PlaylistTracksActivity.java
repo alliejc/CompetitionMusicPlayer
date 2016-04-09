@@ -39,8 +39,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private String token = "";
-    private String playlistId = "";
-    private String userId = "";
     private String playlistName = "";
     private Player mPlayer;
     private List<Item> mItems;
@@ -57,8 +55,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
         token = b.getString("spotifyToken");
-        playlistId = b.getString("playlistId");
-        userId = b.getString("ownerId");
+        String playlistId = b.getString("playlistId");
+        String userId = b.getString("ownerId");
         playlistName = b.getString("playlistName");
 
         toolbarPlayerSetup();
