@@ -45,10 +45,9 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private List<Item> mItems;
     private int itemPosition = 0;
     private static ArrayAdapter<String> mArrayAdapter;
-    private int pauseTimeAt = 13000;
+    private int pauseTimeAt = 300000;
     private Timer mTimer;
-    private MediaPlayer mediaPlayer = null;
-    //private Uri myUri = Uri.parse("android.resource://com.example.alisonjc.compmusicplayer/raw/alarm_ring.mp3");
+    private boolean mBeepPlayed = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +61,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistName = b.getString("playlistName");
 
         toolbarPlayerSetup();
-
-
+        
         mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
         final ListView listView = (ListView) findViewById(R.id.playlisttracksview);
@@ -87,15 +85,14 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
-                        if(playerState.positionInMs >= pauseTimeAt - 5000) {
-                            getMediaPlayer();
+                        if(playerState.positionInMs > pauseTimeAt - 8000 && !mBeepPlayed) {
+                            playBeep();
+                            mBeepPlayed=true;
 
-                            if (playerState.positionInMs > pauseTimeAt) {
-                                mPlayer.pause();
-                                pauseMediaPlayer(mediaPlayer);
-                                onSkipNextClicked();
-
-                            }
+                        }
+                        if (playerState.positionInMs > pauseTimeAt) {
+                            mPlayer.pause();
+                            onSkipNextClicked();
                         }
                     }
                 });
@@ -118,7 +115,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                     break;
                 case R.id.two_minutes:
                     if (checked) {
-                        pauseTimeAt = 130000;
+                        pauseTimeAt = 210000;
                     }
                         break;
             }
@@ -147,7 +144,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onSkipNextClicked() {
-        mediaPlayer.release();
         if (mItems.size() < itemPosition + 2) {
                 itemPosition = 0;
                 playSong(itemPosition);
@@ -174,48 +170,47 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         }
 
     private void playSong(int locationid) {
+        mBeepPlayed = false;
         setCurrentPlayingSong(locationid);
         getSupportActionBar().setSubtitle(mItems.get(locationid).getTrack().getName());
         getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
     }
 
-    private MediaPlayer getMediaPlayer() {
+    private void playBeep() {
 
-        if (mediaPlayer != null) {
-            return mediaPlayer;
-        } else {
-
-            mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+            final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
             mediaPlayer.start();
-            return mediaPlayer;
-        }
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mediaPlayer.release();
+            }
+        });
+
     }
 
-    private void pauseMediaPlayer(MediaPlayer mediaPlayer) {
-        mediaPlayer.release();
-    }
 
-
-//            final MediaPlayer mediaPlayer = new MediaPlayer();
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-//            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            final MediaPlayer mMediaPlayer = new MediaPlayer();
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //                @Override
 //                public void onPrepared(MediaPlayer mp) {
 //                    mp.start();
 //                }
 //            });
 //            try {
-//                mediaPlayer.setDataSource(getApplicationContext(), myUri);
+//                mMediaPlayer.setDataSource(getApplicationContext(), myUri);
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
 //            try {
-//                mediaPlayer.prepare();
+//                mMediaPlayer.prepare();
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
 //
-//            return mediaPlayer;
+//            return mMediaPlayer;
 //
 //            }
 
