@@ -1,6 +1,9 @@
 package com.example.alisonjc.compmusicplayer;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +26,7 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,7 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback {
+public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback, MediaPlayer.OnPreparedListener {
 
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
     private String token = "";
@@ -46,8 +50,9 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private static ArrayAdapter<String> mArrayAdapter;
     private int pauseTimeAt = 13000;
     private Timer mTimer;
+    private MediaPlayer mediaPlayer;
+    private Uri myUri = Uri.parse("android.resource://com.example.alisonjc.compmusicplayer/raw/beep.wav");
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_tracks_list);
@@ -60,6 +65,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistName = b.getString("playlistName");
 
         toolbarPlayerSetup();
+
 
         mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
@@ -84,9 +90,17 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
+                        if(playerState.positionInMs >= pauseTimeAt - 1000) {
+
+                            getMediaPlayer();
+                            //onPrepared(mediaPlayer);
+                        }
+
                         if (playerState.positionInMs > pauseTimeAt) {
                             mPlayer.pause();
+                            //mediaPlayer.release();
                             onSkipNextClicked();
+
                         }
                     }
                 });
@@ -169,6 +183,38 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
     }
 
+    private MediaPlayer getMediaPlayer() {
+
+        if (mediaPlayer != null) {
+            return mediaPlayer;
+        } else {
+
+            final MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+            try {
+                mediaPlayer.setDataSource(getApplicationContext(), myUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return mediaPlayer;
+
+            }
+        }
+
+
+
     private Player getPlayer() {
 
         if(mPlayer != null) {
@@ -180,6 +226,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
                         @Override
                         public void onInitialized(Player player) {
+
                         }
 
                         @Override
@@ -235,7 +282,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         return retrofit.create(SpotifyService.class);
     }
-
 
     private void toolbarPlayerSetup() {
 
@@ -308,5 +354,10 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         super.onDestroy();
     }
 
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mp.start();
+    }
 }
 
