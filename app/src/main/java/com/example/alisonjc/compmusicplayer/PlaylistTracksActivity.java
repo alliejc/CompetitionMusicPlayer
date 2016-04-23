@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,9 +42,9 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String token = "";
     private String playlistName = "";
     private Player mPlayer;
-    private List<Item> mItems;
+    private List<Item> mItems = new ArrayList<>();
     private int itemPosition = 0;
-    private static ArrayAdapter<String> mArrayAdapter;
+    private static PlaylistTracksItemAdapter mPlaylistTracks;
     private int pauseTimeAt = 300000;
     private Timer mTimer;
     private boolean mBeepPlayed = false;
@@ -61,11 +61,11 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistName = b.getString("playlistName");
 
         toolbarPlayerSetup();
-        
-        mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+        mPlaylistTracks = new PlaylistTracksItemAdapter(this, R.layout.playlist_tracks_item, mItems);
 
         final ListView listView = (ListView) findViewById(R.id.playlisttracksview);
-        listView.setAdapter(mArrayAdapter);
+        listView.setAdapter(mPlaylistTracks);
 
         getPlaylistTracks(token, userId, playlistId);
 
@@ -190,33 +190,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     }
 
-
-//            final MediaPlayer mMediaPlayer = new MediaPlayer();
-//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mp) {
-//                    mp.start();
-//                }
-//            });
-//            try {
-//                mMediaPlayer.setDataSource(getApplicationContext(), myUri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                mMediaPlayer.prepare();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return mMediaPlayer;
-//
-//            }
-
-
-
-
     private Player getPlayer() {
 
         if(mPlayer != null) {
@@ -249,18 +222,13 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
-                mArrayAdapter.clear();
+                mPlaylistTracks.clear();
                 if(response.body() != null) {
                     mItems = response.body().getItems();
-                    for (Item item : response.body().getItems()) {
-
-                        if (item.getTrack().getName() != null) {
-                            mArrayAdapter.add(item.getTrack().getName());
-                        }
-                    }
+                    mPlaylistTracks.clear();
+                    mPlaylistTracks.addAll(mItems);
+                    mPlaylistTracks.notifyDataSetChanged();
                 }
-
-                mArrayAdapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<PlaylistTracksList> call, Throwable t) {

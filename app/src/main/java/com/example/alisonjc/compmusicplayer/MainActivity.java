@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -28,6 +27,7 @@ import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private List<Item> mItems;
+    private List<Item> mItems = new ArrayList<>();
     public String token = "";
     public String userId = "";
-    private static ArrayAdapter<String> mArrayAdapter;
+    private static PlaylistItemAdapter mPlaylistItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             newFragment.show(ft, "dialog");
         }
 
-        mArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, mItems);
 
         ListView listView = (ListView) findViewById(R.id.playlistview);
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
 
-        listView.setAdapter(mArrayAdapter);
+        listView.setAdapter(mPlaylistItem);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
@@ -117,14 +118,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
 
-                mArrayAdapter.clear();
                 if(response.body() != null) {
                     mItems = response.body().getItems();
-                    for (Item item : response.body().getItems()) {
-                        mArrayAdapter.add(item.getName());
+                    updateListView(mItems);
                     }
-                }
-                mArrayAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -135,18 +132,20 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     }
 
+    private void updateListView(List<Item> items) {
+        mPlaylistItem.clear();
+        mPlaylistItem.addAll(items);
+        mPlaylistItem.notifyDataSetChanged();
+    }
+
     private void getUserPlaylists(String token, String userId){
         getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-
-                mArrayAdapter.clear();
-                if(response.body() != null) {
-                    for (Item item : response.body().getItems()) {
-                        mArrayAdapter.add(item.getName());
-                    }
+                if (response.body() != null) {
+                    mItems = response.body().getItems();
+                    updateListView(mItems);
                 }
-                mArrayAdapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<UserPlaylists> call, Throwable t) {
