@@ -31,17 +31,21 @@ public class PlaylistItemAdapter extends ArrayAdapter<Item> {
         }
         Item i = getItem(position);
 
-    if(i!=null)
+        if (i != null)
 
-    {
+        {
 
-        TextView pt = (TextView) v.findViewById(R.id.playlisttitle);
+            TextView pt = (TextView) v.findViewById(R.id.playlisttitle);
 
-        if (pt != null) {
-            pt.setText(i.getName());
+            if (pt != null) {
+                pt.setText(i.getName());
+            }
+
         }
 
+        return v;
     }
 
-    return v;
-}}
+
+
+}

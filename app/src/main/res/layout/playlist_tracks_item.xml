@@ -2,50 +2,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="?android:attr/listPreferredItemHeightLarge"
-                android:padding="6dip">
+                android:padding="6dip"
+                >
 
     <!-- Song Name -->
     <TextView
         android:id="@+id/songname"
 
         android:layout_width="wrap_content"
-        android:layout_height="26dip"
-
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
         android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="marquee"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/hyphen"
-        android:layout_alignParentRight="false"
+        android:gravity="top"
+        android:textColor="@color/colorBlack"
+        android:text="this is a sample name"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/songname"
-
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:text=" - "
-
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="30dp"
         />
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:id="@+id/hyphen"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:singleLine="true"-->
+        <!--android:ellipsize="marquee"-->
+        <!--android:text=" - "-->
+        <!--android:gravity="bottom"-->
+        <!--android:textColor="@color/abc_input_method_navigation_guard"-->
+        <!--android:layout_marginLeft="35dp"/>-->
 
      <!--Artist Name-->
     <TextView
         android:id="@+id/artistname"
-
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/hyphen"
-
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
         android:singleLine="true"
         android:ellipsize="marquee"
+        android:gravity="bottom"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/colorLight"
         />
 
 </RelativeLayout>

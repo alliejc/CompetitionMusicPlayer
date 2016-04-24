@@ -7,17 +7,18 @@
     <!-- Playlist Name -->
     <TextView
         android:id="@+id/playlisttitle"
-
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:text="Test"
-        />
+        android:gravity="center_vertical"
+        android:textColor="@color/colorBlack"
+        android:text="sample text"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
     <!-- Playlist Owner -->
     <!--<TextView-->

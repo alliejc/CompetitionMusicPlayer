@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private List<Item> mItems = new ArrayList<>();
     public String token = "";
     public String userId = "";
     private static PlaylistItemAdapter mPlaylistItem;
@@ -59,17 +58,18 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             newFragment.show(ft, "dialog");
         }
 
-        mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, mItems);
+        mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
 
-        ListView listView = (ListView) findViewById(R.id.playlistview);
+        final ListView listView = (ListView) findViewById(R.id.playlistview);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String playlistId = mItems.get(position).getId();
-                String ownerId = mItems.get(position).getOwner().getId();
-                String playlistName = mItems.get(position).getName();
+                Item mItem = (Item) parent.getAdapter().getItem(position);
+                String playlistId = mItem.getId();
+                String ownerId = mItem.getOwner().getId();
+                String playlistName = mItem.getName();
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
@@ -89,9 +89,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("CompMusicPlayer");
+        actionBar.setTitle(R.string.app_name);
         actionBar.setDisplayShowTitleEnabled(true);
-
     }
 
     private void getUserInfo(final String token) {
@@ -119,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
 
                 if(response.body() != null) {
-                    mItems = response.body().getItems();
-                    updateListView(mItems);
+                    updateListView(response.body().getItems());
                     }
             }
 
@@ -143,8 +141,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
                 if (response.body() != null) {
-                    mItems = response.body().getItems();
-                    updateListView(mItems);
+                    updateListView(response.body().getItems());
                 }
             }
             @Override
