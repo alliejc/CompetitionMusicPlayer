@@ -16,23 +16,7 @@
         android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:textColor="@color/colorBlack"
-        android:text="sample text"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"/>
-
-    <!-- Playlist Owner -->
-    <!--<TextView-->
-        <!--android:id="@+id/playlistowner"-->
-
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_toRightOf="@id/playlisttitle"-->
-
-        <!--android:singleLine="true"-->
-        <!--android:ellipsize="marquee"-->
-        />
 
 </RelativeLayout>

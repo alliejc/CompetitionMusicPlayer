@@ -24,7 +24,6 @@ import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,9 +41,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private String token = "";
     private String playlistName = "";
     private Player mPlayer;
-    private List<Item> mItems = new ArrayList<>();
     private int itemPosition = 0;
-    private static PlaylistTracksItemAdapter mPlaylistTracks;
+    private static PlaylistTracksItemAdapter mPlaylistTracksItem;
     private int pauseTimeAt = 300000;
     private Timer mTimer;
     private boolean mBeepPlayed = false;
@@ -61,16 +59,14 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         playlistName = b.getString("playlistName");
 
         toolbarPlayerSetup();
-
-        mPlaylistTracks = new PlaylistTracksItemAdapter(this, R.layout.playlist_tracks_item, mItems);
-
-        final ListView listView = (ListView) findViewById(R.id.playlisttracksview);
-        listView.setAdapter(mPlaylistTracks);
-
         getPlaylistTracks(token, userId, playlistId);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPlaylistTracksItem = new PlaylistTracksItemAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
 
+        ListView listView = (ListView) findViewById(R.id.playlisttracksview);
+        listView.setAdapter(mPlaylistTracksItem);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 setCurrentPlayingSong(position);
@@ -126,31 +122,27 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onPauseClicked() {
-        if(mPlayer != null) {
-            mPlayer.pause();
-
-        } else {
+        if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        } else {
+            mPlayer.pause();
         }
     }
 
     private void onPlayClicked() {
         if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
-
         } else {
             mPlayer.resume();
         }
     }
 
     private void onSkipNextClicked() {
-        if (mItems.size() < itemPosition + 2) {
+        if (mPlaylistTracksItem.getCount() < itemPosition + 2) {
                 itemPosition = 0;
                 playSong(itemPosition);
-
             } else {
                 playSong(itemPosition + 1);
-
             } if(mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
@@ -160,10 +152,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             if (itemPosition < 1) {
                 itemPosition = 0;
                 playSong(itemPosition);
-
             } else {
                 playSong(itemPosition - 1);
-
             } if (mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
@@ -172,38 +162,30 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private void playSong(int locationid) {
         mBeepPlayed = false;
         setCurrentPlayingSong(locationid);
-        getSupportActionBar().setSubtitle(mItems.get(locationid).getTrack().getName());
-        getPlayer().play("spotify:track:" + mItems.get(locationid).getTrack().getId());
+        getSupportActionBar().setSubtitle(mPlaylistTracksItem.getItem(locationid).getTrack().getName());
+        getPlayer().play("spotify:track:" + mPlaylistTracksItem.getItem(locationid).getTrack().getId());
     }
 
     private void playBeep() {
-
             final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
             mediaPlayer.start();
-
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                     public void onCompletion(MediaPlayer mp) {
                         mediaPlayer.release();
             }
         });
-
     }
 
     private Player getPlayer() {
-
         if(mPlayer != null) {
             return mPlayer;
-
         } else {
             final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
-
                         @Override
                         public void onInitialized(Player player) {
-
                         }
-
                         @Override
                         public void onError(Throwable throwable) {
                             Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
@@ -211,7 +193,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                     }
             );
             mPlayer.isInitialized();
-
             return mPlayer;
         }
         }
@@ -222,20 +203,16 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
-                mPlaylistTracks.clear();
                 if(response.body() != null) {
-                    mItems = response.body().getItems();
-                    mPlaylistTracks.clear();
-                    mPlaylistTracks.addAll(mItems);
-                    mPlaylistTracks.notifyDataSetChanged();
+                    mPlaylistTracksItem.clear();
+                    mPlaylistTracksItem.addAll(response.body().getItems());
+                    mPlaylistTracksItem.notifyDataSetChanged();
                 }
             }
             @Override
             public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
-
             }
         });
-
     }
 
     private SpotifyService getSpotifyService() {
@@ -256,65 +233,63 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private void toolbarPlayerSetup() {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(myToolbar);
-        ActionBar actionBar = getSupportActionBar();
+            setSupportActionBar(myToolbar);
+            ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle(playlistName);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(playlistName);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
 
-        Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
+            Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
 
-        myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                onPreviousClicked();
-            }
-        });
+                    onPreviousClicked();
+                }
+            });
 
-        myPlayerToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myPlayerToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                onPlayClicked();
-            }
-        });
+                    onPlayClicked();
+                }
+            });
 
-        myPlayerToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myPlayerToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                onPauseClicked();
-            }
-        });
+                    onPauseClicked();
+                }
+            });
 
-        myPlayerToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myPlayerToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                onSkipNextClicked();
-            }
-        });
+                    onSkipNextClicked();
+                }
+            });
 
-    }
+        }
 
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
-
     }
 
     @Override
     public void onPlaybackError(ErrorType errorType, String s) {
-
     }
 
     @Override
@@ -323,7 +298,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         mTimer.cancel();
         super.onDestroy();
     }
-
 
     @Override
     public void onPrepared(MediaPlayer mp) {

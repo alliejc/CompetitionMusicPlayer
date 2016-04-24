@@ -29,7 +29,7 @@ public class PlaylistTracksItemAdapter extends ArrayAdapter<Item> {
             v = inflater.inflate(R.layout.playlist_tracks_item, null);
         }
 
-        Item i = getItem(position);
+        Item i = this.getItem(position);
 
         if (i != null) {
 

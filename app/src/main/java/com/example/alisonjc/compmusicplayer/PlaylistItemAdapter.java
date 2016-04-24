@@ -34,7 +34,6 @@ public class PlaylistItemAdapter extends ArrayAdapter<Item> {
         if (i != null)
 
         {
-
             TextView pt = (TextView) v.findViewById(R.id.playlisttitle);
 
             if (pt != null) {

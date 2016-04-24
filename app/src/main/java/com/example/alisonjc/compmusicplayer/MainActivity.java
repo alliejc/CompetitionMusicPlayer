@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
 
         final ListView listView = (ListView) findViewById(R.id.playlistview);
+        listView.setAdapter(mPlaylistItem);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 startActivity(intent);
             }
         });
-
-        listView.setAdapter(mPlaylistItem);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
