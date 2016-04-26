@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CompMusicPlayer</string>
+    <string name="app_name">Jack n Jill Music Player</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -13,6 +13,7 @@
     <string name="skip_next_song">Skip to next song</string>
     <string name="play_song">Play song</string>
     <string name="pause_song">Pause song</string>
+    <string name="app_subtitle">Select a Playlist</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

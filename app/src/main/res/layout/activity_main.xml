@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <include
         android:id="@+id/tool_bar"
@@ -19,5 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/playlistview"
-        />
+        android:divider="@color/color_dark_gray"
+        android:dividerHeight="0.5dp"/>
 </LinearLayout>

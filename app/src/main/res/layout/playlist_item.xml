@@ -19,9 +19,8 @@
         android:layout_marginRight="30dp"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:textStyle="bold"
         android:gravity="center_vertical"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/color_white"
         />
 
 </RelativeLayout>

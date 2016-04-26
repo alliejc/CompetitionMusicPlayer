@@ -95,7 +95,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.app_name);
+        actionBar.setSubtitle(R.string.app_subtitle);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
 
     }
 

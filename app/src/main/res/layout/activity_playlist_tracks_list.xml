@@ -14,7 +14,8 @@
 
     <include
         android:id="@+id/tool_bar_player"
-        layout="@layout/toolbar_player"/>
+        layout="@layout/toolbar_player"
+        />
 
     <ListView
         android:layout_width="match_parent"
@@ -23,8 +24,8 @@
         android:choiceMode="singleChoice"
         android:background="@color/color_default"
         android:listSelector="@color/pressed_color"
-        android:divider="@color/colorWhite"
-        android:dividerHeight="1dp"
+        android:divider="@color/color_dark_gray"
+        android:dividerHeight="0.5dp"
         />
 
 

@@ -162,7 +162,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onSkipNextClicked() {
-        if (mPlaylistTracksItem.getCount() < itemPosition + 2) {
+        if (mPlaylistTracksItem.getCount() <= itemPosition + 1) {
                 itemPosition = 0;
                 playSong(itemPosition);
                 mListView.setSelection(itemPosition);
