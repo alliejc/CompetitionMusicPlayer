@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PlaylistTracksActivity">
+    tools:context=".PlaylistTracksActivity"
+    >
 
     <include
         android:id="@+id/tool_bar"
@@ -19,6 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/playlisttracksview"
+        android:choiceMode="singleChoice"
+        android:background="@color/color_default"
+        android:listSelector="@color/pressed_color"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="1dp"
         />
+
 
 </LinearLayout>

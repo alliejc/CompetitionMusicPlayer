@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -46,6 +47,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private int pauseTimeAt = 300000;
     private Timer mTimer;
     private boolean mBeepPlayed = false;
+    private ListView mListView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +65,11 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         mPlaylistTracksItem = new PlaylistTracksItemAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
 
-        ListView listView = (ListView) findViewById(R.id.playlisttracksview);
-        listView.setAdapter(mPlaylistTracksItem);
+        mListView = (ListView) findViewById(R.id.playlisttracksview);
+        mListView.setAdapter(mPlaylistTracksItem);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 setCurrentPlayingSong(position);
@@ -117,8 +120,10 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             }
         }
 
+
     private void setCurrentPlayingSong(int itemPosition){
-            this.itemPosition = itemPosition;
+        this.itemPosition = itemPosition;
+        listviewSelector();
     }
 
     private void onPauseClicked() {
@@ -158,6 +163,13 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
         }
+
+    private void listviewSelector() {
+        mListView.clearChoices();
+        mListView.setItemChecked(itemPosition, true);
+        mListView.setSelected(true);
+        mPlaylistTracksItem.notifyDataSetChanged();
+    }
 
     private void playSong(int locationid) {
         mBeepPlayed = false;

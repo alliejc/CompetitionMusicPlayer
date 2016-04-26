@@ -3,44 +3,33 @@
                 android:layout_width="fill_parent"
                 android:layout_height="?android:attr/listPreferredItemHeightLarge"
                 android:padding="6dip"
+                android:background="@drawable/list_item_selected"
                 >
 
     <!-- Song Name -->
     <TextView
         android:id="@+id/songname"
-
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
+        android:textSize="20sp"
         android:layout_centerInParent="true"
         android:layout_alignParentStart="true"
         android:textStyle="bold"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:gravity="top"
-        android:textColor="@color/colorBlack"
-        android:text="this is a sample name"
+        android:textColor="@color/colorWhite"
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="30dp"
         />
 
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="35dp"-->
-        <!--android:id="@+id/hyphen"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:singleLine="true"-->
-        <!--android:ellipsize="marquee"-->
-        <!--android:text=" - "-->
-        <!--android:gravity="bottom"-->
-        <!--android:textColor="@color/abc_input_method_navigation_guard"-->
-        <!--android:layout_marginLeft="35dp"/>-->
-
      <!--Artist Name-->
     <TextView
         android:id="@+id/artistname"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
+        android:textSize="15sp"
         android:layout_alignParentBottom="true"
         android:singleLine="true"
         android:ellipsize="marquee"

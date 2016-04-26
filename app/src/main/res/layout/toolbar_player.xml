@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
+    android:background="@color/color_default"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="100">
+        android:weightSum="100"
+        android:background="@color/color_default"
+        >
 
         <ImageButton
             android:layout_width="40dp"
@@ -22,7 +23,8 @@
             android:src="@drawable/ic_skip_previous_white_36dp"
             android:id="@+id/skip_previous"
             android:layout_weight="20"
-            android:contentDescription="@string/skip_previous_song"/>
+            android:contentDescription="@string/skip_previous_song"
+            android:layout_gravity="center_vertical"/>
 
         <ImageButton
             android:layout_width="40dp"
@@ -31,7 +33,8 @@
             android:src="@drawable/ic_play_arrow_white_36dp"
             android:id="@+id/play"
             android:layout_weight="20"
-            android:contentDescription="@string/play_song"/>
+            android:contentDescription="@string/play_song"
+            android:layout_gravity="center_vertical"/>
 
         <ImageButton
             android:layout_width="40dp"
@@ -40,7 +43,8 @@
             android:src="@drawable/ic_pause_white_36dp"
             android:id="@+id/pause"
             android:layout_weight="20"
-            android:contentDescription="@string/pause_song"/>
+            android:contentDescription="@string/pause_song"
+            android:layout_gravity="center_vertical"/>
 
         <ImageButton
             android:layout_width="40dp"
@@ -49,7 +53,8 @@
             android:src="@drawable/ic_skip_next_white_36dp"
             android:id="@+id/skip_next"
             android:layout_weight="20"
-            android:contentDescription="@string/skip_next_song"/>
+            android:contentDescription="@string/skip_next_song"
+            android:layout_gravity="center_vertical"/>
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -57,7 +62,8 @@
             android:orientation="horizontal"
             android:checkedButton="@+id/one_minute_thirty"
             android:layout_margin="10dp"
-            android:layout_weight="20">
+            android:layout_weight="20"
+            >
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -66,7 +72,11 @@
                 android:onClick="onRadioButtonClicked"
                 android:id="@+id/one_minute_thirty"
                 android:checked="true"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                />
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -74,7 +84,11 @@
                 android:text="@string/two_minute_radio_button"
                 android:onClick="onRadioButtonClicked"
                 android:id="@+id/two_minutes"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                />
 
         </RadioGroup>
     </LinearLayout>

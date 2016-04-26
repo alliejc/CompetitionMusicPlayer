@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
+    android:background="@color/color_default"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:fitsSystemWindows="true">
-
+    android:fitsSystemWindows="true"
+    >
 
     </android.support.v7.widget.Toolbar>

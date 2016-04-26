@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -77,6 +79,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 b.putString("spotifyToken", token);
                 b.putString("ownerId", ownerId);
                 b.putString("playlistName", playlistName);
+
+                Animation animation1 = new AlphaAnimation(0.1f, 0.3f);
+                animation1.setDuration(1000);
+                view.startAnimation(animation1);
 
                 Intent intent = new Intent(getApplicationContext(), PlaylistTracksActivity.class);
                 intent.putExtras(b);
