@@ -22,18 +22,16 @@
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_skip_previous_white_36dp"
             android:id="@+id/skip_previous"
-            android:layout_weight="20"
-            android:contentDescription="@string/skip_previous_song"
+            android:layout_weight="33.3"
             android:layout_gravity="center_vertical"/>
 
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_play_arrow_white_36dp"
             android:id="@+id/play"
-            android:layout_weight="20"
-            android:contentDescription="@string/play_song"
+            android:src="@drawable/ic_play_arrow_white_36dp"
+            android:layout_weight="33.3"
             android:layout_gravity="center_vertical"/>
 
         <ImageButton
@@ -42,9 +40,10 @@
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_pause_white_36dp"
             android:id="@+id/pause"
-            android:layout_weight="20"
-            android:contentDescription="@string/pause_song"
-            android:layout_gravity="center_vertical"/>
+            android:layout_weight="33.3"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            />
 
         <ImageButton
             android:layout_width="40dp"
@@ -52,8 +51,7 @@
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_skip_next_white_36dp"
             android:id="@+id/skip_next"
-            android:layout_weight="20"
-            android:contentDescription="@string/skip_next_song"
+            android:layout_weight="33.3"
             android:layout_gravity="center_vertical"/>
 
         <RadioGroup

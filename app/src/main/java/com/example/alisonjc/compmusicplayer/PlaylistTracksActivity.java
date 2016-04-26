@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -48,6 +49,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private Timer mTimer;
     private boolean mBeepPlayed = false;
     private ListView mListView;
+    private ImageButton mPlayButton;
+    private ImageButton mPauseButton;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,9 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         String playlistId = b.getString("playlistId");
         String userId = b.getString("ownerId");
         playlistName = b.getString("playlistName");
+
+        mPlayButton = (ImageButton) findViewById(R.id.play);
+        mPauseButton = (ImageButton) findViewById(R.id.pause);
 
         toolbarPlayerSetup();
         getPlaylistTracks(token, userId, playlistId);
@@ -74,6 +80,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 setCurrentPlayingSong(position);
                 playSong(position);
+                showPause();
             }
         });
 
@@ -131,14 +138,26 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         } else {
             mPlayer.pause();
+            showPlay();
         }
     }
 
+    private void showPause() {
+        mPlayButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.VISIBLE);
+    }
+    private void showPlay() {
+        mPauseButton.setVisibility(View.GONE);
+        mPlayButton.setVisibility(View.VISIBLE);
+    }
+
     private void onPlayClicked() {
+
         if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         } else {
             mPlayer.resume();
+            showPause();
         }
     }
 
@@ -146,6 +165,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         if (mPlaylistTracksItem.getCount() < itemPosition + 2) {
                 itemPosition = 0;
                 playSong(itemPosition);
+                mListView.setSelection(itemPosition);
             } else {
                 playSong(itemPosition + 1);
             } if(mPlayer == null) {
@@ -173,6 +193,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void playSong(int locationid) {
         mBeepPlayed = false;
+        showPause();
         setCurrentPlayingSong(locationid);
         getSupportActionBar().setSubtitle(mPlaylistTracksItem.getItem(locationid).getTrack().getName());
         getPlayer().play("spotify:track:" + mPlaylistTracksItem.getItem(locationid).getTrack().getId());
@@ -253,7 +274,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBackPressed();
@@ -275,6 +296,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                 public void onClick(View v) {
 
                     onPlayClicked();
+
                 }
             });
 

@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.app_name);
         actionBar.setDisplayShowTitleEnabled(true);
+
     }
 
     private void getUserInfo(final String token) {
