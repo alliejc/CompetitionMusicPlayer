@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         } else {
 
-            getCurrentUserPlaylists(token);
-
+            updateCurrentUserPlaylists(token);
 
         }
 
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     }
 
-        private void getUserInfo(final String token) {
+        private void updateUserInfo(final String token) {
 
         getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
@@ -123,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 if(response.body() != null) {
                     userId = response.body().getId();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", userId).commit();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", token).commit();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", userId).apply();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", token).apply();
                 }
             }
 
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
 
 
-    private void getCurrentUserPlaylists(String token) {
+    private void updateCurrentUserPlaylists(String token) {
         getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<UserPlaylists>() {
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
@@ -161,20 +160,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         mPlaylistItem.notifyDataSetChanged();
     }
 
-    private void getUserPlaylists(String token, String userId){
-        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
-            @Override
-            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-                if (response.body() != null) {
-                    updateListView(response.body().getItems());
-                }
-            }
-            @Override
-            public void onFailure(Call<UserPlaylists> call, Throwable t) {
-
-            }
-        });
-    }
 
     private SpotifyService getSpotifyService() {
 
@@ -255,9 +240,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 switch (response.getType()) {
                     case TOKEN:
                         token = response.getAccessToken();
-                        getCurrentUserPlaylists(token);
-                        getUserInfo(token);
-                        //getUserPlaylists(token, userId);
+                        updateCurrentUserPlaylists(token);
+                        updateUserInfo(token);
                             break;
 
                     // Auth flow returned an error
