@@ -9,12 +9,14 @@ import retrofit2.http.Path;
 
 public interface SpotifyService {
 
+    //Not currently used
     @GET("v1/me")
     Call<SpotifyUser> getCurrentUser(@Header("Authorization") String bearerToken);
 
     @GET("v1/me/playlists")
     Call<UserPlaylists> getCurrentUserPlaylists(@Header("Authorization") String bearerToken);
 
+    //Not currently used
     @GET("v1/users/{user_id}/playlists")
     Call<UserPlaylists> getUserPlayLists(@Header("Authorization") String bearerToken, @Path("user_id") String userId);
 

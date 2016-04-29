@@ -94,7 +94,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                         if(playerState.positionInMs > pauseTimeAt - 8000 && !mBeepPlayed) {
                             playBeep();
                             mBeepPlayed=true;
-
                         }
                         if (playerState.positionInMs > pauseTimeAt) {
                             mPlayer.pause();

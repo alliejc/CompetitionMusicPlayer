@@ -2,6 +2,7 @@ package com.example.alisonjc.compmusicplayer;
 
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -53,11 +54,22 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
+
+        userId = getPreferences(Context.MODE_PRIVATE).getString("user","");
+        token = getPreferences(Context.MODE_PRIVATE).getString("token","");
+
+        if(userId == "" || token == "" ){
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             DialogFragment newFragment = MySignInDialog.newInstance();
             newFragment.show(ft, "dialog");
+
+
+        } else {
+
+            getCurrentUserPlaylists(token);
+
+
         }
 
         mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
@@ -89,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 startActivity(intent);
             }
-        });
+            });
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
@@ -100,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
 
+
     }
 
-    private void getUserInfo(final String token) {
+        private void getUserInfo(final String token) {
 
         getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
@@ -110,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 if(response.body() != null) {
                     userId = response.body().getId();
-                    getUserPlaylists(token, response.body().getId());
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", userId).commit();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", token).commit();
                 }
             }
 
@@ -120,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
     }
+
+
 
     private void getCurrentUserPlaylists(String token) {
         getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<UserPlaylists>() {
@@ -170,6 +186,27 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 return retrofit.create(SpotifyService.class);
     }
 
+    public void onRadioButtonClicked(View view) {
+
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch (view.getId()) {
+
+            case R.id.one_minute_thirty:
+                if (checked){
+                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case R.id.two_minutes:
+                if (checked) {
+                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+        }
+    }
+
 
     public static class MySignInDialog extends DialogFragment {
 
@@ -183,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             View v = inflater.inflate(R.layout.dialog_login, container, false);
 
             getDialog().setTitle("Login");
+            getDialog().setCanceledOnTouchOutside(false);
 
             View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
             mLoginButton.setVisibility(View.VISIBLE);
@@ -213,14 +251,13 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+
                 switch (response.getType()) {
                     case TOKEN:
                         token = response.getAccessToken();
-                        userId = response.getType().toString();
                         getCurrentUserPlaylists(token);
                         getUserInfo(token);
-                        getUserPlaylists(token, userId);
+                        //getUserPlaylists(token, userId);
                             break;
 
                     // Auth flow returned an error
@@ -233,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 }
             }
             }
-        }
 
         @Override
         public void onLoggedIn() {
@@ -275,26 +311,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             super.onDestroy();
         }
 
-    public void onRadioButtonClicked(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-
-        switch (view.getId()) {
-
-            case R.id.one_minute_thirty:
-                if (checked){
-                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-
-                }
-                break;
-            case R.id.two_minutes:
-                if (checked) {
-                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-
-                }
-                break;
-        }
-    }
 
 }
 
