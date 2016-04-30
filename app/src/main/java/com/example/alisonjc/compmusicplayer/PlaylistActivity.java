@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyServiceInterface;
+import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.SpotifyUser;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.UserPlaylists;
@@ -39,8 +39,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaylistActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
@@ -51,11 +49,13 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
     public String mToken = "";
     public String mUserId = "";
 
+    SpotifyService mSpotifyService = new SpotifyService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mUserId = getPreferences(Context.MODE_PRIVATE).getString("user","");
         mToken = getPreferences(Context.MODE_PRIVATE).getString("token","");
@@ -108,12 +108,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
-
     }
 
         private void updateUserInfo(final String token) {
 
-        getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
+       mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
 
@@ -134,7 +133,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
 
 
     private void updateCurrentUserPlaylists(String token, String userId) {
-        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
+        mSpotifyService.getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
                 if(response.body() != null){
@@ -156,16 +155,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         mPlaylistItem.notifyDataSetChanged();
     }
 
-
-    private SpotifyServiceInterface getSpotifyService() {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-                return retrofit.create(SpotifyServiceInterface.class);
-    }
 
     public void onRadioButtonClicked(View view) {
 

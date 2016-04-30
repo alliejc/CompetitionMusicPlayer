@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyServiceInterface;
+import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.PlaylistTracksList;
 import com.spotify.sdk.android.player.Config;
@@ -35,13 +35,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback, MediaPlayer.OnPreparedListener {
 
@@ -59,6 +55,8 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     private ListView mListView;
     private ImageButton mPlayButton;
     private ImageButton mPauseButton;
+
+    private SpotifyService mSpotifyService = new SpotifyService();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,7 +237,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     public void getPlaylistTracks(String token, String userId, String playlistId) {
 
-        getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
+        mSpotifyService.getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
@@ -255,20 +253,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         });
     }
 
-    private SpotifyServiceInterface getSpotifyService() {
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spotify.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        return retrofit.create(SpotifyServiceInterface.class);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
