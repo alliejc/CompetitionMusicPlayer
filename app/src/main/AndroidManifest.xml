@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.alisonjc.compmusicplayer" >
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -11,15 +10,15 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_action_music_1"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppTheme">
 
         <activity
             android:name=".PlaylistActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:configChanges="keyboardHidden|orientation|screenSize" >
 
             <intent-filter>
@@ -41,7 +40,7 @@
             />
 
         <activity android:name=".PlaylistTracksActivity"
-                  android:theme="@style/AppTheme.NoActionBar"
+                  android:theme="@style/AppTheme"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
     </application>
