@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -19,8 +22,8 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyServiceInterface;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.SpotifyUser;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.UserPlaylists;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -54,21 +57,16 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mUserId = getPreferences(Context.MODE_PRIVATE).getString("user","");
         mToken = getPreferences(Context.MODE_PRIVATE).getString("token","");
 
         if(mUserId == "" || mToken == "" ){
 
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            DialogFragment newFragment = MySignInDialog.newInstance();
-            newFragment.show(ft, "dialog");
-
+            userLogin();
 
         } else {
 
-            updateCurrentUserPlaylists(mToken);
-
+            updateCurrentUserPlaylists(mToken, mUserId);
         }
 
         mPlaylistItem = new PlaylistAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
@@ -110,6 +108,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
+
     }
 
         private void updateUserInfo(final String token) {
@@ -122,6 +121,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
                     mUserId = response.body().getId();
                     getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
                     getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
+                    updateCurrentUserPlaylists(mToken, mUserId);
                 }
             }
 
@@ -132,14 +132,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         });
     }
 
-    private void updateCurrentUserPlaylists(String token) {
-        getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<UserPlaylists>() {
+
+    private void updateCurrentUserPlaylists(String token, String userId) {
+        getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-
-                if(response.body() != null) {
-                    updateListView(response.body().getItems());
-                    }
+                if(response.body() != null){
+                        updateListView(response.body().getItems());
+                }
             }
 
             @Override
@@ -186,6 +186,41 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
                 }
                 break;
         }
+    }
+
+    private void userLogin() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        DialogFragment newFragment = MySignInDialog.newInstance();
+        newFragment.show(ft, "dialog");
+
+    }
+
+    private void userLogout() {
+        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+        Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
+        userLogin();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_overflow, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_toolbar:
+                userLogout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public MenuInflater getMenuInflater() {
+        return super.getMenuInflater();
     }
 
 
@@ -236,8 +271,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
                 switch (response.getType()) {
                     case TOKEN:
                         mToken = response.getAccessToken();
-                        updateCurrentUserPlaylists(mToken);
                         updateUserInfo(mToken);
+                        updateCurrentUserPlaylists(mToken, mUserId);
                             break;
 
                     // Auth flow returned an error

@@ -25,7 +25,7 @@ Competition Practice Player uses a number of open source projects to work proper
 * [RoboGuice] - Dependency injection
 
 
-And of course Competition Practice Player itself is open source with a [public repository](https://github.com/joemccann/dillinger)
+And of course Competition Practice Player itself is open source with a [public repository](https://github.com/alliejc/compeitionpracticeplayer)
  on GitHub.
 
 ### Installation

@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">Jack n Jill Practice Player</string>
+    <string name="app_name">Competition Practice Player</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="logout">LOGOUT</string>
 
     <string name="two_minute_radio_button">2:00</string>
     <string name="one_thirty_radio_button">1:30</string>

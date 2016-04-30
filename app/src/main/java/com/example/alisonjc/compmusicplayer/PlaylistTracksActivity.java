@@ -1,5 +1,8 @@
 package com.example.alisonjc.compmusicplayer;
 
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -7,6 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -264,6 +270,45 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         return retrofit.create(SpotifyServiceInterface.class);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_overflow, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_toolbar:
+               userLogout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void userLogin() {
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        DialogFragment newFragment = PlaylistActivity.MySignInDialog.newInstance();
+        newFragment.show(ft, "dialog");
+
+    }
+
+    private void userLogout() {
+
+        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+
+        Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
+
+        userLogin();
+    }
+
+    @Override
+    public MenuInflater getMenuInflater() {
+        return super.getMenuInflater();
+    }
+
     private void toolbarPlayerSetup() {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -274,6 +319,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
