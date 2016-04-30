@@ -1,13 +1,13 @@
 
-package com.example.alisonjc.compmusicplayer.spotify.tracklist;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
 
-import com.example.alisonjc.compmusicplayer.spotify.*;
-import com.example.alisonjc.compmusicplayer.spotify.Artist;
-import com.example.alisonjc.compmusicplayer.spotify.ExternalIds;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Artist;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.ExternalIds;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Album;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,10 +16,10 @@ public class Track {
 
     @SerializedName("album")
     @Expose
-    private com.example.alisonjc.compmusicplayer.spotify.Album album;
+    private com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Album album;
     @SerializedName("artists")
     @Expose
-    private List<com.example.alisonjc.compmusicplayer.spotify.Artist> artists = new ArrayList<com.example.alisonjc.compmusicplayer.spotify.Artist>();
+    private List<Artist> artists = new ArrayList<Artist>();
     @SerializedName("available_markets")
     @Expose
     private List<String> availableMarkets = new ArrayList<String>();
@@ -34,7 +34,7 @@ public class Track {
     private Boolean explicit;
     @SerializedName("external_ids")
     @Expose
-    private com.example.alisonjc.compmusicplayer.spotify.ExternalIds externalIds;
+    private ExternalIds externalIds;
     @SerializedName("external_urls")
     @Expose
     private ExternalUrls___ externalUrls;
@@ -68,7 +68,7 @@ public class Track {
      * @return
      *     The album
      */
-    public com.example.alisonjc.compmusicplayer.spotify.Album getAlbum() {
+    public Album getAlbum() {
         return album;
     }
 
@@ -77,7 +77,7 @@ public class Track {
      * @param album
      *     The album
      */
-    public void setAlbum(com.example.alisonjc.compmusicplayer.spotify.Album album) {
+    public void setAlbum(Album album) {
         this.album = album;
     }
 
@@ -86,7 +86,7 @@ public class Track {
      * @return
      *     The artists
      */
-    public List<com.example.alisonjc.compmusicplayer.spotify.Artist> getArtists() {
+    public List<Artist> getArtists() {
         return artists;
     }
 
@@ -176,7 +176,7 @@ public class Track {
      * @return
      *     The externalIds
      */
-    public com.example.alisonjc.compmusicplayer.spotify.ExternalIds getExternalIds() {
+    public ExternalIds getExternalIds() {
         return externalIds;
     }
 

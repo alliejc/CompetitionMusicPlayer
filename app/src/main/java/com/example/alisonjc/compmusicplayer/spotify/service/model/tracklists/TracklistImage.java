@@ -1,30 +1,29 @@
 
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Generated;
-
 @Generated("org.jsonschema2pojo")
-public class Image {
+public class TracklistImage {
 
     @SerializedName("height")
     @Expose
-    private Object height;
+    private Integer height;
     @SerializedName("url")
     @Expose
     private String url;
     @SerializedName("width")
     @Expose
-    private Object width;
+    private Integer width;
 
     /**
      * 
      * @return
      *     The height
      */
-    public Object getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
@@ -33,7 +32,7 @@ public class Image {
      * @param height
      *     The height
      */
-    public void setHeight(Object height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
@@ -60,7 +59,7 @@ public class Image {
      * @return
      *     The width
      */
-    public Object getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
@@ -69,7 +68,7 @@ public class Image {
      * @param width
      *     The width
      */
-    public void setWidth(Object width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 

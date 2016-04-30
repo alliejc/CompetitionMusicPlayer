@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.example.alisonjc.compmusicplayer.spotify.tracklist.Item;
-import com.example.alisonjc.compmusicplayer.spotify.tracklist.PlaylistTracksList;
+import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyServiceInterface;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.Item;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.PlaylistTracksList;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
@@ -39,15 +39,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback, MediaPlayer.OnPreparedListener {
 
-    private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    private String token = "";
-    private String playlistName = "";
-    private Player mPlayer;
-    private int itemPosition = 0;
-    private static PlaylistTracksItemAdapter mPlaylistTracksItem;
-    private int pauseTimeAt = 300000;
-    private Timer mTimer;
+    private static PlaylistTracksAdapter mPlaylistTracksItem;
+    private static final String CLIENT_ID = BuildConfig.CLIENT_ID;
+
+    private String mToken = "";
+    private String mPlaylistName = "";
+    private int mItemPosition = 0;
+    private int mPauseTimeAt = 300000;
     private boolean mBeepPlayed = false;
+
+    private Player mPlayer;
+    private Timer mTimer;
     private ListView mListView;
     private ImageButton mPlayButton;
     private ImageButton mPauseButton;
@@ -58,18 +60,18 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
-        token = b.getString("spotifyToken");
+        mToken = b.getString("spotifyToken");
         String playlistId = b.getString("playlistId");
         String userId = b.getString("ownerId");
-        playlistName = b.getString("playlistName");
+        mPlaylistName = b.getString("playlistName");
 
         mPlayButton = (ImageButton) findViewById(R.id.play);
         mPauseButton = (ImageButton) findViewById(R.id.pause);
 
         toolbarPlayerSetup();
-        getPlaylistTracks(token, userId, playlistId);
+        getPlaylistTracks(mToken, userId, playlistId);
 
-        mPlaylistTracksItem = new PlaylistTracksItemAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
+        mPlaylistTracksItem = new PlaylistTracksAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
 
         mListView = (ListView) findViewById(R.id.playlisttracksview);
         mListView.setAdapter(mPlaylistTracksItem);
@@ -91,11 +93,11 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
-                        if(playerState.positionInMs > pauseTimeAt - 8000 && !mBeepPlayed) {
+                        if(playerState.positionInMs > mPauseTimeAt - 8000 && !mBeepPlayed) {
                             playBeep();
                             mBeepPlayed=true;
                         }
-                        if (playerState.positionInMs > pauseTimeAt) {
+                        if (playerState.positionInMs > mPauseTimeAt) {
                             mPlayer.pause();
                             onSkipNextClicked();
                         }
@@ -115,12 +117,12 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
                 case R.id.one_minute_thirty:
                     if (checked){
-                        pauseTimeAt = 100000;
+                        mPauseTimeAt = 100000;
                     }
                     break;
                 case R.id.two_minutes:
                     if (checked) {
-                        pauseTimeAt = 210000;
+                        mPauseTimeAt = 210000;
                     }
                         break;
             }
@@ -128,7 +130,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
 
     private void setCurrentPlayingSong(int itemPosition){
-        this.itemPosition = itemPosition;
+        this.mItemPosition = itemPosition;
         listviewSelector();
     }
 
@@ -161,23 +163,23 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onSkipNextClicked() {
-        if (mPlaylistTracksItem.getCount() <= itemPosition + 1) {
-                itemPosition = 0;
-                playSong(itemPosition);
-                mListView.setSelection(itemPosition);
+        if (mPlaylistTracksItem.getCount() <= mItemPosition + 1) {
+                mItemPosition = 0;
+                playSong(mItemPosition);
+                mListView.setSelection(mItemPosition);
             } else {
-                playSong(itemPosition + 1);
+                playSong(mItemPosition + 1);
             } if(mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
             }
 
     private void onPreviousClicked() {
-            if (itemPosition < 1) {
-                itemPosition = 0;
-                playSong(itemPosition);
+            if (mItemPosition < 1) {
+                mItemPosition = 0;
+                playSong(mItemPosition);
             } else {
-                playSong(itemPosition - 1);
+                playSong(mItemPosition - 1);
             } if (mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
@@ -185,7 +187,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
     private void listviewSelector() {
         mListView.clearChoices();
-        mListView.setItemChecked(itemPosition, true);
+        mListView.setItemChecked(mItemPosition, true);
         mListView.setSelected(true);
         mPlaylistTracksItem.notifyDataSetChanged();
     }
@@ -213,14 +215,14 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         if(mPlayer != null) {
             return mPlayer;
         } else {
-            final Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
+            final Config playerConfig = new Config(getApplicationContext(), mToken, CLIENT_ID);
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
                         @Override
                         public void onInitialized(Player player) {
                         }
                         @Override
                         public void onError(Throwable throwable) {
-                            Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
+                            Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
                         }
                     }
             );
@@ -247,7 +249,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         });
     }
 
-    private SpotifyService getSpotifyService() {
+    private SpotifyServiceInterface getSpotifyService() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -259,7 +261,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                 .client(client)
                 .build();
 
-        return retrofit.create(SpotifyService.class);
+        return retrofit.create(SpotifyServiceInterface.class);
     }
 
     private void toolbarPlayerSetup() {
@@ -268,7 +270,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             setSupportActionBar(myToolbar);
             ActionBar actionBar = getSupportActionBar();
 
-            actionBar.setTitle(playlistName);
+            actionBar.setTitle(mPlaylistName);
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);

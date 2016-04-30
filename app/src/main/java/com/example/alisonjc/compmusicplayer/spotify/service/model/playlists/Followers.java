@@ -1,16 +1,16 @@
 
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.playlists;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class Tracks {
+public class Followers {
 
     @SerializedName("href")
     @Expose
-    private String href;
+    private Object href;
     @SerializedName("total")
     @Expose
     private Integer total;
@@ -20,7 +20,7 @@ public class Tracks {
      * @return
      *     The href
      */
-    public String getHref() {
+    public Object getHref() {
         return href;
     }
 
@@ -29,7 +29,7 @@ public class Tracks {
      * @param href
      *     The href
      */
-    public void setHref(String href) {
+    public void setHref(Object href) {
         this.href = href;
     }
 

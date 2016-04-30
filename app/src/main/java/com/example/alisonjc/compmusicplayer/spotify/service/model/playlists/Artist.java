@@ -1,35 +1,23 @@
 
-package com.example.alisonjc.compmusicplayer.spotify.tracklist;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.playlists;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
-
-import com.example.alisonjc.compmusicplayer.spotify.Image;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("org.jsonschema2pojo")
-public class Album {
+import javax.annotation.Generated;
 
-    @SerializedName("album_type")
-    @Expose
-    private String albumType;
-    @SerializedName("available_markets")
-    @Expose
-    private List<String> availableMarkets = new ArrayList<String>();
+@Generated("org.jsonschema2pojo")
+public class Artist {
+
     @SerializedName("external_urls")
     @Expose
-    private ExternalUrls_ externalUrls;
+    private ExternalUrls externalUrls;
     @SerializedName("href")
     @Expose
     private String href;
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("images")
-    @Expose
-    private List<Image> images = new ArrayList<Image>();
     @SerializedName("name")
     @Expose
     private String name;
@@ -43,45 +31,9 @@ public class Album {
     /**
      * 
      * @return
-     *     The albumType
-     */
-    public String getAlbumType() {
-        return albumType;
-    }
-
-    /**
-     * 
-     * @param albumType
-     *     The album_type
-     */
-    public void setAlbumType(String albumType) {
-        this.albumType = albumType;
-    }
-
-    /**
-     * 
-     * @return
-     *     The availableMarkets
-     */
-    public List<String> getAvailableMarkets() {
-        return availableMarkets;
-    }
-
-    /**
-     * 
-     * @param availableMarkets
-     *     The available_markets
-     */
-    public void setAvailableMarkets(List<String> availableMarkets) {
-        this.availableMarkets = availableMarkets;
-    }
-
-    /**
-     * 
-     * @return
      *     The externalUrls
      */
-    public ExternalUrls_ getExternalUrls() {
+    public ExternalUrls getExternalUrls() {
         return externalUrls;
     }
 
@@ -90,7 +42,7 @@ public class Album {
      * @param externalUrls
      *     The external_urls
      */
-    public void setExternalUrls(ExternalUrls_ externalUrls) {
+    public void setExternalUrls(ExternalUrls externalUrls) {
         this.externalUrls = externalUrls;
     }
 
@@ -128,24 +80,6 @@ public class Album {
      */
     public void setId(String id) {
         this.id = id;
-    }
-
-    /**
-     * 
-     * @return
-     *     The images
-     */
-    public List<Image> getImages() {
-        return images;
-    }
-
-    /**
-     * 
-     * @param images
-     *     The images
-     */
-    public void setImages(List<Image> images) {
-        this.images = images;
     }
 
     /**

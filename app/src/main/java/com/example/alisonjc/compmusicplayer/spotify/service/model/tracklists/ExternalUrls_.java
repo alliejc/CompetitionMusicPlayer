@@ -1,13 +1,12 @@
 
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.annotation.Generated;
-
 @Generated("org.jsonschema2pojo")
-public class ExternalUrls {
+public class ExternalUrls_ {
 
     @SerializedName("spotify")
     @Expose

@@ -19,10 +19,10 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.alisonjc.compmusicplayer.spotify.Item;
-import com.example.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.example.alisonjc.compmusicplayer.spotify.SpotifyUser;
-import com.example.alisonjc.compmusicplayer.spotify.UserPlaylists;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
+import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyServiceInterface;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.SpotifyUser;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.UserPlaylists;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -39,14 +39,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
+public class PlaylistActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
-    private static final String CLIENT_ID = "fea06d390d9848c3b5c0ff43bbe0b2d0";
-    public String token = "";
-    public String userId = "";
-    private static PlaylistItemAdapter mPlaylistItem;
+    private static PlaylistAdapter mPlaylistItem;
+    private static final String CLIENT_ID = BuildConfig.CLIENT_ID;
+    public String mToken = "";
+    public String mUserId = "";
 
 
     @Override
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         setContentView(R.layout.activity_main);
 
 
-        userId = getPreferences(Context.MODE_PRIVATE).getString("user","");
-        token = getPreferences(Context.MODE_PRIVATE).getString("token","");
+        mUserId = getPreferences(Context.MODE_PRIVATE).getString("user","");
+        mToken = getPreferences(Context.MODE_PRIVATE).getString("token","");
 
-        if(userId == "" || token == "" ){
+        if(mUserId == "" || mToken == "" ){
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             DialogFragment newFragment = MySignInDialog.newInstance();
@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         } else {
 
-            updateCurrentUserPlaylists(token);
+            updateCurrentUserPlaylists(mToken);
 
         }
 
-        mPlaylistItem = new PlaylistItemAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
+        mPlaylistItem = new PlaylistAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
 
         final ListView listView = (ListView) findViewById(R.id.playlistview);
         listView.setAdapter(mPlaylistItem);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 Bundle b = new Bundle();
                 b.putString("playlistId", playlistId);
-                b.putString("spotifyToken", token);
+                b.putString("spotifyToken", mToken);
                 b.putString("ownerId", ownerId);
                 b.putString("playlistName", playlistName);
 
@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
-
-
     }
 
         private void updateUserInfo(final String token) {
@@ -121,9 +119,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
 
                 if(response.body() != null) {
-                    userId = response.body().getId();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", userId).apply();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", token).apply();
+                    mUserId = response.body().getId();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
                 }
             }
 
@@ -133,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
     }
-
-
 
     private void updateCurrentUserPlaylists(String token) {
         getSpotifyService().getCurrentUserPlaylists("Bearer " + token).enqueue(new Callback<UserPlaylists>() {
@@ -161,14 +157,14 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     }
 
 
-    private SpotifyService getSpotifyService() {
+    private SpotifyServiceInterface getSpotifyService() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.spotify.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-                return retrofit.create(SpotifyService.class);
+                return retrofit.create(SpotifyServiceInterface.class);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -239,9 +235,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
                 switch (response.getType()) {
                     case TOKEN:
-                        token = response.getAccessToken();
-                        updateCurrentUserPlaylists(token);
-                        updateUserInfo(token);
+                        mToken = response.getAccessToken();
+                        updateCurrentUserPlaylists(mToken);
+                        updateUserInfo(mToken);
                             break;
 
                     // Auth flow returned an error
@@ -257,37 +253,37 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         @Override
         public void onLoggedIn() {
-            Log.d("MainActivity", "User logged in");
+            Log.d("PlaylistActivity", "User logged in");
         }
 
         @Override
         public void onLoggedOut() {
-            Log.d("MainActivity", "User logged out");
+            Log.d("PlaylistActivity", "User logged out");
         }
 
         @Override
         public void onLoginFailed(Throwable error) {
-            Log.d("MainActivity", "Login failed");
+            Log.d("PlaylistActivity", "Login failed");
         }
 
         @Override
         public void onTemporaryError() {
-            Log.d("MainActivity", "Temporary error occurred");
+            Log.d("PlaylistActivity", "Temporary error occurred");
         }
 
         @Override
         public void onConnectionMessage(String message) {
-            Log.d("MainActivity", "Received connection message: " + message);
+            Log.d("PlaylistActivity", "Received connection message: " + message);
         }
 
         @Override
         public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
-            Log.d("MainActivity", "Playback event received: " + eventType.name());
+            Log.d("PlaylistActivity", "Playback event received: " + eventType.name());
         }
 
         @Override
         public void onPlaybackError(ErrorType errorType, String errorDetails) {
-            Log.d("MainActivity", "Playback error received: " + errorType.name());
+            Log.d("PlaylistActivity", "Playback error received: " + errorType.name());
         }
 
         @Override

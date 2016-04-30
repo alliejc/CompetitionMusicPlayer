@@ -1,21 +1,26 @@
 
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Generated;
+
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Image;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class Item {
+public class Album {
 
-    @SerializedName("collaborative")
+    @SerializedName("album_type")
     @Expose
-    private Boolean collaborative;
+    private String albumType;
+    @SerializedName("available_markets")
+    @Expose
+    private List<String> availableMarkets = new ArrayList<String>();
     @SerializedName("external_urls")
     @Expose
-    private ExternalUrls externalUrls;
+    private ExternalUrls_ externalUrls;
     @SerializedName("href")
     @Expose
     private String href;
@@ -24,22 +29,10 @@ public class Item {
     private String id;
     @SerializedName("images")
     @Expose
-    private List<Object> images = new ArrayList<Object>();
+    private List<Image> images = new ArrayList<Image>();
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("owner")
-    @Expose
-    private Owner owner;
-    @SerializedName("public")
-    @Expose
-    private Boolean _public;
-    @SerializedName("snapshot_id")
-    @Expose
-    private String snapshotId;
-    @SerializedName("tracks")
-    @Expose
-    private Tracks tracks;
     @SerializedName("type")
     @Expose
     private String type;
@@ -50,19 +43,37 @@ public class Item {
     /**
      * 
      * @return
-     *     The collaborative
+     *     The albumType
      */
-    public Boolean getCollaborative() {
-        return collaborative;
+    public String getAlbumType() {
+        return albumType;
     }
 
     /**
      * 
-     * @param collaborative
-     *     The collaborative
+     * @param albumType
+     *     The album_type
      */
-    public void setCollaborative(Boolean collaborative) {
-        this.collaborative = collaborative;
+    public void setAlbumType(String albumType) {
+        this.albumType = albumType;
+    }
+
+    /**
+     * 
+     * @return
+     *     The availableMarkets
+     */
+    public List<String> getAvailableMarkets() {
+        return availableMarkets;
+    }
+
+    /**
+     * 
+     * @param availableMarkets
+     *     The available_markets
+     */
+    public void setAvailableMarkets(List<String> availableMarkets) {
+        this.availableMarkets = availableMarkets;
     }
 
     /**
@@ -70,7 +81,7 @@ public class Item {
      * @return
      *     The externalUrls
      */
-    public ExternalUrls getExternalUrls() {
+    public ExternalUrls_ getExternalUrls() {
         return externalUrls;
     }
 
@@ -79,7 +90,7 @@ public class Item {
      * @param externalUrls
      *     The external_urls
      */
-    public void setExternalUrls(ExternalUrls externalUrls) {
+    public void setExternalUrls(ExternalUrls_ externalUrls) {
         this.externalUrls = externalUrls;
     }
 
@@ -124,7 +135,7 @@ public class Item {
      * @return
      *     The images
      */
-    public List<Object> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
@@ -133,7 +144,7 @@ public class Item {
      * @param images
      *     The images
      */
-    public void setImages(List<Object> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 
@@ -153,78 +164,6 @@ public class Item {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * 
-     * @return
-     *     The owner
-     */
-    public Owner getOwner() {
-        return owner;
-    }
-
-    /**
-     * 
-     * @param owner
-     *     The owner
-     */
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * 
-     * @return
-     *     The _public
-     */
-    public Boolean getPublic() {
-        return _public;
-    }
-
-    /**
-     * 
-     * @param _public
-     *     The public
-     */
-    public void setPublic(Boolean _public) {
-        this._public = _public;
-    }
-
-    /**
-     * 
-     * @return
-     *     The snapshotId
-     */
-    public String getSnapshotId() {
-        return snapshotId;
-    }
-
-    /**
-     * 
-     * @param snapshotId
-     *     The snapshot_id
-     */
-    public void setSnapshotId(String snapshotId) {
-        this.snapshotId = snapshotId;
-    }
-
-    /**
-     * 
-     * @return
-     *     The tracks
-     */
-    public Tracks getTracks() {
-        return tracks;
-    }
-
-    /**
-     * 
-     * @param tracks
-     *     The tracks
-     */
-    public void setTracks(Tracks tracks) {
-        this.tracks = tracks;
     }
 
     /**

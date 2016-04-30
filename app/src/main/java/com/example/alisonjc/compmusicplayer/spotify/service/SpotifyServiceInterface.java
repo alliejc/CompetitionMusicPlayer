@@ -1,13 +1,15 @@
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service;
 
-import com.example.alisonjc.compmusicplayer.spotify.tracklist.PlaylistTracksList;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.SpotifyUser;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.UserPlaylists;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.PlaylistTracksList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
 
-public interface SpotifyService {
+public interface SpotifyServiceInterface {
 
     //Not currently used
     @GET("v1/me")

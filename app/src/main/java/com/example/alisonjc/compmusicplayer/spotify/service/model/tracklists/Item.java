@@ -1,5 +1,5 @@
 
-package com.example.alisonjc.compmusicplayer.spotify.tracklist;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,7 +14,7 @@ public class Item {
     private String addedAt;
     @SerializedName("added_by")
     @Expose
-    private com.example.alisonjc.compmusicplayer.spotify.tracklist.AddedBy addedBy;
+    private AddedBy addedBy;
     @SerializedName("is_local")
     @Expose
     private Boolean isLocal;
@@ -45,7 +45,7 @@ public class Item {
      * @return
      *     The addedBy
      */
-    public com.example.alisonjc.compmusicplayer.spotify.tracklist.AddedBy getAddedBy() {
+    public AddedBy getAddedBy() {
         return addedBy;
     }
 
@@ -54,7 +54,7 @@ public class Item {
      * @param addedBy
      *     The added_by
      */
-    public void setAddedBy(com.example.alisonjc.compmusicplayer.spotify.tracklist.AddedBy addedBy) {
+    public void setAddedBy(AddedBy addedBy) {
         this.addedBy = addedBy;
     }
 

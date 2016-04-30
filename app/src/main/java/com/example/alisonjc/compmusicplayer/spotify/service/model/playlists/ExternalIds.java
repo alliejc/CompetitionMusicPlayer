@@ -1,5 +1,5 @@
 
-package com.example.alisonjc.compmusicplayer.spotify;
+package com.example.alisonjc.compmusicplayer.spotify.service.model.playlists;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;

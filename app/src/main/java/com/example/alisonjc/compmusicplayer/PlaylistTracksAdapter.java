@@ -7,16 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.alisonjc.compmusicplayer.spotify.tracklist.Item;
+import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.Item;
 
 import java.util.List;
 
 /**
  * Created by alisonjc on 4/10/16.
  */
-public class PlaylistTracksItemAdapter extends ArrayAdapter<Item> {
+public class PlaylistTracksAdapter extends ArrayAdapter<Item> {
 
-    public PlaylistTracksItemAdapter (Context context, int textViewResourceId, List<Item> objects) {
+    public PlaylistTracksAdapter(Context context, int textViewResourceId, List<Item> objects) {
         super(context, textViewResourceId, objects);
     }
 
