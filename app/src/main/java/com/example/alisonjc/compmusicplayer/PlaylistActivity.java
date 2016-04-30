@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.SpotifyUser;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.UserPlaylists;
+import com.google.inject.Inject;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -39,42 +39,72 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
-public class PlaylistActivity extends AppCompatActivity implements PlayerNotificationCallback, ConnectionStateCallback {
+@ContentView(R.layout.activity_main)
+public class PlaylistActivity extends RoboActionBarActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
     private static final int REQUEST_CODE = 1337;
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
-    private static PlaylistAdapter mPlaylistItem;
     private static final String CLIENT_ID = BuildConfig.CLIENT_ID;
-    public String mToken = "";
-    public String mUserId = "";
+    private static PlaylistAdapter mPlaylistItem;
 
-    SpotifyService mSpotifyService = new SpotifyService();
+    private String mToken = "";
+    private String mUserId = "";
+
+    @InjectView(R.id.playlistview)
+    private ListView mListView;
+
+    @Inject
+    SpotifyService mSpotifyService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
 
         mUserId = getPreferences(Context.MODE_PRIVATE).getString("user","");
         mToken = getPreferences(Context.MODE_PRIVATE).getString("token","");
 
         if(mUserId == "" || mToken == "" ){
-
             userLogin();
 
         } else {
-
             updateCurrentUserPlaylists(mToken, mUserId);
         }
 
+        listViewSetup();
+        toolbarSetup();
+    }
+
+    private void updateUserInfo(final String token) {
+
+       mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
+            @Override
+            public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
+
+                if(response.body() != null) {
+                    mUserId = response.body().getId();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
+                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
+                    updateCurrentUserPlaylists(mToken, mUserId);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SpotifyUser> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void listViewSetup(){
         mPlaylistItem = new PlaylistAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
 
-        final ListView listView = (ListView) findViewById(R.id.playlistview);
-        listView.setAdapter(mPlaylistItem);
+        mListView.setAdapter(mPlaylistItem);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -98,8 +128,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
 
                 startActivity(intent);
             }
-            });
+        });
 
+    }
+
+    private void toolbarSetup(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -108,27 +141,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
-    }
 
-        private void updateUserInfo(final String token) {
-
-       mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
-            @Override
-            public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
-
-                if(response.body() != null) {
-                    mUserId = response.body().getId();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
-                    updateCurrentUserPlaylists(mToken, mUserId);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SpotifyUser> call, Throwable t) {
-
-            }
-        });
     }
 
 
@@ -154,7 +167,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
         mPlaylistItem.addAll(items);
         mPlaylistItem.notifyDataSetChanged();
     }
-
 
     public void onRadioButtonClicked(View view) {
 
@@ -272,8 +284,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
                     // Most likely auth flow was cancelled
                     default:
                 }
-            }
-            }
+        }
+    }
 
         @Override
         public void onLoggedIn() {
@@ -312,9 +324,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlayerNotific
 
         @Override
         protected void onDestroy() {
+
             super.onDestroy();
         }
-
 
 }
 

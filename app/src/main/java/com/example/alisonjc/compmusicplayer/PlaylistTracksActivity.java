@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 import com.example.alisonjc.compmusicplayer.spotify.service.SpotifyService;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.Item;
 import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.PlaylistTracksList;
+import com.google.inject.Inject;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
@@ -38,29 +38,40 @@ import java.util.TimerTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
-public class PlaylistTracksActivity extends AppCompatActivity implements PlayerNotificationCallback, MediaPlayer.OnPreparedListener {
+@ContentView(R.layout.activity_playlist_tracks_list)
+public class PlaylistTracksActivity extends RoboActionBarActivity implements PlayerNotificationCallback, MediaPlayer.OnPreparedListener {
 
     private static PlaylistTracksAdapter mPlaylistTracksItem;
     private static final String CLIENT_ID = BuildConfig.CLIENT_ID;
 
     private String mToken = "";
     private String mPlaylistName = "";
+
     private int mItemPosition = 0;
     private int mPauseTimeAt = 300000;
     private boolean mBeepPlayed = false;
 
     private Player mPlayer;
     private Timer mTimer;
-    private ListView mListView;
-    private ImageButton mPlayButton;
-    private ImageButton mPauseButton;
 
-    private SpotifyService mSpotifyService = new SpotifyService();
+    @InjectView(R.id.play)
+        private ImageButton mPlayButton;
+
+    @InjectView(R.id.pause)
+        private ImageButton mPauseButton;
+
+    @InjectView(R.id.playlisttracksview)
+        private ListView mListView;
+
+    @Inject
+    SpotifyService mSpotifyService;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlist_tracks_list);
 
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
@@ -69,27 +80,33 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         String userId = b.getString("ownerId");
         mPlaylistName = b.getString("playlistName");
 
-        mPlayButton = (ImageButton) findViewById(R.id.play);
-        mPauseButton = (ImageButton) findViewById(R.id.pause);
-
-        toolbarPlayerSetup();
         getPlaylistTracks(mToken, userId, playlistId);
 
-        mPlaylistTracksItem = new PlaylistTracksAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
+        toolbarPlayerSetup();
+        listviewSetup();
+        startTimerTask();
 
-        mListView = (ListView) findViewById(R.id.playlisttracksview);
-        mListView.setAdapter(mPlaylistTracksItem);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    }
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setCurrentPlayingSong(position);
-                playSong(position);
-                showPause();
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+            switch (view.getId()) {
+
+                case R.id.one_minute_thirty:
+                    if (checked){
+                        mPauseTimeAt = 100000;
+                    }
+                    break;
+                case R.id.two_minutes:
+                    if (checked) {
+                        mPauseTimeAt = 210000;
+                    }
+                        break;
             }
-        });
+        }
 
+    private void startTimerTask() {
         TimerTask mTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -112,26 +129,25 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
 
         mTimer = new Timer();
         mTimer.schedule(mTimerTask, 1000, 1000);
+
     }
 
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+    private void listviewSetup() {
+        mPlaylistTracksItem = new PlaylistTracksAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
 
-            switch (view.getId()) {
+        mListView.setAdapter(mPlaylistTracksItem);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
-                case R.id.one_minute_thirty:
-                    if (checked){
-                        mPauseTimeAt = 100000;
-                    }
-                    break;
-                case R.id.two_minutes:
-                    if (checked) {
-                        mPauseTimeAt = 210000;
-                    }
-                        break;
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                setCurrentPlayingSong(position);
+                playSong(position);
+                showPause();
             }
-        }
+        });
 
+    }
 
     private void setCurrentPlayingSong(int itemPosition){
         this.mItemPosition = itemPosition;
@@ -157,7 +173,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
     }
 
     private void onPlayClicked() {
-
         if(mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         } else {
@@ -176,7 +191,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             } if(mPlayer == null) {
                 Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
             }
-            }
+    }
 
     private void onPreviousClicked() {
             if (mItemPosition < 1) {
@@ -228,11 +243,11 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                         public void onError(Throwable throwable) {
                             Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
                         }
-                    }
-            );
+                    });
+
             mPlayer.isInitialized();
             return mPlayer;
-        }
+            }
         }
 
     public void getPlaylistTracks(String token, String userId, String playlistId) {
@@ -276,7 +291,6 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment newFragment = PlaylistActivity.MySignInDialog.newInstance();
         newFragment.show(ft, "dialog");
-
     }
 
     private void userLogout() {
@@ -299,10 +313,10 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
             setSupportActionBar(myToolbar);
             ActionBar actionBar = getSupportActionBar();
 
-            actionBar.setTitle(mPlaylistName);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(mPlaylistName);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setHomeButtonEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -347,7 +361,7 @@ public class PlaylistTracksActivity extends AppCompatActivity implements PlayerN
                 }
             });
 
-        }
+    }
 
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
