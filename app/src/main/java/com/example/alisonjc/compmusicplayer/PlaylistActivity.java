@@ -5,13 +5,11 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,27 +63,30 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUserId = getPreferences(Context.MODE_PRIVATE).getString("user","");
-        mToken = getPreferences(Context.MODE_PRIVATE).getString("token","");
+        mUserId = getPreferences(Context.MODE_PRIVATE).getString("user", "");
+        mToken = getPreferences(Context.MODE_PRIVATE).getString("token", "");
 
-        if(mUserId == "" || mToken == "" ){
+        if (mUserId == "" || mToken == "") {
             userLogin();
-
         } else {
             updateCurrentUserPlaylists(mToken, mUserId);
         }
-
         listViewSetup();
         toolbarSetup();
     }
 
+    /**
+     * Setting the userId from the response.  Setting preferences with the token and updated userId.
+     * @param token - Spotify user token
+     */
+
     private void updateUserInfo(final String token) {
 
-       mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
+        mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
             @Override
             public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
 
-                if(response.body() != null) {
+                if (response.body() != null) {
                     mUserId = response.body().getId();
                     getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
                     getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
@@ -95,16 +96,15 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
             @Override
             public void onFailure(Call<SpotifyUser> call, Throwable t) {
-
             }
         });
     }
 
-    private void listViewSetup(){
-        mPlaylistItem = new PlaylistAdapter(this,R.layout.playlist_item, new ArrayList<Item>());
+    private void listViewSetup() {
+
+        mPlaylistItem = new PlaylistAdapter(this, R.layout.playlist_item, new ArrayList<Item>());
 
         mListView.setAdapter(mPlaylistItem);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -130,10 +130,10 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                 startActivity(intent);
             }
         });
-
     }
 
-    private void toolbarSetup(){
+    private void toolbarSetup() {
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -143,28 +143,27 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
-
     }
 
-
     private void updateCurrentUserPlaylists(String token, String userId) {
+
         mSpotifyService.getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
+
             @Override
             public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-                if(response.body() != null){
-                        updateListView(response.body().getItems());
+                if (response.body() != null) {
+                    updateListView(response.body().getItems());
                 }
             }
 
             @Override
             public void onFailure(Call<UserPlaylists> call, Throwable t) {
-
             }
         });
-
     }
 
     private void updateListView(List<Item> items) {
+
         mPlaylistItem.clear();
         mPlaylistItem.addAll(items);
         mPlaylistItem.notifyDataSetChanged();
@@ -173,32 +172,30 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
     public void onRadioButtonClicked(View view) {
 
         boolean checked = ((RadioButton) view).isChecked();
-
         switch (view.getId()) {
 
             case R.id.one_minute_thirty:
-                if (checked){
+                if (checked) {
                     Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-
                 }
                 break;
             case R.id.two_minutes:
                 if (checked) {
                     Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-
                 }
                 break;
         }
     }
 
     private void userLogin() {
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment newFragment = MySignInDialog.newInstance();
         newFragment.show(ft, "dialog");
-
     }
 
     private void userLogout() {
+
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
         Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
         userLogin();
@@ -206,12 +203,14 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_overflow, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.menu_toolbar:
                 userLogout();
@@ -221,11 +220,9 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         }
     }
 
-    @NonNull
-    public MenuInflater getMenuInflater() {
-        return super.getMenuInflater();
-    }
-
+    /**
+     * Login Dialog Fragment
+     */
 
     public static class MySignInDialog extends DialogFragment {
 
@@ -239,10 +236,8 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
             View v = inflater.inflate(R.layout.dialog_login, container, false);
 
             getDialog().setCanceledOnTouchOutside(false);
-
             View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
             mLoginButton.setVisibility(View.VISIBLE);
-
             mLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -252,13 +247,11 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                             "user-follow-modify", "user-follow-read", "user-library-read", "user-library-modify", "user-read-private", "user-read-birthdate", "user-read-email"});
                     builder.setShowDialog(true);
                     AuthenticationRequest request = builder.build();
-
                     AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
 
                     onDestroyView();
                 }
             });
-
             return v;
         }
     }
@@ -269,66 +262,55 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+            switch (response.getType()) {
+                case TOKEN:
+                    mToken = response.getAccessToken();
+                    updateUserInfo(mToken);
+                    updateCurrentUserPlaylists(mToken, mUserId);
+                    break;
 
-                switch (response.getType()) {
-                    case TOKEN:
-                        mToken = response.getAccessToken();
-                        updateUserInfo(mToken);
-                        updateCurrentUserPlaylists(mToken, mUserId);
-                            break;
+                case ERROR:
+                    break;
 
-                    // Auth flow returned an error
-                    case ERROR:
-                        // Handle error response
-                        break;
-
-                    // Most likely auth flow was cancelled
-                    default:
-                }
+                default:
+            }
         }
     }
 
-        @Override
-        public void onLoggedIn() {
-            Log.d("PlaylistActivity", "User logged in");
-        }
+    @Override
+    public void onLoggedIn() {
+        Log.d("PlaylistActivity", "User logged in");
+    }
 
-        @Override
-        public void onLoggedOut() {
-            Log.d("PlaylistActivity", "User logged out");
-        }
+    @Override
+    public void onLoggedOut() {
+        Log.d("PlaylistActivity", "User logged out");
+    }
 
-        @Override
-        public void onLoginFailed(Throwable error) {
-            Log.d("PlaylistActivity", "Login failed");
-        }
+    @Override
+    public void onLoginFailed(Throwable error) {
+        Log.d("PlaylistActivity", "Login failed");
+    }
 
-        @Override
-        public void onTemporaryError() {
-            Log.d("PlaylistActivity", "Temporary error occurred");
-        }
+    @Override
+    public void onTemporaryError() {
+        Log.d("PlaylistActivity", "Temporary error occurred");
+    }
 
-        @Override
-        public void onConnectionMessage(String message) {
-            Log.d("PlaylistActivity", "Received connection message: " + message);
-        }
+    @Override
+    public void onConnectionMessage(String message) {
+        Log.d("PlaylistActivity", "Received connection message: " + message);
+    }
 
-        @Override
-        public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
-            Log.d("PlaylistActivity", "Playback event received: " + eventType.name());
-        }
+    @Override
+    public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
+        Log.d("PlaylistActivity", "Playback event received: " + eventType.name());
+    }
 
-        @Override
-        public void onPlaybackError(ErrorType errorType, String errorDetails) {
-            Log.d("PlaylistActivity", "Playback error received: " + errorType.name());
-        }
-
-        @Override
-        protected void onDestroy() {
-
-            super.onDestroy();
-        }
-
+    @Override
+    public void onPlaybackError(ErrorType errorType, String errorDetails) {
+        Log.d("PlaylistActivity", "Playback error received: " + errorType.name());
+    }
 }
 
 

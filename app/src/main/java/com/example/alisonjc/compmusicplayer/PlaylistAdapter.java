@@ -13,9 +13,11 @@ import java.util.List;
 
 public class PlaylistAdapter extends ArrayAdapter<Item> {
 
+   private final LayoutInflater mInflater;
 
     public PlaylistAdapter(Context context, int textViewResourceId, List<Item> objects) {
         super(context, textViewResourceId, objects);
+        mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -23,25 +25,17 @@ public class PlaylistAdapter extends ArrayAdapter<Item> {
         View v = convertView;
 
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.playlist_item, null);
+            v = this.mInflater.inflate(R.layout.playlist_item, parent, false);
         }
         Item i = getItem(position);
 
-        if (i != null)
-
-        {
+        if (i != null) {
             TextView pt = (TextView) v.findViewById(R.id.playlisttitle);
 
             if (pt != null) {
                 pt.setText(i.getName());
             }
-
         }
-
         return v;
     }
-
-
-
 }

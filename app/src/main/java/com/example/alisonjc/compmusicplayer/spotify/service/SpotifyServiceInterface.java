@@ -19,7 +19,7 @@ public interface SpotifyServiceInterface {
     @GET("v1/me/playlists")
     Call<UserPlaylists> getCurrentUserPlaylists(@Header("Authorization") String bearerToken);
 
-    //Not currently used
+    //logged in users playlists and userid
     @GET("v1/users/{user_id}/playlists")
     Call<UserPlaylists> getUserPlayLists(@Header("Authorization") String bearerToken, @Path("user_id") String userId);
 

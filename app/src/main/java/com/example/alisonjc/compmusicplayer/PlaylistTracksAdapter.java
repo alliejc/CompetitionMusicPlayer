@@ -13,17 +13,21 @@ import java.util.List;
 
 public class PlaylistTracksAdapter extends ArrayAdapter<Item> {
 
+    private final LayoutInflater mInflater;
+
     public PlaylistTracksAdapter(Context context, int textViewResourceId, List<Item> objects) {
+
         super(context, textViewResourceId, objects);
+        mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         View v = convertView;
 
         if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.playlist_tracks_item, null);
+            v = this.mInflater.inflate(R.layout.playlist_tracks_item, parent, false);
         }
 
         Item i = this.getItem(position);
@@ -33,16 +37,15 @@ public class PlaylistTracksAdapter extends ArrayAdapter<Item> {
             TextView sn = (TextView) v.findViewById(R.id.songname);
             TextView an = (TextView) v.findViewById(R.id.artistname);
 
-            if (sn != null){
+            if (sn != null) {
                 sn.setText(i.getTrack().getName());
             }
-            if (an != null){
+            if (an != null) {
                 an.setText(i.getTrack().getArtists().get(0).getName());
             }
 
         }
         return v;
-
     }
 
 }

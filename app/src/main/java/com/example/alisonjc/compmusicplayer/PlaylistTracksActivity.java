@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -84,30 +82,30 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
         getPlaylistTracks(mToken, userId, playlistId);
 
         toolbarPlayerSetup();
-        listviewSetup();
+        listViewSetup();
         startTimerTask();
-
     }
 
     public void onRadioButtonClicked(View view) {
+
         boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
 
-            switch (view.getId()) {
-
-                case R.id.one_minute_thirty:
-                    if (checked){
-                        mPauseTimeAt = 90000;
-                    }
-                    break;
-                case R.id.two_minutes:
-                    if (checked) {
-                        mPauseTimeAt = 120000;
-                    }
-                        break;
-            }
+            case R.id.one_minute_thirty:
+                if (checked) {
+                    mPauseTimeAt = 90000;
+                }
+                break;
+            case R.id.two_minutes:
+                if (checked) {
+                    mPauseTimeAt = 120000;
+                }
+                break;
         }
+    }
 
     private void startTimerTask() {
+
         TimerTask mTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -115,9 +113,9 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
-                        if(playerState.positionInMs > mPauseTimeAt - 10000 && !mBeepPlayed) {
+                        if (playerState.positionInMs > mPauseTimeAt - 10000 && !mBeepPlayed) {
                             playBeep();
-                            mBeepPlayed=true;
+                            mBeepPlayed = true;
                         }
                         if (playerState.positionInMs > mPauseTimeAt) {
                             mPlayer.pause();
@@ -127,18 +125,15 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 });
             }
         };
-
         mTimer = new Timer();
         mTimer.schedule(mTimerTask, 1000, 1000);
-
     }
 
-    private void listviewSetup() {
-        mPlaylistTracksItem = new PlaylistTracksAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
+    private void listViewSetup() {
 
+        mPlaylistTracksItem = new PlaylistTracksAdapter(this, R.layout.playlist_tracks_item, new ArrayList<Item>());
         mListView.setAdapter(mPlaylistTracksItem);
         mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -147,16 +142,17 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 showPause();
             }
         });
-
     }
 
-    private void setCurrentPlayingSong(int itemPosition){
+    private void setCurrentPlayingSong(int itemPosition) {
+
         this.mItemPosition = itemPosition;
         listviewSelector();
     }
 
     private void onPauseClicked() {
-        if(mPlayer == null) {
+
+        if (mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         } else {
             mPlayer.pause();
@@ -165,16 +161,20 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     }
 
     private void showPause() {
+
         mPlayButton.setVisibility(View.GONE);
         mPauseButton.setVisibility(View.VISIBLE);
     }
+
     private void showPlay() {
+
         mPauseButton.setVisibility(View.GONE);
         mPlayButton.setVisibility(View.VISIBLE);
     }
 
     private void onPlayClicked() {
-        if(mPlayer == null) {
+
+        if (mPlayer == null) {
             Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
         } else {
             mPlayer.resume();
@@ -183,36 +183,46 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     }
 
     private void onSkipNextClicked() {
+
         if (mPlaylistTracksItem.getCount() <= mItemPosition + 1) {
-                mItemPosition = 0;
-                playSong(mItemPosition);
-                mListView.setSelection(mItemPosition);
-            } else {
-                playSong(mItemPosition + 1);
-            } if(mPlayer == null) {
-                Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
-            }
+            mItemPosition = 0;
+            playSong(mItemPosition);
+            mListView.setSelection(mItemPosition);
+        } else {
+            playSong(mItemPosition + 1);
+        }
+        if (mPlayer == null) {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onPreviousClicked() {
-            if (mItemPosition < 1) {
-                mItemPosition = 0;
-                playSong(mItemPosition);
-            } else {
-                playSong(mItemPosition - 1);
-            } if (mPlayer == null) {
-                Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
-            }
+
+        if (mItemPosition < 1) {
+            mItemPosition = 0;
+            playSong(mItemPosition);
+        } else {
+            playSong(mItemPosition - 1);
         }
+        if (mPlayer == null) {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void listviewSelector() {
+
         mListView.clearChoices();
         mListView.setItemChecked(mItemPosition, true);
         mListView.setSelected(true);
         mPlaylistTracksItem.notifyDataSetChanged();
     }
 
+    /**
+     * Switches the play button to the pause button. Sets the song location and subtitle of the song to be played.  Plays song.
+     * @param locationid - location of the song to be played
+     */
     private void playSong(int locationid) {
+
         mBeepPlayed = false;
         showPause();
         setCurrentPlayingSong(locationid);
@@ -221,66 +231,79 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     }
 
     private void playBeep() {
-            final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        mediaPlayer.release();
+
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mediaPlayer.release();
             }
         });
     }
 
     private Player getPlayer() {
-        if(mPlayer != null) {
+
+        if (mPlayer != null) {
             return mPlayer;
         } else {
             final Config playerConfig = new Config(getApplicationContext(), mToken, CLIENT_ID);
             mPlayer = Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
-                        @Override
-                        public void onInitialized(Player player) {
-                        }
-                        @Override
-                        public void onError(Throwable throwable) {
-                            Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
-                        }
-                    });
 
+                @Override
+                public void onInitialized(Player player) {
+                }
+
+                @Override
+                public void onError(Throwable throwable) {
+                    Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
+                }
+            });
             mPlayer.isInitialized();
             return mPlayer;
-            }
         }
+    }
+
+    /**
+     * Gets the current users playlist tracks and updates the adapter
+     * @param token - Spotify user token
+     * @param userId - Spotify user ID
+     * @param playlistId - Spotify playlist ID
+     */
 
     public void getPlaylistTracks(String token, String userId, String playlistId) {
 
         mSpotifyService.getSpotifyService().getPlaylistTracks("Bearer " + token, userId, playlistId).enqueue(new Callback<PlaylistTracksList>() {
+
             @Override
             public void onResponse(Call<PlaylistTracksList> call, Response<PlaylistTracksList> response) {
 
-                if(response.body() != null) {
+                if (response.body() != null) {
                     mPlaylistTracksItem.clear();
                     mPlaylistTracksItem.addAll(response.body().getItems());
                     mPlaylistTracksItem.notifyDataSetChanged();
                 }
             }
+
             @Override
             public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
             }
         });
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_overflow, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.menu_toolbar:
-               userLogout();
+                userLogout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -297,74 +320,60 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     private void userLogout() {
 
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-
         Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
-
         userLogin();
-    }
-
-   @NonNull
-    public MenuInflater getMenuInflater() {
-        return super.getMenuInflater();
     }
 
     private void toolbarPlayerSetup() {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
-            setSupportActionBar(myToolbar);
-            ActionBar actionBar = getSupportActionBar();
+        setSupportActionBar(myToolbar);
+        ActionBar actionBar = getSupportActionBar();
 
         assert actionBar != null;
         actionBar.setTitle(mPlaylistName);
-                actionBar.setDisplayShowHomeEnabled(true);
-                actionBar.setHomeButtonEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         assert myToolbar != null;
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
-            Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
+        Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
 
         assert myPlayerToolbar != null;
         myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
+                onPreviousClicked();
+            }
+        });
 
-                    onPreviousClicked();
-                }
-            });
+        myPlayerToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPlayClicked();
+            }
+        });
 
-            myPlayerToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        myPlayerToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPauseClicked();
+            }
+        });
 
-                    onPlayClicked();
-
-                }
-            });
-
-            myPlayerToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    onPauseClicked();
-                }
-            });
-
-            myPlayerToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    onSkipNextClicked();
-                }
-            });
-
+        myPlayerToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSkipNextClicked();
+            }
+        });
     }
 
     @Override
@@ -377,6 +386,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
     @Override
     protected void onDestroy() {
+
         Spotify.destroyPlayer(this);
         mTimer.cancel();
         super.onDestroy();

@@ -6,8 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SpotifyService {
 
-    private SpotifyServiceInterface mSpotifyService;
-
+    private final SpotifyServiceInterface mSpotifyService;
 
     public SpotifyService() {
 
@@ -17,9 +16,7 @@ public class SpotifyService {
                 .build();
 
         mSpotifyService = retrofit.create(SpotifyServiceInterface.class);
-
     }
-
     public SpotifyServiceInterface getSpotifyService() {
         return mSpotifyService;
     }

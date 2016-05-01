@@ -39,8 +39,9 @@ Open in Android studio
 
 Want to contribute? Great!
 
-Add your spotify api key to the gradel.properties file. You need the following key:
+Add your spotify api key to the gradle.properties file. You need the following key:
 
+{ProjectDirectory}/gradle.properties
 CLIENT_ID="{your key}"
 
 ### Todos

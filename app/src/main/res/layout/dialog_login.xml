@@ -7,12 +7,12 @@
     >
 
     <ImageButton
+        android:id="@+id/spotifyLoginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spotifyLoginButton"
-        android:src="@drawable/spotify_login_button_image"
-        android:scaleType="fitCenter"
         android:contentDescription="@string/login_Dialog_Fragment"
-       />
+        android:scaleType="fitCenter"
+        android:src="@drawable/spotify_login_button_image"
+        />
 
 </LinearLayout>

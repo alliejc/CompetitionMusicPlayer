@@ -18,15 +18,14 @@
         />
 
     <ListView
+        android:id="@+id/playlisttracksview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/playlisttracksview"
-        android:choiceMode="singleChoice"
         android:background="@color/color_default"
-        android:listSelector="@color/pressed_color"
+        android:choiceMode="singleChoice"
         android:divider="@color/color_dark_gray"
         android:dividerHeight="0.5dp"
+        android:listSelector="@color/pressed_color"
         />
-
 
 </LinearLayout>
