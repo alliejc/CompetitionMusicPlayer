@@ -25,16 +25,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize" >
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="comp-music-player-login://callback"
-                    android:scheme="fea06d390d9848c3b5c0ff43bbe0b2d0" />
             </intent-filter>
         </activity>
 
