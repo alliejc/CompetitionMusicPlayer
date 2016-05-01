@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.example.alisonjc.compmusicplayer"
+        applicationId "com.alisonjc.compmusicplayer"
         buildConfigField("String", "CLIENT_ID", CLIENT_ID)
         minSdkVersion 19
         targetSdkVersion 23
