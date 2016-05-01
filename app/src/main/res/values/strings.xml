@@ -1,10 +1,16 @@
 <resources>
-    <string name="app_name">Competition Practice Player</string>
+    <string name="app_name">Comp Practice Player</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="logout">Logout</string>
+
+    <string name= "content_description_play">Play Button</string>
+    <string name= "content_description_pause">Play Button</string>
+    <string name= "content_description_skip_next">Play Button</string>
+    <string name= "content_description_skip_previous">Play Button</string>
+
 
     <string name="two_minute_radio_button">2:00</string>
     <string name="one_thirty_radio_button">1:30</string>

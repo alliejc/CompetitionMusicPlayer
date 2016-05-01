@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -136,6 +137,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle(R.string.app_name);
         actionBar.setSubtitle(R.string.app_subtitle);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -219,7 +221,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         }
     }
 
-    @Override
+    @NonNull
     public MenuInflater getMenuInflater() {
         return super.getMenuInflater();
     }
@@ -236,7 +238,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                                  Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.dialog_login, container, false);
 
-            getDialog().setTitle("Login");
             getDialog().setCanceledOnTouchOutside(false);
 
             View mLoginButton = v.findViewById(R.id.spotifyLoginButton);

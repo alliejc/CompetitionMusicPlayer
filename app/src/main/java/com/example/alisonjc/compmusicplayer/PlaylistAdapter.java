@@ -11,9 +11,6 @@ import com.example.alisonjc.compmusicplayer.spotify.service.model.playlists.Item
 
 import java.util.List;
 
-/**
- * Created by alisonjc on 4/10/16.
- */
 public class PlaylistAdapter extends ArrayAdapter<Item> {
 
 

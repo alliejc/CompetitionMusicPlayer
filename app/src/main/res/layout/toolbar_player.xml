@@ -10,50 +10,57 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:weightSum="100"
         android:background="@color/color_default"
         >
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_action_playback_prev"
             android:id="@+id/skip_previous"
             android:layout_weight="33.3"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/content_description_skip_previous"
+            />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/play"
             android:src="@drawable/ic_action_playback_play"
             android:layout_weight="33.3"
             android:layout_gravity="center_vertical"
+            android:contentDescription="@string/content_description_play"
+
             />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_action_playback_pause"
             android:id="@+id/pause"
             android:layout_weight="33.3"
             android:layout_gravity="center_vertical"
             android:visibility="gone"
+            android:contentDescription="@string/content_description_pause"
+
             />
 
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_action_playback_next"
             android:id="@+id/skip_next"
             android:layout_weight="33.3"
             android:layout_gravity="center_vertical"
+            android:contentDescription="@string/content_description_skip_next"
             />
 
         <RadioGroup

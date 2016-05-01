@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -52,20 +53,20 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     private String mPlaylistName = "";
 
     private int mItemPosition = 0;
-    private int mPauseTimeAt = 300000;
+    private int mPauseTimeAt = 100000;
     private boolean mBeepPlayed = false;
 
     private Player mPlayer;
     private Timer mTimer;
 
     @InjectView(R.id.play)
-        private ImageButton mPlayButton;
+    private ImageButton mPlayButton;
 
     @InjectView(R.id.pause)
-        private ImageButton mPauseButton;
+    private ImageButton mPauseButton;
 
     @InjectView(R.id.playlisttracksview)
-        private ListView mListView;
+    private ListView mListView;
 
     @Inject
     SpotifyService mSpotifyService;
@@ -95,12 +96,12 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
                 case R.id.one_minute_thirty:
                     if (checked){
-                        mPauseTimeAt = 100000;
+                        mPauseTimeAt = 90000;
                     }
                     break;
                 case R.id.two_minutes:
                     if (checked) {
-                        mPauseTimeAt = 210000;
+                        mPauseTimeAt = 120000;
                     }
                         break;
             }
@@ -114,7 +115,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
-                        if(playerState.positionInMs > mPauseTimeAt - 8000 && !mBeepPlayed) {
+                        if(playerState.positionInMs > mPauseTimeAt - 10000 && !mBeepPlayed) {
                             playBeep();
                             mBeepPlayed=true;
                         }
@@ -302,7 +303,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
         userLogin();
     }
 
-    @Override
+   @NonNull
     public MenuInflater getMenuInflater() {
         return super.getMenuInflater();
     }
@@ -313,12 +314,14 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
             setSupportActionBar(myToolbar);
             ActionBar actionBar = getSupportActionBar();
 
-                actionBar.setTitle(mPlaylistName);
+        assert actionBar != null;
+        actionBar.setTitle(mPlaylistName);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setHomeButtonEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
 
+        assert myToolbar != null;
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -328,7 +331,8 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
             Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
 
-            myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
+        assert myPlayerToolbar != null;
+        myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 

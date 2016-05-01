@@ -11,9 +11,6 @@ import com.example.alisonjc.compmusicplayer.spotify.service.model.tracklists.Ite
 
 import java.util.List;
 
-/**
- * Created by alisonjc on 4/10/16.
- */
 public class PlaylistTracksAdapter extends ArrayAdapter<Item> {
 
     public PlaylistTracksAdapter(Context context, int textViewResourceId, List<Item> objects) {
