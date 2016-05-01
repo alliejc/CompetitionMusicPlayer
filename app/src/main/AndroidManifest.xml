@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:logo="@mipmap/ic_action_music_1"
+        android:logo="@drawable/ic_action_music_black"
         android:fullBackupContent="true"
         >
 

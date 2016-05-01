@@ -142,7 +142,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         actionBar.setSubtitle(R.string.app_subtitle);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_1);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_music_white);
     }
 
     private void updateCurrentUserPlaylists(String token, String userId) {
