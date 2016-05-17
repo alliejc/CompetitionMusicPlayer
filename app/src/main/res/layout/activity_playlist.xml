@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PlaylistActivity"
-    >
+    android:background="@color/color_default"
+    tools:context=".PlaylistActivity">
 
     <include
         android:id="@+id/tool_bar"
@@ -21,5 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/color_dark_gray"
-        android:dividerHeight="0.5dp"/>
+        android:dividerHeight="0.5dp"
+        />
+
 </LinearLayout>

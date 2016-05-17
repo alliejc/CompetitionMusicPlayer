@@ -42,7 +42,7 @@ import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-@ContentView(R.layout.activity_main)
+@ContentView(R.layout.activity_playlist)
 public class PlaylistActivity extends RoboActionBarActivity implements PlayerNotificationCallback, ConnectionStateCallback {
 
     private static final int REQUEST_CODE = 1337;
@@ -96,6 +96,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
             @Override
             public void onFailure(Call<SpotifyUser> call, Throwable t) {
+                onTokenExpired();
             }
         });
     }
@@ -158,6 +159,8 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
             @Override
             public void onFailure(Call<UserPlaylists> call, Throwable t) {
+                onTokenExpired();
+
             }
         });
     }
@@ -167,6 +170,13 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         mPlaylistItem.clear();
         mPlaylistItem.addAll(items);
         mPlaylistItem.notifyDataSetChanged();
+    }
+
+    private void onTokenExpired() {
+
+        Toast.makeText(this, "Due to Spotify limitations your Spotify login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
+        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+        userLogin();
     }
 
     public void onRadioButtonClicked(View view) {
@@ -270,6 +280,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                     break;
 
                 case ERROR:
+                    onTokenExpired();
                     break;
 
                 default:
@@ -289,16 +300,19 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     @Override
     public void onLoginFailed(Throwable error) {
+//        onTokenExpired();
         Log.d("PlaylistActivity", "Login failed");
     }
 
     @Override
     public void onTemporaryError() {
+//        onTokenExpired();
         Log.d("PlaylistActivity", "Temporary error occurred");
     }
 
     @Override
     public void onConnectionMessage(String message) {
+//        onTokenExpired();
         Log.d("PlaylistActivity", "Received connection message: " + message);
     }
 
@@ -309,6 +323,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     @Override
     public void onPlaybackError(ErrorType errorType, String errorDetails) {
+//        onTokenExpired();
         Log.d("PlaylistActivity", "Playback error received: " + errorType.name());
     }
 }

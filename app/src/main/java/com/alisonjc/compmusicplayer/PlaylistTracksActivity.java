@@ -256,12 +256,20 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
                 @Override
                 public void onError(Throwable throwable) {
+                    onTokenExpired();
                     Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
                 }
             });
             mPlayer.isInitialized();
             return mPlayer;
         }
+    }
+
+    private void onTokenExpired() {
+
+        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+        Toast.makeText(this, "Due to Spotify limitations your Spotify login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
+        userLogin();
     }
 
     /**
@@ -287,6 +295,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
             @Override
             public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
+                onTokenExpired();
             }
         });
     }
@@ -382,6 +391,8 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
     @Override
     public void onPlaybackError(ErrorType errorType, String s) {
+
+//        onTokenExpired();
     }
 
     @Override
