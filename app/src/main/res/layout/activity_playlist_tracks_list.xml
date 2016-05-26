@@ -15,6 +15,10 @@
         android:id="@+id/tool_bar_player"
         layout="@layout/toolbar_player"/>
 
+    <include
+        android:id="@+id/seeker_bar"
+        layout="@layout/seeker_bar"/>
+
     <ListView
         android:id="@+id/playlisttracksview"
         android:layout_width="match_parent"

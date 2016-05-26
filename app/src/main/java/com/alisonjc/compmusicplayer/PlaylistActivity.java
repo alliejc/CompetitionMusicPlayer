@@ -75,6 +75,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         toolbarSetup();
     }
 
+
     /**
      * Setting the userId from the response.  Setting preferences with the token and updated userId.
      * @param token - Spotify user token
@@ -82,23 +83,28 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     private void updateUserInfo(final String token) {
 
-        mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
-            @Override
-            public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
+        if (token != null) {
 
-                if (response.body() != null) {
-                    mUserId = response.body().getId();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
-                    getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
-                    updateCurrentUserPlaylists(mToken, mUserId);
+            mSpotifyService.getSpotifyService().getCurrentUser("Bearer " + token).enqueue(new Callback<SpotifyUser>() {
+                @Override
+                public void onResponse(Call<SpotifyUser> call, Response<SpotifyUser> response) {
+
+                    if (response.isSuccess() && response.body() != null) {
+                        mUserId = response.body().getId();
+                        getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
+                        getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
+                        updateCurrentUserPlaylists(mToken, mUserId);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<SpotifyUser> call, Throwable t) {
-                onTokenExpired();
-            }
-        });
+                @Override
+                public void onFailure(Call<SpotifyUser> call, Throwable t) {
+                    userLogout();
+                }
+            });
+        } else {
+            userLogout();
+        }
     }
 
     private void listViewSetup() {
@@ -148,21 +154,25 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     private void updateCurrentUserPlaylists(String token, String userId) {
 
-        mSpotifyService.getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
+        if (token != null) {
+            mSpotifyService.getSpotifyService().getUserPlayLists("Bearer " + token, userId).enqueue(new Callback<UserPlaylists>() {
 
-            @Override
-            public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
-                if (response.body() != null) {
-                    updateListView(response.body().getItems());
+                @Override
+                public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
+                    if (response.isSuccess() && response.body() != null) {
+                        updateListView(response.body().getItems());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<UserPlaylists> call, Throwable t) {
-                onTokenExpired();
+                @Override
+                public void onFailure(Call<UserPlaylists> call, Throwable t) {
 
-            }
-        });
+                    userLogout();
+                }
+            });
+        } else {
+            userLogout();
+        }
     }
 
     private void updateListView(List<Item> items) {
@@ -170,13 +180,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         mPlaylistItem.clear();
         mPlaylistItem.addAll(items);
         mPlaylistItem.notifyDataSetChanged();
-    }
-
-    private void onTokenExpired() {
-
-        Toast.makeText(this, "Due to Spotify limitations your Spotify login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
-        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-        userLogin();
     }
 
     public void onRadioButtonClicked(View view) {
@@ -199,6 +202,9 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     private void userLogin() {
 
+        Toast.makeText(this, "Due to Spotify technology limitations your login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
+        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment newFragment = MySignInDialog.newInstance();
         newFragment.show(ft, "dialog");
@@ -207,8 +213,8 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
     private void userLogout() {
 
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-        Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
         userLogin();
+        //Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -260,8 +266,10 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                     AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
 
                     onDestroyView();
+
                 }
             });
+
             return v;
         }
     }
@@ -280,7 +288,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                     break;
 
                 case ERROR:
-                    onTokenExpired();
                     break;
 
                 default:
@@ -300,19 +307,16 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     @Override
     public void onLoginFailed(Throwable error) {
-//        onTokenExpired();
         Log.d("PlaylistActivity", "Login failed");
     }
 
     @Override
     public void onTemporaryError() {
-//        onTokenExpired();
         Log.d("PlaylistActivity", "Temporary error occurred");
     }
 
     @Override
     public void onConnectionMessage(String message) {
-//        onTokenExpired();
         Log.d("PlaylistActivity", "Received connection message: " + message);
     }
 
@@ -323,7 +327,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     @Override
     public void onPlaybackError(ErrorType errorType, String errorDetails) {
-//        onTokenExpired();
         Log.d("PlaylistActivity", "Playback error received: " + errorType.name());
     }
 }
