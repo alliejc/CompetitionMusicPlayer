@@ -189,15 +189,16 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                     int seconds = ((mSongLocation / 1000) % 60);
                     int minutes = ((mSongLocation / 1000) / 60);
 
-                    mSongLocationView.setText(String.valueOf(minutes) + ":" + String.valueOf(seconds));
+                    mSongLocationView.setText(String.format("%2d:%02d", minutes, seconds, 0));
 
-                    }
+
+                }
             });
         }
 
         seekHandler.postDelayed(run, 1000);
     }
-    
+
     Runnable run = new Runnable() {
         @Override
         public void run() {
@@ -205,7 +206,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
         }
     };
-
 
     private void listViewSetup() {
 
@@ -487,7 +487,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
         Spotify.destroyPlayer(this);
         mTimer.cancel();
-
+        seekHandler.removeCallbacks(run);
         mSeekBar.setProgress(0);
         super.onDestroy();
     }
