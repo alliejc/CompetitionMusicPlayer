@@ -87,7 +87,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Intent intent = getIntent();
         final Bundle b = intent.getExtras();
         mToken = b.getString("spotifyToken");
@@ -102,7 +101,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
         startTimerTask();
 
         mSongLocationView.setText("0:00");
-        mSongDurationView.setText("1:30");
+        mSongDurationView.setText(R.string.one_thirty_radio_button);
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -180,7 +179,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 @Override
                 public void onPlayerState(PlayerState playerState) {
 
-                    mSongDuration = playerState.durationInMs;
+                    mSongDuration = mPauseTimeAt;
                     mSongLocation = playerState.positionInMs;
 
                     mSeekBar.setMax(mSongDuration);

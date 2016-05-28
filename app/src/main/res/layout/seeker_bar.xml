@@ -4,18 +4,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_toolbar"
+
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="100">
 
         <SeekBar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/seekerBarView"
             android:paddingTop="15dp"
+            android:progressDrawable="@drawable/seekbar_progress_pink"
+            android:thumb="@drawable/seekbar_control_pink"
+            android:layout_weight="65"
+            android:layout_gravity="center"
             />
 
         <LinearLayout
@@ -23,15 +30,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="10dp"
-            android:weightSum="100">
+            android:weightSum="100"
+            >
 
         <TextView
             android:id="@+id/musicCurrentLoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@color/color_default"
+            android:textSize="18sp"
+            android:textColor="@color/color_light_gray"
             android:layout_weight="50"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:gravity="start">
         </TextView>
 
@@ -39,11 +49,13 @@
             android:id="@+id/musicDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@color/color_default"
+            android:textSize="18sp"
+            android:textColor="@color/color_light_gray"
             android:layout_weight="50"
             android:gravity="end"
-            android:paddingEnd="10dp">
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            >
 
         </TextView>
         </LinearLayout>
