@@ -54,13 +54,13 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     private String mPlaylistName = "";
 
     private int mItemPosition = 0;
-    private int mPauseTimeAt = 100000;
+    private int mPauseTimeAt = 90000;
+    private int mSongLocation;
+
     private boolean mBeepPlayed = false;
 
     private Player mPlayer;
     private Timer mTimer;
-    private int mSongDuration;
-    private int mSongLocation;
     private Handler seekHandler = new Handler();
 
     @InjectView(R.id.play)
@@ -155,11 +155,11 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                     @Override
                     public void onPlayerState(PlayerState playerState) {
 
-                        if (mSongLocation > mPauseTimeAt - 10000 && !mBeepPlayed) {
+                        if (mSongLocation >= mPauseTimeAt - 10000 && !mBeepPlayed) {
                             playBeep();
                             mBeepPlayed = true;
                         }
-                        if (mSongLocation > mPauseTimeAt) {
+                        if (mSongLocation >= mPauseTimeAt) {
                             mPlayer.pause();
                             onSkipNextClicked();
                         }
@@ -179,17 +179,15 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 @Override
                 public void onPlayerState(PlayerState playerState) {
 
-                    mSongDuration = mPauseTimeAt;
                     mSongLocation = playerState.positionInMs;
 
-                    mSeekBar.setMax(mSongDuration);
+                    mSeekBar.setMax(mPauseTimeAt);
                     mSeekBar.setProgress(mSongLocation);
 
                     int seconds = ((mSongLocation / 1000) % 60);
                     int minutes = ((mSongLocation / 1000) / 60);
 
                     mSongLocationView.setText(String.format("%2d:%02d", minutes, seconds, 0));
-
 
                 }
             });
@@ -337,19 +335,13 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 @Override
                 public void onError(Throwable throwable) {
                     Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
+                    userLogout();
                 }
             });
             mPlayer.isInitialized();
             return mPlayer;
         }
     }
-
-//    private void onTokenExpired() {
-//
-//        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-//        Toast.makeText(this, "Due to Spotify limitations your Spotify login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
-//        userLogin();
-//    }
 
     /**
      * Gets the current users playlist tracks and updates the adapter
@@ -407,7 +399,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     private void userLogin() {
 
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-        Toast.makeText(this, "Due to Spotify limitations your Spotify login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment newFragment = PlaylistActivity.MySignInDialog.newInstance();
@@ -417,7 +408,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
     private void userLogout() {
 
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-        //Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
         userLogin();
     }
 

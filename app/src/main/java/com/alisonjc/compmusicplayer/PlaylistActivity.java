@@ -78,6 +78,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     /**
      * Setting the userId from the response.  Setting preferences with the token and updated userId.
+     *
      * @param token - Spotify user token
      */
 
@@ -106,6 +107,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
             userLogout();
         }
     }
+
 
     private void listViewSetup() {
 
@@ -202,7 +204,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
     private void userLogin() {
 
-        Toast.makeText(this, "Due to Spotify technology limitations your login expires every hour, sorry for the inconvenience", Toast.LENGTH_LONG).show();
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -214,7 +215,6 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
         getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
         userLogin();
-        //Toast.makeText(this, "Logout Successful.  Please login to continue", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -236,43 +236,44 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         }
     }
 
-    /**
-     * Login Dialog Fragment
-     */
+/**
+ * Login Dialog Fragment
+ */
 
-    public static class MySignInDialog extends DialogFragment {
+public static class MySignInDialog extends DialogFragment {
 
-        static MySignInDialog newInstance() {
-            return new MySignInDialog();
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.dialog_login, container, false);
-
-            getDialog().setCanceledOnTouchOutside(false);
-            View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
-            mLoginButton.setVisibility(View.VISIBLE);
-            mLoginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
-                    builder.setScopes(new String[]{"playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "streaming",
-                            "user-follow-modify", "user-follow-read", "user-library-read", "user-library-modify", "user-read-private", "user-read-birthdate", "user-read-email"});
-                    builder.setShowDialog(true);
-                    AuthenticationRequest request = builder.build();
-                    AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
-
-                    onDestroyView();
-
-                }
-            });
-
-            return v;
-        }
+    static MySignInDialog newInstance() {
+        return new MySignInDialog();
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.dialog_login, container, false);
+
+        getDialog().setCanceledOnTouchOutside(false);
+        View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
+        mLoginButton.setVisibility(View.VISIBLE);
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
+                builder.setScopes(new String[]{"playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "streaming",
+                        "user-follow-modify", "user-follow-read", "user-library-read", "user-library-modify", "user-read-private", "user-read-birthdate", "user-read-email"});
+                builder.setShowDialog(true);
+                AuthenticationRequest request = builder.build();
+                AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+
+                onDestroyView();
+
+            }
+        });
+
+        return v;
+    }
+
+}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
