@@ -68,6 +68,7 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
 
         if (mUserId == "" || mToken == "") {
             userLogin();
+
         } else {
             updateCurrentUserPlaylists(mToken, mUserId);
         }
@@ -95,16 +96,21 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                         getPreferences(Context.MODE_PRIVATE).edit().putString("user", mUserId).apply();
                         getPreferences(Context.MODE_PRIVATE).edit().putString("token", mToken).apply();
                         updateCurrentUserPlaylists(mToken, mUserId);
+
+                    } else if(response.code() == 401) {
+                        userLogout();
                     }
+
+                    Log.d("DEBUG RAW UPDATER USER", response.raw().toString());
                 }
 
                 @Override
                 public void onFailure(Call<SpotifyUser> call, Throwable t) {
-                    userLogout();
+
+                    Log.e("ERROR UPDATE USER", t.getLocalizedMessage());
+
                 }
             });
-        } else {
-            userLogout();
         }
     }
 
@@ -163,17 +169,19 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
                 public void onResponse(Call<UserPlaylists> call, Response<UserPlaylists> response) {
                     if (response.isSuccess() && response.body() != null) {
                         updateListView(response.body().getItems());
+                    } else if(response.code() == 401){
+                        userLogout();
                     }
+
+                    Log.d("DEBUG RAW GET PLAYLIST", response.raw().toString());
                 }
 
                 @Override
                 public void onFailure(Call<UserPlaylists> call, Throwable t) {
+                    Log.e("ERROR GETTING PLAYLIST", t.getLocalizedMessage());
 
-                    userLogout();
                 }
             });
-        } else {
-            userLogout();
         }
     }
 

@@ -335,7 +335,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 @Override
                 public void onError(Throwable throwable) {
                     Log.e("PlaylistActivity", "Could not initialize player: " + throwable.getMessage());
-                    userLogout();
                 }
             });
             mPlayer.isInitialized();
@@ -364,16 +363,21 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                         mPlaylistTracksItem.clear();
                         mPlaylistTracksItem.addAll(response.body().getItems());
                         mPlaylistTracksItem.notifyDataSetChanged();
+
+                    } else if(response.code() == 401) {
+                        userLogout();
                     }
+
+                    Log.d("DEBUG RAW GET TRACKS", response.raw().toString());
                 }
 
                 @Override
                 public void onFailure(Call<PlaylistTracksList> call, Throwable t) {
-                    userLogout();
+
+                    Log.e("ERROR GET TRACKS", t.getLocalizedMessage());
+
                 }
             });
-        } else {
-            userLogout();
         }
     }
 

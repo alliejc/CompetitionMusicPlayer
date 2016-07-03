@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="6dip"
-                android:background="@color/color_default"
-    >
+                android:background="@color/color_default">
+
 
     <!-- Playlist Name -->
     <TextView
         android:id="@+id/playlisttitle"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="35dp"
         android:textSize="20sp"
         android:background="?attr/selectableItemBackground"
