@@ -288,6 +288,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
         mListView.clearChoices();
         mListView.setItemChecked(mItemPosition, true);
+        mListView.smoothScrollToPosition(mItemPosition);
         mListView.setSelected(true);
         mPlaylistTracksItem.notifyDataSetChanged();
     }
