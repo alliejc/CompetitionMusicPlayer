@@ -99,6 +99,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
         toolbarPlayerSetup();
         listViewSetup();
         startTimerTask();
+        playerControlsSetup();
 
         mSongLocationView.setText("0:00");
         mSongDurationView.setText(R.string.one_thirty_radio_button);
@@ -365,7 +366,7 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                         mPlaylistTracksItem.addAll(response.body().getItems());
                         mPlaylistTracksItem.notifyDataSetChanged();
 
-                    } else if(response.code() == 401) {
+                    } else if (response.code() == 401) {
                         userLogout();
                     }
 
@@ -403,8 +404,6 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
 
     private void userLogin() {
 
-        getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment newFragment = PlaylistActivity.MySignInDialog.newInstance();
         newFragment.show(ft, "dialog");
@@ -435,38 +434,43 @@ public class PlaylistTracksActivity extends RoboActionBarActivity implements Pla
                 onBackPressed();
             }
         });
+    }
 
-        Toolbar myPlayerToolbar = (Toolbar) findViewById(R.id.tool_bar_player);
+    private void playerControlsSetup() {
 
-        assert myPlayerToolbar != null;
-        myPlayerToolbar.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
+        View playerControls = (View) findViewById(R.id.tool_bar_player);
+
+
+        assert playerControls != null;
+        playerControls.findViewById(R.id.skip_previous).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPreviousClicked();
             }
         });
 
-        myPlayerToolbar.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+        playerControls.findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPlayClicked();
             }
         });
 
-        myPlayerToolbar.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+        playerControls.findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPauseClicked();
             }
         });
 
-        myPlayerToolbar.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
+        playerControls.findViewById(R.id.skip_next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSkipNextClicked();
             }
         });
     }
+
 
     @Override
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
