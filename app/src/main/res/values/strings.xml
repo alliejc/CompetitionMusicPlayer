@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">CompPlayer</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <string name="logout">Logout</string>
     <string name="login_dialog_title">Please login to continue</string>
 
-    <string name= "content_description_play">Play Button</string>
-    <string name= "content_description_pause">Play Button</string>
-    <string name= "content_description_skip_next">Play Button</string>
-    <string name= "content_description_skip_previous">Play Button</string>
+    <string name="content_description_play">Play Button</string>
+    <string name="content_description_pause">Play Button</string>
+    <string name="content_description_skip_next">Play Button</string>
+    <string name="content_description_skip_previous">Play Button</string>
 
 
     <string name="two_minute_radio_button">2:00</string>
@@ -36,4 +36,20 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+
+    <string name="section_1">Playlists</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array
+        name="string_array_name">
+        <item>Playlists</item>
+        <item>Artists</item>
+        <item>Albums</item>
+        <item>Songs</item>
+    </string-array>
 </resources>
