@@ -8,6 +8,7 @@ public class SpotifyService {
 
     private final SpotifyServiceInterface mSpotifyService;
 
+
     public SpotifyService() {
 
         Retrofit retrofit = new Retrofit.Builder()

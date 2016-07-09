@@ -25,7 +25,6 @@ public class PlaylistMainActivity extends AppCompatActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +114,6 @@ public class PlaylistMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onNavigationDrawerItemSelected(int position) {
-
-        if (position == 0) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaylistFragment.newInstance())
-                    .commit();
-        }
-    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -151,7 +142,7 @@ public class PlaylistMainActivity extends AppCompatActivity {
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.section_1);
+                mDrawerTitle = getString(R.string.section_1);
                 break;
             case 2:
                 // your code

@@ -17,8 +17,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.spotify.service.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.service.model.playlists.Item;
@@ -192,23 +190,23 @@ public class PlaylistActivity extends RoboActionBarActivity implements PlayerNot
         mPlaylistItem.notifyDataSetChanged();
     }
 
-    public void onRadioButtonClicked(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-        switch (view.getId()) {
-
-            case R.id.one_minute_thirty:
-                if (checked) {
-                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.two_minutes:
-                if (checked) {
-                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-    }
+//    public void onRadioButtonClicked(View view) {
+//
+//        boolean checked = ((RadioButton) view).isChecked();
+//        switch (view.getId()) {
+//
+//            case R.id.one_minute_thirty:
+//                if (checked) {
+//                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+//            case R.id.two_minutes:
+//                if (checked) {
+//                    Toast.makeText(this, "Please select a playlist", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+//        }
+//    }
 
     private void userLogin() {
 

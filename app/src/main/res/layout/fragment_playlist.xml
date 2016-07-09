@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/color_default"
-    tools:context=".PlaylistActivity">
+    tools:context=".PlaylistMainActivity">
 
     <include
         android:id="@+id/tool_bar"
