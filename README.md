@@ -14,7 +14,7 @@ For this reason, Competition Practice Player includes these features:
   - Gives a pause before playing the next song in the list
 
 ### Version
-1.0.0
+1.1.0
 
 ### Tech
 
@@ -52,6 +52,11 @@ CLIENT_ID="{your key}"
  - Add an Artist list, Album List, and Song list
  - Add a search bar
  - Add customizeable time and beep options
+  
+### Known Issues
+
+  - Only available for paid Spotify accounts (Spotify limitation)
+  - The Spotify OAuth token only lasts 1 hour, without a refresh token option for the Android SDK, meaning the user must login every hour (Spotify Limitation)
 
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
