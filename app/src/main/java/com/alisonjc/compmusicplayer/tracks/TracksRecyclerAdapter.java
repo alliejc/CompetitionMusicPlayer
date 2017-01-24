@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.databinding.RecyclerItemModel;
+import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemViewModel;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.spotify.TrackItem;
-import com.android.databinding.library.baseAdapters.BR;
 
 import java.util.List;
+
+import static android.databinding.tool.util.GenerationalClassUtil.ExtensionFilter.BR;
 
 public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecyclerAdapter<T>.GenericViewHolder> {
 
@@ -45,9 +46,9 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
     @Override
     public void onBindViewHolder(final GenericViewHolder holder, final int position) {
         TrackItem item = mList.get(position);
-        RecyclerItemModel recyclerItemModel = new RecyclerItemModel(item);
+        TrackRecyclerItemViewModel trackRecyclerItemViewModel = new TrackRecyclerItemViewModel(item);
 
-        holder.bindItem(recyclerItemModel);
+        holder.bindItem(trackRecyclerItemViewModel);
         holder.bind(item, mListener);
         holder.itemView.setSelected(selectedItem == position);
     }
@@ -80,8 +81,8 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
             this.mRecyclerviewItemBinding = itemBinding;
         }
 
-        public void bindItem(RecyclerItemModel recyclerItemModel) {
-            mRecyclerviewItemBinding.setVariable(BR.recycler_view_item, recyclerItemModel);
+        public void bindItem(TrackRecyclerItemViewModel trackRecyclerItemViewModel) {
+            mRecyclerviewItemBinding.setVariable(BR.recycler_view_item, trackRecyclerItemViewModel);
             mRecyclerviewItemBinding.executePendingBindings();
         }
 

@@ -6,13 +6,13 @@ import android.databinding.Bindable;
 import com.alisonjc.compmusicplayer.TrackItemInterface;
 import com.alisonjc.compmusicplayer.spotify.TrackItem;
 
-public class RecyclerItemModel extends BaseObservable {
+public class TrackRecyclerItemViewModel extends BaseObservable {
 
     private String mHeaderText;
     private String mSubHeaderText;
     private TrackItemInterface mTrackItem;
 
-    public RecyclerItemModel(TrackItem trackItem) {
+    public TrackRecyclerItemViewModel(TrackItem trackItem) {
         this.mTrackItem = trackItem;
     }
 
@@ -22,19 +22,9 @@ public class RecyclerItemModel extends BaseObservable {
         return this.mHeaderText;
     }
 
-//    public void setHeaderText(String headerText){
-//        this.mHeaderText = headerText;
-//        notifyPropertyChanged(BR.headerText);
-//    }
-
     @Bindable
     public String getSubHeaderText(){
         mSubHeaderText = mTrackItem.getArtist();
         return this.mSubHeaderText;
     }
-
-//    public void setSubHeaderText(String subHeaderText){
-//        this.mSubHeaderText = subHeaderText;
-//        notifyPropertyChanged(BR.subHeaderText);
-//    }
 }

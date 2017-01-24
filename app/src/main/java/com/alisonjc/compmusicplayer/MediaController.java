@@ -1,9 +1,11 @@
 package com.alisonjc.compmusicplayer;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,24 +18,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel;
+import com.alisonjc.compmusicplayer.databinding.MediaControlsBinding;
 import com.alisonjc.compmusicplayer.spotify.MusicPlayer;
+import com.alisonjc.compmusicplayer.spotify.TrackItem;
 import com.alisonjc.compmusicplayer.tracks.OnControllerTrackChangeListener;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MediaController extends Fragment implements OnControllerTrackChangeListener {
 
-
-    @BindView(R.id.song_title)
-    TextView mSongView;
-
-    @BindView(R.id.artist)
-    TextView mArtistView;
 
     @BindView(R.id.play)
     ImageButton mPlayButton;
@@ -59,7 +60,13 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @BindView(R.id.two_minutes)
     RadioButton mTwoMin;
 
-    private int mSongLocation = 0;
+    @Inject
+    private MediaControllerViewModel mMediaControllerViewModel;
+
+    @Inject
+    private MediaControlsBinding mMediaControlsBinding;
+
+    private int mSongProgress = 0;
     private Handler mSeekBarHandler = new Handler();
     private Handler mMusicTimerHandler = new Handler();
     private SpotifyPlayer mPlayer;
@@ -90,6 +97,13 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     };
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mMediaControlsBinding = DataBindingUtil.setContentView(getActivity(), R.layout.media_controls);
+        mMediaControlsBinding.setMedia_controller(mMediaControllerViewModel);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.media_controls, container, false);
         mPlayerControls = rootView.findViewById(R.id.music_player);
@@ -109,27 +123,27 @@ public class MediaController extends Fragment implements OnControllerTrackChange
         playerControlsSetup();
     }
 
-    public void playSong(String songName, String artistName, String uri) {
+    public void playSong(TrackItem trackItem) {
         Log.i(TAG, "playSong");
 
         mBeepPlayed = false;
         Log.i(TAG, "mBeepPlayed = false");
 
+        mMediaControllerViewModel.setTrackItem(trackItem);
+        mPlayer.playUri(mOperationCallback, trackItem.getUri(), 0, 0);
+
         setMusicTimer();
         showPauseButton();
         setSeekBar();
-        mPlayer.playUri(mOperationCallback, uri, 0, 0);
-        mSongView.setText(songName + " - ");
-        mArtistView.setText(artistName);
     }
 
     private void setMusicTimer() {
 
         if (mPlayer != null && mPlayer.getPlaybackState() != null) {
 
-            mSongLocation = (int) mPlayer.getPlaybackState().positionMs;
+            mSongProgress = (int) mPlayer.getPlaybackState().positionMs;
 
-            if (mSongLocation >= mEndSongAt - 10000 && !mBeepPlayed) {
+            if (mSongProgress >= mEndSongAt - 10000 && !mBeepPlayed) {
                 Log.i(TAG, "setTimerPlayBeep");
 
                 playBeep();
@@ -137,7 +151,7 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
                 Log.i(TAG, "mBeepPlayed = true");
 
-            } else if (mSongLocation >= mEndSongAt && mBeepPlayed) {
+            } else if (mSongProgress >= mEndSongAt && mBeepPlayed) {
                 Log.i(TAG, "SetTimeSkipNext");
 
                 onSkipNextClicked();
@@ -154,15 +168,15 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
 
     private void setSeekBar() {
-        Log.i("setSeekBar", "SetSeekBar" + mSongLocation);
+        Log.i("setSeekBar", "SetSeekBar" + mSongProgress);
 
         if (mPlayer != null) {
 
-            mSeekBar.setProgress(mSongLocation);
-            mSeekBar.setMax(mEndSongAt);
+            mMediaControllerViewModel.setSongProgress(mSongProgress);
+            mMediaControllerViewModel.setSeekBarMax(mEndSongAt);
 
-            mSeconds = ((mSongLocation / 1000) % 60);
-            mMinutes = ((mSongLocation / 1000) / 60);
+            mSeconds = ((mSongProgress / 1000) % 60);
+            mMinutes = ((mSongProgress / 1000) / 60);
 
             mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
         }
@@ -211,12 +225,12 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
                     mPlayer.seekToPosition(mOperationCallback, progress);
 
-                    seekBar.setProgress(mSongLocation);
+                    seekBar.setProgress(mSongProgress);
                     Log.i("onProgressChanged", "SetProgress" + seekBar.getProgress());
 
                     mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
 
-                    mSongLocation = progress;
+                    mSongProgress = progress;
                     setSeekBar();
                 }
             }

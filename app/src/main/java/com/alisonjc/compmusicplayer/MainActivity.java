@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.alisonjc.compmusicplayer.playlists.OnPlaylistInteractionListener;
 import com.alisonjc.compmusicplayer.playlists.PlaylistFragment;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.alisonjc.compmusicplayer.spotify.TrackItem;
 import com.alisonjc.compmusicplayer.tracks.OnControllerTrackChangeListener;
 import com.alisonjc.compmusicplayer.tracks.OnTrackSelectedListener;
 import com.alisonjc.compmusicplayer.tracks.PlaylistTracksFragment;
@@ -244,9 +245,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTrackSelected(String songName, String artistName, String uri) {
+    public void onTrackSelected(TrackItem trackItem) {
         Log.i(TAG, "onTracksSelected");
-        mMediaController.playSong(songName, artistName, uri);
+        mMediaController.playSong(trackItem);
     }
 
     @Override

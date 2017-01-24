@@ -1,8 +1,8 @@
 package com.alisonjc.compmusicplayer.spotify;
 
+
 import com.alisonjc.compmusicplayer.TrackItemInterface;
 import com.alisonjc.compmusicplayer.spotify.model.playlist_tracklists.Item;
-
 
 public class TrackItem implements TrackItemInterface {
 

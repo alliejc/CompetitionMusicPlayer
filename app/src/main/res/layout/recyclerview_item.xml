@@ -3,7 +3,7 @@
     <data>
         <variable
             name="recycler_view_item"
-            type="com.alisonjc.compmusicplayer.databinding.RecyclerItemModel">
+            type="com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemViewModel">
             </variable>
         </data>
 
@@ -12,8 +12,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_item"
     android:orientation="vertical"
-    android:weightSum="100"
-    >
+    android:weightSum="100">
 
     <TextView
         android:id="@+id/recyclerview_header_text"

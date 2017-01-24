@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="seek_bar"
+            type="com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel">
+        </variable>
+    </data>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_default"
@@ -32,6 +37,8 @@
         android:indeterminate="false"
         android:paddingEnd="10dip"
         android:paddingStart="10dip"
+        android:progress="@{seek_bar.progress}"
+        android:max="@{seek_bar.seekBarMax}"
         android:progressDrawable="@drawable/seekbar_progress_pink"/>
 
     <TextView
@@ -47,3 +54,4 @@
 
     </TextView>
 </LinearLayout>
+</layout>
