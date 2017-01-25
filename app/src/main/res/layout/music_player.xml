@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="media_controller"
+            type="com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel">
+        </variable>
+    </data>
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +23,6 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/content_description_skip_previous"
         android:src="@mipmap/ic_action_playback_prev"
         />
 
@@ -26,8 +32,8 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/content_description_play"
         android:src="@mipmap/ic_action_playback_play"
+        android:visibility="@{media_controller.playButtonVisible}"
         />
 
     <ImageButton
@@ -36,9 +42,8 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/content_description_pause"
         android:src="@mipmap/ic_action_playback_pause"
-        android:visibility="gone"
+        android:visibility="@{media_controller.pauseButtonVisible}"
         />
 
     <ImageButton
@@ -47,7 +52,6 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="@string/content_description_skip_next"
         android:src="@mipmap/ic_action_playback_next"
         />
 
@@ -88,3 +92,4 @@
 
     </RadioGroup>
 </LinearLayout>
+</layout>

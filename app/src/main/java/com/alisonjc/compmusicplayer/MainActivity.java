@@ -29,8 +29,7 @@ import com.alisonjc.compmusicplayer.tracks.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.tracks.TracksFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         toolbarSetup();
-        LeakCanary.install(getApplication());
     }
 
     private void navigationDrawerSetup() {
@@ -264,8 +262,7 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        RefWatcher refWatcher = Application.getRefWatcher(this);
-        refWatcher.watch(this);
+
 
     }
 }

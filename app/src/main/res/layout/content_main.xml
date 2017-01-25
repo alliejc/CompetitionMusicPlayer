@@ -33,7 +33,7 @@
 
     <FrameLayout
         android:id="@+id/media_controls_frame"
-        layout="@layout/media_controls"
+        layout="@layout/media_controller"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="25"/>

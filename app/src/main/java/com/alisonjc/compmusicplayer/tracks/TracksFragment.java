@@ -119,12 +119,12 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
         this.mItemPosition = itemPosition;
         mAdapter.recyclerViewSelector(mItemPosition);
         mRecyclerView.smoothScrollToPosition(mItemPosition);
-        onSongSelected(mTracksList.get(itemPosition).getSongName(), mTracksList.get(itemPosition).getArtist(), mTracksList.get(itemPosition).getUri());
+        onSongSelected(mTracksList.get(itemPosition));
     }
 
-    public void onSongSelected(String songName, String artistName, String uri) {
+    public void onSongSelected(TrackItem trackItem) {
         if (mListener != null) {
-            mListener.onTrackSelected(songName, artistName, uri);
+            mListener.onTrackSelected(trackItem);
         }
         Log.i(TAG, "onSongSelected");
     }
@@ -170,7 +170,7 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
     }
 
     @Override
-    public void onTrackSelected(String trackName, String artistName, String uri) {
-        Log.i(TAG, "onTackSelected");
+    public void onTrackSelected(TrackItem trackItem) {
+
     }
 }

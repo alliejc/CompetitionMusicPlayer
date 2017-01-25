@@ -136,13 +136,12 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
         this.mItemPosition = itemPosition;
         mAdapter.recyclerViewSelector(mItemPosition);
         mRecyclerView.smoothScrollToPosition(mItemPosition);
-        onSongSelected(mPlaylistTracksList.get(itemPosition).getSongName(), mPlaylistTracksList.get(itemPosition).getArtist(), mPlaylistTracksList.get(itemPosition).getUri());
-    }
+        onSongSelected(mPlaylistTracksList.get(itemPosition));    }
 
-    public void onSongSelected(String songName, String artistName, String uri) {
+    public void onSongSelected(TrackItem trackItem) {
         Log.i(TAG, "onSongSelected");
         if (mListener != null) {
-            mListener.onTrackSelected(songName, artistName, uri);
+            mListener.onTrackSelected(trackItem);
         }
 
     }
@@ -187,7 +186,7 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     }
 
     @Override
-    public void onTrackSelected(String trackName, String artistName, String uri) {
-        Log.i(TAG, "onTrackSelected");
+    public void onTrackSelected(TrackItem trackItem) {
+
     }
 }

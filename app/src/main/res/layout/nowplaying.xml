@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="now_playing_bar"
+            name="media_controller"
             type="com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel">
         </variable>
     </data>
@@ -15,7 +15,6 @@
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp">
 <TextView
-    android:id="@+id/song_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_weight="50"
@@ -23,10 +22,9 @@
     android:textSize="18sp"
     android:layout_gravity="center_vertical|end"
     android:gravity="center_vertical|end"
-    android:text="@{now_playing_bar.songName}"/>
+    android:text="@{media_controller.songName}"/>
 
     <TextView
-        android:id="@+id/artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="50"
@@ -34,6 +32,6 @@
         android:textSize="18sp"
         android:layout_gravity="center_vertical|start"
         android:gravity="center_vertical|start"
-        android:text="@{now_playing_bar.artist}"/>
+        android:text="@{media_controller.artist}"/>
 </LinearLayout>
 </layout>

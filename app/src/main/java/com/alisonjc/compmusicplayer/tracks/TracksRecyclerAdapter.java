@@ -8,14 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.alisonjc.compmusicplayer.BR;
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemViewModel;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
+import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemViewModel;
 import com.alisonjc.compmusicplayer.spotify.TrackItem;
 
 import java.util.List;
 
-import static android.databinding.tool.util.GenerationalClassUtil.ExtensionFilter.BR;
 
 public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecyclerAdapter<T>.GenericViewHolder> {
 
