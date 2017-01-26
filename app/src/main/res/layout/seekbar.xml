@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="media_controller"
+            name="seekbar"
             type="com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel">
         </variable>
     </data>
@@ -16,12 +16,13 @@
     android:layout_marginTop="10dp">
 
     <TextView
+        android:id="@+id/seek_bar_progressText"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_weight="15"
         android:gravity="center"
-        android:text="@{media_controller.progressText}"
+        android:text="@{seekbar.progressText}"
         android:textColor="@color/color_light_gray"
         android:textSize="18sp">
     </TextView>
@@ -36,17 +37,18 @@
         android:indeterminate="false"
         android:paddingEnd="10dip"
         android:paddingStart="10dip"
-        android:progress="@{media_controller.progress}"
-        android:max="@{media_controller.seekBarMax}"
+        android:progress="@{seekbar.progress}"
+        android:max="@{seekbar.seekBarMax}"
         android:progressDrawable="@drawable/seekbar_progress_pink"/>
 
     <TextView
+        android:id="@+id/seek_bar_max"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:layout_weight="15"
         android:gravity="center"
-        android:text="@{String.valueOf(media_controller.seekBarMax)}"
+        android:text="@{String.valueOf(seekbar.seekBarMax)}"
         android:textColor="@color/color_light_gray"
         android:textSize="18sp">
 

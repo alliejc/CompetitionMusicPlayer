@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.databinding.MediaControllerBinding;
@@ -33,8 +34,8 @@ import butterknife.BindView;
 
 public class MediaController extends Fragment implements OnControllerTrackChangeListener {
 
-    @BindView(R.id.seek_bar_view)
-    SeekBar mSeekBar;
+
+
 
     @BindView(R.id.radio_group)
     RadioGroup mRadioGroup;
@@ -48,16 +49,19 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @Inject
     MediaControllerViewModel mMediaControllerViewModel;
 
+    private MediaController mPlayerControls;
+    private TextView mSeek;
+    private SeekBar mSeekBar;
     private ImageButton mPlayButton;
     private ImageButton mPauseButton;
     private ImageButton mSkipNextButton;
+    private ImageButton mSkipPreviousButton;
     private int mSongProgress = 0;
     private Handler mSeekBarHandler = new Handler();
     private Handler mMusicTimerHandler = new Handler();
     private SpotifyPlayer mPlayer;
     private int mEndSongAt = 90000;
     private boolean mBeepPlayed = false;
-   // private View mPlayerControls;
     private OnControllerTrackChangeListener mOnControllerTrackChangeListener;
     private static final String TAG = "MediaController";
     private MusicPlayer mMusicPlayer = MusicPlayer.getmMusicPlayer();
@@ -95,13 +99,7 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
         mMediaControllerViewModel = new MediaControllerViewModel();
         MediaControllerBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.media_controller, container, false);
-        //mBinding.nowplaying.setMedia_controller(mMediaControllerViewModel);
-        mSeekBar = mBinding.seekbar.seekBarView;
-        mPauseButton = mBinding.musicPlayer.pause;
-        mPlayButton = mBinding.musicPlayer.play;
-        mSkipNextButton = mBinding.musicPlayer.skipNext;
-
-        //mBinding.setMedia_controller(mMediaControllerViewModel);
+        mBinding.setMediaControllerViewModel(mMediaControllerViewModel);
 
         return mBinding.getRoot();
     }
