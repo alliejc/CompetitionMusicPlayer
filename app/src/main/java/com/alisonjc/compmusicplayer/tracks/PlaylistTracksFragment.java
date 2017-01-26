@@ -16,7 +16,7 @@ import com.alisonjc.compmusicplayer.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.RecyclerDivider;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     private OnTrackSelectedListener mListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private List<TrackItem> mPlaylistTracksList;
+    private List<TrackItemModel> mPlaylistTracksList;
     private TracksRecyclerAdapter mAdapter;
     private View rootView;
     private String mPlaylistId;
@@ -119,7 +119,7 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
                     mTotalTracks = playlistTracksList.getTotal();
                     return playlistTracksList.getItems();
                 })
-                .map(item -> new TrackItem(item))
+                .map(item -> new TrackItemModel(item))
                 .toList()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -138,10 +138,10 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
         mRecyclerView.smoothScrollToPosition(mItemPosition);
         onSongSelected(mPlaylistTracksList.get(itemPosition));    }
 
-    public void onSongSelected(TrackItem trackItem) {
+    public void onSongSelected(TrackItemModel trackItemModel) {
         Log.i(TAG, "onSongSelected");
         if (mListener != null) {
-            mListener.onTrackSelected(trackItem);
+            mListener.onTrackSelected(trackItemModel);
         }
 
     }
@@ -186,7 +186,7 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     }
 
     @Override
-    public void onTrackSelected(TrackItem trackItem) {
+    public void onTrackSelected(TrackItemModel trackItemModel) {
 
     }
 }

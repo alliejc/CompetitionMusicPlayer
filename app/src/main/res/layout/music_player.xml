@@ -8,7 +8,6 @@
     </data>
 
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_default"
@@ -33,7 +32,7 @@
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
         android:src="@mipmap/ic_action_playback_play"
-        android:visibility="@{media_controller.playButtonVisible}"
+        android:visibility="@{media_controller.playButtonVisibility}"
         />
 
     <ImageButton
@@ -43,7 +42,7 @@
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
         android:src="@mipmap/ic_action_playback_pause"
-        android:visibility="@{media_controller.pauseButtonVisible}"
+        android:visibility="@{media_controller.pauseButtonVisibility}"
         />
 
     <ImageButton
@@ -93,3 +92,5 @@
     </RadioGroup>
 </LinearLayout>
 </layout>
+
+    <!--android:onClick="@{media_controller.skipPreviousButtonOnClick}"-->

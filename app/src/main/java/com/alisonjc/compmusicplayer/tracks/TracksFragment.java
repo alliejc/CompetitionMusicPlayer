@@ -16,7 +16,7 @@ import com.alisonjc.compmusicplayer.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.RecyclerDivider;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
     private OnTrackSelectedListener mListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private List<TrackItem> mTracksList;
+    private List<TrackItemModel> mTracksList;
     private TracksRecyclerAdapter mAdapter;
     private View rootView;
     private int mItemPosition = 0;
@@ -103,7 +103,7 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
                     mTotalTracks = userTracks.getTotal();
                     return userTracks.getItems();
                 })
-                .map(item -> new TrackItem(item))
+                .map(item -> new TrackItemModel(item))
                 .toList()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,9 +122,9 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
         onSongSelected(mTracksList.get(itemPosition));
     }
 
-    public void onSongSelected(TrackItem trackItem) {
+    public void onSongSelected(TrackItemModel trackItemModel) {
         if (mListener != null) {
-            mListener.onTrackSelected(trackItem);
+            mListener.onTrackSelected(trackItemModel);
         }
         Log.i(TAG, "onSongSelected");
     }
@@ -170,7 +170,7 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
     }
 
     @Override
-    public void onTrackSelected(TrackItem trackItem) {
+    public void onTrackSelected(TrackItemModel trackItemModel) {
 
     }
 }

@@ -1,8 +1,8 @@
 package com.alisonjc.compmusicplayer.tracks;
 
 
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 public interface OnTrackSelectedListener {
-    void onTrackSelected(TrackItem trackItem);
+    void onTrackSelected(TrackItemModel trackItemModel);
 }

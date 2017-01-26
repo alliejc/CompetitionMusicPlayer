@@ -12,14 +12,14 @@ import com.alisonjc.compmusicplayer.BR;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemViewModel;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 import java.util.List;
 
 
 public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecyclerAdapter<T>.GenericViewHolder> {
 
-    private List<TrackItem> mList;
+    private List<TrackItemModel> mList;
     private Context mContext;
     private OnItemClickListener mListener;
     private int selectedItem = -1;
@@ -29,7 +29,7 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
         void onItemClick(Object item, int position);
     }
 
-    public TracksRecyclerAdapter(List<TrackItem> list, Context context, OnItemClickListener listener) {
+    public TracksRecyclerAdapter(List<TrackItemModel> list, Context context, OnItemClickListener listener) {
         mList = list;
         mContext = context;
         mListener = listener;
@@ -45,7 +45,7 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
 
     @Override
     public void onBindViewHolder(final GenericViewHolder holder, final int position) {
-        TrackItem item = mList.get(position);
+        TrackItemModel item = mList.get(position);
         TrackRecyclerItemViewModel trackRecyclerItemViewModel = new TrackRecyclerItemViewModel(item);
 
         holder.bindItem(trackRecyclerItemViewModel);
@@ -66,7 +66,7 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
         notifyItemChanged(selectedItem);
     }
 
-    public void updateAdapter(List<TrackItem> items) {
+    public void updateAdapter(List<TrackItemModel> items) {
 
         mList.addAll(items);
         notifyDataSetChanged();
@@ -86,7 +86,7 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
             mRecyclerviewItemBinding.executePendingBindings();
         }
 
-        public void bind(TrackItem item, final TracksRecyclerAdapter.OnItemClickListener listener) {
+        public void bind(TrackItemModel item, final TracksRecyclerAdapter.OnItemClickListener listener) {
 
             itemView.setOnClickListener(view -> {
                 Log.i(TAG, "itemView OnClick");

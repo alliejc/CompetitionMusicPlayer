@@ -2,29 +2,29 @@ package com.alisonjc.compmusicplayer.databinding;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-
+import android.view.View;
 import com.alisonjc.compmusicplayer.BR;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 public class MediaControllerViewModel extends BaseObservable {
 
     private String mSong;
     private String mArtist;
-    private TrackItem mTrackItem;
+    private TrackItemModel mTrackItemModel;
     private String mUri;
     private int mSongProgress;
     private int mSeekBarMax;
-    private int mPlayButtonVisible;
-    private int mPauseButtonVisible;
+    private boolean mIsPlaying;
 
     public MediaControllerViewModel() {
     }
 
-    public void setTrackItem(TrackItem trackItem) {
-        mTrackItem = trackItem;
-        mSong = trackItem.getSongName();
-        mArtist = trackItem.getArtist();
-        mUri = trackItem.getUri();
+    public void setTrackItemModel(TrackItemModel trackItemModel) {
+        mTrackItemModel = trackItemModel;
+        mSong = trackItemModel.getSongName();
+        mArtist = trackItemModel.getArtist();
+        mUri = trackItemModel.getUri();
         notifyPropertyChanged(BR.songName);
         notifyPropertyChanged(BR.artist);
     }
@@ -73,25 +73,20 @@ public class MediaControllerViewModel extends BaseObservable {
         notifyPropertyChanged(BR.seekBarMax);
     }
 
-    public void setPlayButtonVisible(){
-        //0 == visible
-        //8 == gone
-        mPlayButtonVisible = 0;
-        mPauseButtonVisible = 8;
-
-        notifyPropertyChanged(BR.playButtonVisible);
+    public void setIsPlaying(boolean isPlaying){
+        mIsPlaying = isPlaying;
+        notifyPropertyChanged(BR.playButtonVisibility);
+        notifyPropertyChanged(BR.pauseButtonVisibility);
     }
 
     @Bindable
-    public int getPlayButtonVisible(){
-        return  this.mPlayButtonVisible;
+    public int getPlayButtonVisibility(){
+        return mIsPlaying ? View.VISIBLE : View.GONE;
     }
 
     @Bindable
-    public int getPauseButtonVisible(){
-        return this.mPauseButtonVisible;
+    public int getPauseButtonVisibility(){
+        return mIsPlaying ? View.GONE : View.VISIBLE;
     }
-
-
 
 }

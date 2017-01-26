@@ -4,7 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.alisonjc.compmusicplayer.TrackItemInterface;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 
 public class TrackRecyclerItemViewModel extends BaseObservable {
 
@@ -12,8 +12,8 @@ public class TrackRecyclerItemViewModel extends BaseObservable {
     private String mSubHeaderText;
     private TrackItemInterface mTrackItem;
 
-    public TrackRecyclerItemViewModel(TrackItem trackItem) {
-        this.mTrackItem = trackItem;
+    public TrackRecyclerItemViewModel(TrackItemModel trackItemModel) {
+        this.mTrackItem = trackItemModel;
     }
 
     @Bindable

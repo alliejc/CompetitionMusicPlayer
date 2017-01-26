@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="media_controller"
+            name="media_controller_view_model"
             type="com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel">
         </variable>
     </data>
@@ -20,7 +20,7 @@
     android:weightSum="100">
 
     <include
-        android:id="@+id/seeker_bar"
+        android:id="@+id/seekbar"
         layout="@layout/seekbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -42,6 +42,3 @@
 </LinearLayout>
 </FrameLayout>
 </layout>
-
-    <!--bind:media_controller="@{media_controller.seek_bar}"-->
-    <!--bind:media_controller="@{media_controller.now_playing_bar}"-->

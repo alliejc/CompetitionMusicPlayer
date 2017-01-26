@@ -27,6 +27,7 @@
     </TextView>
 
     <SeekBar
+        android:id="@+id/seek_bar_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -45,7 +46,7 @@
         android:layout_gravity="end"
         android:layout_weight="15"
         android:gravity="center"
-        android:text="@{media_controller.seekBarMax}"
+        android:text="@{String.valueOf(media_controller.seekBarMax)}"
         android:textColor="@color/color_light_gray"
         android:textSize="18sp">
 

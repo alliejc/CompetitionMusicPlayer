@@ -1,6 +1,7 @@
 package com.alisonjc.compmusicplayer;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,7 +20,7 @@ import android.widget.Toast;
 import com.alisonjc.compmusicplayer.databinding.MediaControllerBinding;
 import com.alisonjc.compmusicplayer.databinding.MediaControllerViewModel;
 import com.alisonjc.compmusicplayer.spotify.MusicPlayer;
-import com.alisonjc.compmusicplayer.spotify.TrackItem;
+import com.alisonjc.compmusicplayer.spotify.TrackItemModel;
 import com.alisonjc.compmusicplayer.tracks.OnControllerTrackChangeListener;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
@@ -31,21 +33,8 @@ import butterknife.BindView;
 
 public class MediaController extends Fragment implements OnControllerTrackChangeListener {
 
-
-    @BindView(R.id.play)
-    ImageButton mPlayButton;
-
-    @BindView(R.id.pause)
-    ImageButton mPauseButton;
-
-    @BindView(R.id.seekerBarView)
+    @BindView(R.id.seek_bar_view)
     SeekBar mSeekBar;
-
-//    @BindView(R.id.musicCurrentLoc)
-//    TextView mSongLocationView;
-
-//    @BindView(R.id.musicDuration)
-//    TextView mSongDurationView;
 
     @BindView(R.id.radio_group)
     RadioGroup mRadioGroup;
@@ -59,15 +48,16 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @Inject
     MediaControllerViewModel mMediaControllerViewModel;
 
+    private ImageButton mPlayButton;
+    private ImageButton mPauseButton;
+    private ImageButton mSkipNextButton;
     private int mSongProgress = 0;
     private Handler mSeekBarHandler = new Handler();
     private Handler mMusicTimerHandler = new Handler();
     private SpotifyPlayer mPlayer;
     private int mEndSongAt = 90000;
     private boolean mBeepPlayed = false;
-    private View mPlayerControls;
-    private int mSeconds = 0;
-    private int mMinutes = 0;
+   // private View mPlayerControls;
     private OnControllerTrackChangeListener mOnControllerTrackChangeListener;
     private static final String TAG = "MediaController";
     private MusicPlayer mMusicPlayer = MusicPlayer.getmMusicPlayer();
@@ -92,35 +82,43 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        MediaControllerBinding binding = MediaControllerBinding.inflate(inflater);
-        mMediaControllerViewModel = new MediaControllerViewModel();
 
         if (mPlayer == null) {
             mPlayer = mMusicPlayer.getPlayer(getContext());
         }
     }
 
+    @Nullable
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
-        playerControlsSetup();
+        mMediaControllerViewModel = new MediaControllerViewModel();
+        MediaControllerBinding mBinding = DataBindingUtil.inflate(inflater, R.layout.media_controller, container, false);
+        //mBinding.nowplaying.setMedia_controller(mMediaControllerViewModel);
+        mSeekBar = mBinding.seekbar.seekBarView;
+        mPauseButton = mBinding.musicPlayer.pause;
+        mPlayButton = mBinding.musicPlayer.play;
+        mSkipNextButton = mBinding.musicPlayer.skipNext;
+
+        //mBinding.setMedia_controller(mMediaControllerViewModel);
+
+        return mBinding.getRoot();
     }
 
-    public void playSong(TrackItem trackItem) {
+    public void playSong(TrackItemModel trackItemModel) {
         Log.i(TAG, "playSong");
 
-        mMediaControllerViewModel.setTrackItem(trackItem);
+        mMediaControllerViewModel.setTrackItemModel(trackItemModel);
 
         mBeepPlayed = false;
         Log.i(TAG, "mBeepPlayed = false");
 
-        mMediaControllerViewModel.setTrackItem(trackItem);
-        mPlayer.playUri(mOperationCallback, trackItem.getUri(), 0, 0);
+        mMediaControllerViewModel.setTrackItemModel(trackItemModel);
+        mPlayer.playUri(mOperationCallback, trackItemModel.getUri(), 0, 0);
 
+        mMediaControllerViewModel.setIsPlaying(true);
         setMusicTimer();
-        showPauseButton();
         setSeekBar();
     }
 
@@ -158,7 +156,6 @@ public class MediaController extends Fragment implements OnControllerTrackChange
         Log.i("setSeekBar", "SetSeekBar" + mSongProgress);
 
         if (mPlayer != null) {
-
             mMediaControllerViewModel.setSongProgress(mSongProgress);
             mMediaControllerViewModel.setSeekBarMax(mEndSongAt);
         }
@@ -175,60 +172,63 @@ public class MediaController extends Fragment implements OnControllerTrackChange
         //mSongLocationView.setText(R.string.start_time);
         //mSongDurationView.setText(R.string.one_thirty_radio_button);
 
-        mPlayerControls.findViewById(R.id.skip_previous).setOnClickListener(view -> {
-            onPreviousClicked();
-        });
+        mMediaControllerViewModel.setSongProgress(mSongProgress);
 
-        mPlayerControls.findViewById(R.id.play).setOnClickListener(view -> {
-            onPlayClicked();
-        });
+//        mPlayerControls.findViewById(R.id.skip_previous).setOnClickListener(view -> {
+//            onPreviousClicked();
+//        });
+//
+//        mPlayerControls.findViewById(R.id.play).setOnClickListener(view -> {
+//            onPlayClicked();
+//        });
+//
+//        mPlayerControls.findViewById(R.id.pause).setOnClickListener(view -> {
+//            onPauseClicked();
+//        });
+//
+//        mPlayerControls.findViewById(R.id.skip_next).setOnClickListener(view -> {
+//            onSkipNextClicked();
+//        });
+//
+//        mRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+//            onRadioButtonClicked(i);
+//        });
 
-        mPlayerControls.findViewById(R.id.pause).setOnClickListener(view -> {
-            onPauseClicked();
-        });
-
-        mPlayerControls.findViewById(R.id.skip_next).setOnClickListener(view -> {
-            onSkipNextClicked();
-        });
-
-        mRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
-            onRadioButtonClicked(i);
-        });
-
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i("Seekbar", "onProgressChanged" + progress);
-
-                if (mPlayer != null && fromUser) {
-
-                    mSeekBarHandler.removeCallbacks(seekrun);
-                    Log.i("onProgressChanged", "removeCallbacks - Seek");
-
-                    mPlayer.seekToPosition(mOperationCallback, progress);
-
-
-                    seekBar.setProgress(mSongProgress);
-                    Log.i("onProgressChanged", "SetProgress" + seekBar.getProgress());
-
-                    //mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
-
-                    mSongProgress = progress;
-                    setSeekBar();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.i("Seekbar", "START" + seekBar.getProgress());
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.i("Seekbar", "STOP" + seekBar.getProgress());
-                //onProgressChanged(seekBar, seekBar.getProgress(), true);
-            }
-        });
+//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                Log.i("Seekbar", "onProgressChanged" + progress);
+//
+//                if (mPlayer != null && fromUser) {
+//
+//                    mSeekBarHandler.removeCallbacks(seekrun);
+//                    Log.i("onProgressChanged", "removeCallbacks - Seek");
+//
+//                    mPlayer.seekToPosition(mOperationCallback, progress);
+//
+//                    mMediaControllerViewModel.setSongProgress(progress);
+//
+////                    seekBar.setProgress(mSongProgress);
+////                    Log.i("onProgressChanged", "SetProgress" + seekBar.getProgress());
+//
+//                    //mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
+//
+//                    mSongProgress = progress;
+//                    setSeekBar();
+//                }
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                Log.i("Seekbar", "START" + seekBar.getProgress());
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                Log.i("Seekbar", "STOP" + seekBar.getProgress());
+//                //onProgressChanged(seekBar, seekBar.getProgress(), true);
+//            }
+//        });
     }
 
     private void playBeep() {
@@ -251,29 +251,17 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
         if (mPlayer != null) {
             mPlayer.pause(mOperationCallback);
-            showPlayButton();
+            mMediaControllerViewModel.setIsPlaying(false);
         } else {
             Toast.makeText(getActivity(), "Please select a song", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void showPauseButton() {
-
-        mPlayButton.setVisibility(View.GONE);
-        mPauseButton.setVisibility(View.VISIBLE);
-    }
-
-    private void showPlayButton() {
-
-        mPauseButton.setVisibility(View.GONE);
-        mPlayButton.setVisibility(View.VISIBLE);
     }
 
     private void onPlayClicked() {
 
         if (mPlayer != null) {
             mPlayer.resume(mOperationCallback);
-            showPauseButton();
+            mMediaControllerViewModel.setIsPlaying(true);
         }
     }
 
@@ -370,7 +358,7 @@ public class MediaController extends Fragment implements OnControllerTrackChange
 
         setSeekBar();
         setMusicTimer();
-        showPlayButton();
+        mMediaControllerViewModel.setIsPlaying(false);
 
         if (mPlayer != null) {
             mPlayer.pause(mOperationCallback);
