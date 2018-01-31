@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alisonjc.compmusicplayer.adapter.TracksRecyclerAdapter;
+import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.util.RecyclerDivider;
-import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
-import com.alisonjc.compmusicplayer.callbacks.OnTrackSelectedListener;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 
@@ -28,16 +28,16 @@ import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class PlaylistTracksFragment extends Fragment implements OnControllerTrackChangeListener, OnTrackSelectedListener {
+public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged, IOnTrackSelected {
 
 //    @BindView(R.id.recycler_view)
 //    RecyclerView mRecyclerView;
 
-    private OnTrackSelectedListener mListener;
+    private IOnTrackSelected mListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private List<TrackItemModel> mPlaylistTracksList;
-    private TracksRecyclerAdapter mAdapter;
+    private TracksAdapter mAdapter;
     private View rootView;
     private String mPlaylistId;
     private String mUserId;
@@ -99,7 +99,7 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
         mRecyclerView.setHasFixedSize(true);
         loadMoreDataFromApi(mOffset);
 
-        mAdapter = new TracksRecyclerAdapter<>(mPlaylistTracksList, getContext(), (item, position) -> {
+        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), (item, position) -> {
             mItemPosition = position;
             setCurrentPlayingSong(mItemPosition);
         });
@@ -153,8 +153,8 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnTrackSelectedListener) {
-            mListener = (OnTrackSelectedListener) context;
+        if (context instanceof IOnTrackSelected) {
+            mListener = (IOnTrackSelected) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnTracksInteractionListener");

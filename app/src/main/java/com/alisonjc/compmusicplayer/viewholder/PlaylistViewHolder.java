@@ -6,14 +6,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.adapter.PlaylistRecyclerAdapter;
+import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
-import com.google.gson.internal.LinkedTreeMap;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Node;
-
-import java.util.List;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder {
 
@@ -31,7 +26,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
         image = (ImageView) itemView.findViewById(R.id.playlist_image);
     }
 
-    public void bind(final Item item, String url, final PlaylistRecyclerAdapter.onItemClickListener listener) {
+    public void bind(final Item item, String url, final PlaylistAdapter.onItemClickListener listener) {
         playlistTitle.setText(item.getName());
         songCount.setText(item.getTracks().getTotal().toString() + " songs");
 

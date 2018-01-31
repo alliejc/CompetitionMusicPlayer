@@ -1,6 +1,6 @@
 package com.alisonjc.compmusicplayer.callbacks;
 
 
-public interface OnControllerTrackChangeListener {
+public interface IOnTrackChanged {
     void onControllerTrackChange (boolean skipforward);
 }

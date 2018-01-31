@@ -18,19 +18,19 @@ import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
 import java.util.List;
 
 
-public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
+public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
 
     private List<TrackItemModel> mList;
     private Context mContext;
     private OnItemClickListener mListener;
     private int selectedItem = -1;
-    private static final String TAG = "TracksRecyclerAdapter";
+    private static final String TAG = "TracksAdapter";
 
     public interface OnItemClickListener {
         void onItemClick(Object item, int position);
     }
 
-    public TracksRecyclerAdapter(List<TrackItemModel> list, Context context, OnItemClickListener listener) {
+    public TracksAdapter(List<TrackItemModel> list, Context context, OnItemClickListener listener) {
         mList = list;
         mContext = context;
         mListener = listener;

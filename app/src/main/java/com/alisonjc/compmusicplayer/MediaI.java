@@ -16,8 +16,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.spotify.SpotifyMusicPlayer;
-import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.Spotify;
@@ -26,7 +26,7 @@ import com.spotify.sdk.android.player.SpotifyPlayer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MediaController extends Fragment implements OnControllerTrackChangeListener {
+public class MediaI extends Fragment implements IOnTrackChanged {
 
 
     @BindView(R.id.song_title)
@@ -68,15 +68,15 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     private View mPlayerControls;
     private int mSeconds = 0;
     private int mMinutes = 0;
-    private OnControllerTrackChangeListener mOnControllerTrackChangeListener;
-    private static final String TAG = "MediaController";
+    private IOnTrackChanged mIOnTrackChanged;
+    private static final String TAG = "MediaI";
     private SpotifyMusicPlayer mSpotifyMusicPlayer = SpotifyMusicPlayer.getmSpotifyMusicPlayer();
 
-    public MediaController() {
+    public MediaI() {
     }
 
-    public static MediaController newInstance() {
-        return new MediaController();
+    public static MediaI newInstance() {
+        return new MediaI();
     }
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
@@ -342,8 +342,8 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnControllerTrackChangeListener) {
-            mOnControllerTrackChangeListener = (OnControllerTrackChangeListener) context;
+        if (context instanceof IOnTrackChanged) {
+            mIOnTrackChanged = (IOnTrackChanged) context;
 
         } else {
             throw new RuntimeException(context.toString()
@@ -354,9 +354,9 @@ public class MediaController extends Fragment implements OnControllerTrackChange
     @Override
     public void onControllerTrackChange(boolean skipforward) {
 
-        if (mOnControllerTrackChangeListener != null) {
+        if (mIOnTrackChanged != null) {
             Log.i(TAG, "onControllerTrackChangeNOTNULL");
-            mOnControllerTrackChangeListener.onControllerTrackChange(skipforward);
+            mIOnTrackChanged.onControllerTrackChange(skipforward);
 
         } else {
             Log.i(TAG, "onControllerTrackChangeNULL");

@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.alisonjc.compmusicplayer.BR;
-import com.alisonjc.compmusicplayer.adapter.TracksRecyclerAdapter;
+import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemModel;
@@ -24,7 +24,7 @@ public class GenericViewHolder extends RecyclerView.ViewHolder {
         mRecyclerviewItemBinding.executePendingBindings();
     }
 
-    public void bindItemListener(TrackItemModel item, final TracksRecyclerAdapter.OnItemClickListener listener) {
+    public void bindItemListener(TrackItemModel item, final TracksAdapter.OnItemClickListener listener) {
         itemView.setOnClickListener(view -> {
             Log.i(TAG, "itemView OnClick");
 

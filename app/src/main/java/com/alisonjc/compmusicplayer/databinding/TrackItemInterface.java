@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.callbacks;
+package com.alisonjc.compmusicplayer.databinding;
 
 
 public interface TrackItemInterface {

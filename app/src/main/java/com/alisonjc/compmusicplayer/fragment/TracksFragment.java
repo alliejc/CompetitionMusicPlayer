@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alisonjc.compmusicplayer.adapter.TracksRecyclerAdapter;
+import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.util.RecyclerDivider;
-import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
-import com.alisonjc.compmusicplayer.callbacks.OnTrackSelectedListener;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 
@@ -29,13 +29,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class TracksFragment extends Fragment implements OnControllerTrackChangeListener, OnTrackSelectedListener {
+public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrackSelected {
 
-    private OnTrackSelectedListener mListener;
+    private IOnTrackSelected mListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private List<TrackItemModel> mTracksList;
-    private TracksRecyclerAdapter mAdapter;
+    private TracksAdapter mAdapter;
     private View rootView;
     private int mItemPosition = 0;
     private int mTotalTracks = 0;
@@ -82,7 +82,7 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
         mRecyclerView.setHasFixedSize(true);
         loadDataFromApi(mOffset);
 
-        mAdapter = new TracksRecyclerAdapter<>(mTracksList, getContext(), (item, position)-> {
+        mAdapter = new TracksAdapter<>(mTracksList, getContext(), (item, position)-> {
 
                 mItemPosition = position;
                 setCurrentPlayingSong(position);
@@ -134,8 +134,8 @@ public class TracksFragment extends Fragment implements OnControllerTrackChangeL
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnTrackSelectedListener) {
-            mListener = (OnTrackSelectedListener) context;
+        if (context instanceof IOnTrackSelected) {
+            mListener = (IOnTrackSelected) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnTracksInteractionListener");

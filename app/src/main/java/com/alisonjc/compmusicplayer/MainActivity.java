@@ -20,12 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alisonjc.compmusicplayer.callbacks.OnPlaylistInteractionListener;
+import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
-import com.alisonjc.compmusicplayer.fragment.PlaylistFragment;
+import com.alisonjc.compmusicplayer.fragment.PlaylistFragmentI;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
-import com.alisonjc.compmusicplayer.callbacks.OnTrackSelectedListener;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.fragment.TracksFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -38,7 +38,7 @@ import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnPlaylistInteractionListener, OnControllerTrackChangeListener, OnTrackSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, IOnPlaylistSelected, IOnTrackChanged, IOnTrackSelected {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity
     private String mPlaylistTitle;
     private String mUserName;
     private String mUserEmail;
-    private MediaController mMediaController;
+    private MediaI mMediaController;
     private PlaylistTracksFragment mPlaylistTracksFragment;
     private TracksFragment mTracksFragment;
     private static final int REQUEST_CODE = 1337;
-    private OnControllerTrackChangeListener mOnControllerTrackChangeListener;
+    private IOnTrackChanged mIOnTrackChanged;
     private static final String TAG = "MainActivity";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
     private TabLayout mTabLayout;
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         mTracksFragment = TracksFragment.newInstance();
-        mOnControllerTrackChangeListener = mTracksFragment;
+        mIOnTrackChanged = mTracksFragment;
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, mTracksFragment, "tracksFragment").addToBackStack(null).commit();
         mActionBar.setTitle(R.string.songs_drawer);
     }
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity
     private void getPlaylists() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
+        PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
         mActionBar.setTitle(R.string.playlists_drawer);
     }
@@ -238,13 +238,13 @@ public class MainActivity extends AppCompatActivity
                                 navigationDrawerSetup();
 
                                 FragmentManager fragmentManager = getSupportFragmentManager();
-                                PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
+                                PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
 
                                 fragmentManager.beginTransaction()
                                         .replace(R.id.main_framelayout, playlistFragment, "playlistTracksFragment").addToBackStack(null)
                                         .commit();
 
-                                mMediaController = MediaController.newInstance();
+                                mMediaController = MediaI.newInstance();
                                 fragmentManager.beginTransaction()
                                         .replace(R.id.media_controls_frame, mMediaController, "mediaController")
                                         .commit();
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         mPlaylistTracksFragment = PlaylistTracksFragment.newInstance(userId, playlistId);
-        mOnControllerTrackChangeListener = mPlaylistTracksFragment;
+        mIOnTrackChanged = mPlaylistTracksFragment;
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, mPlaylistTracksFragment, "playlistTracksFragment").addToBackStack(null).commit();
     }
 
@@ -284,9 +284,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onControllerTrackChange(boolean skipforward) {
-        if (mOnControllerTrackChangeListener != null) {
+        if (mIOnTrackChanged != null) {
             Log.i(TAG, "onControllerTackChangeNOTNULL");
-            mOnControllerTrackChangeListener.onControllerTrackChange(skipforward);
+            mIOnTrackChanged.onControllerTrackChange(skipforward);
         } else {
             Log.i(TAG, "onControllerTrackChangeNULL");
         }

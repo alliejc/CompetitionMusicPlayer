@@ -1,11 +1,8 @@
 package com.alisonjc.compmusicplayer.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -13,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.adapter.PlaylistRecyclerAdapter;
-import com.alisonjc.compmusicplayer.util.RecyclerDivider;
-import com.alisonjc.compmusicplayer.callbacks.OnPlaylistInteractionListener;
+import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
+import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 
@@ -26,22 +22,19 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class PlaylistFragment extends Fragment implements OnPlaylistInteractionListener {
+public class PlaylistFragmentI extends Fragment implements IOnPlaylistSelected {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private PlaylistRecyclerAdapter mAdapter;
+    private PlaylistAdapter mAdapter;
     private List<Item> mPlaylistItemList;
-    private OnPlaylistInteractionListener mListener;
-    private Drawable dividerDrawable;
+    private IOnPlaylistSelected mListener;
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
-
-    public PlaylistFragment() {
+    public PlaylistFragmentI() {
     }
 
-    public static PlaylistFragment newInstance() {
-        return new PlaylistFragment();
+    public static PlaylistFragmentI newInstance() {
+        return new PlaylistFragmentI();
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +62,7 @@ public class PlaylistFragment extends Fragment implements OnPlaylistInteractionL
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setHasFixedSize(true);
 
-            mAdapter = new PlaylistRecyclerAdapter(getContext(), mPlaylistItemList, item ->  {
+            mAdapter = new PlaylistAdapter(getContext(), mPlaylistItemList, item ->  {
                     String userId = item.getOwner().getId();
                     String playlistId = item.getId();
                     String playlistTitle = item.getName();
@@ -83,7 +76,6 @@ public class PlaylistFragment extends Fragment implements OnPlaylistInteractionL
     }
 
     private void recyclerViewSetup() {
-
         mSpotifyService.getUserPlayLists()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -101,8 +93,8 @@ public class PlaylistFragment extends Fragment implements OnPlaylistInteractionL
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnPlaylistInteractionListener) {
-            mListener = (OnPlaylistInteractionListener) context;
+        if (context instanceof IOnPlaylistSelected) {
+            mListener = (IOnPlaylistSelected) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnTracksInteractionListener");

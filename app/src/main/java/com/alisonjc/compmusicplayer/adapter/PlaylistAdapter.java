@@ -14,7 +14,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
-public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistViewHolder> {
 
     private List<Item> mPlaylistItemList;
     private Context mContext;
@@ -24,7 +24,7 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHo
         void onItemClick(Item item);
     }
 
-    public PlaylistRecyclerAdapter(Context context, List<Item> playlistItemList, onItemClickListener listener) {
+    public PlaylistAdapter(Context context, List<Item> playlistItemList, onItemClickListener listener) {
 
         this.mPlaylistItemList = playlistItemList;
         this.mContext = context;
