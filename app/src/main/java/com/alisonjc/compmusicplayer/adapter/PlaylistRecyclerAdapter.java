@@ -35,7 +35,7 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHo
 
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View v = inflater.inflate(R.layout.recyclerview_item, parent, false);
+        View v = inflater.inflate(R.layout.item_playlist, parent, false);
         PlaylistViewHolder holder = new PlaylistViewHolder(v);
 
         return holder;
@@ -45,11 +45,7 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHo
     public void onBindViewHolder(PlaylistViewHolder holder, int position) {
 
         Item item = mPlaylistItemList.get(position);
-        TextView playlistTitle = holder.playlistTitle;
-        TextView songCount = holder.songCount;
 
-        playlistTitle.setText(item.getName());
-        songCount.setText(item.getTracks().getTotal().toString() + " songs");
         holder.bind(item, listener);
     }
 
