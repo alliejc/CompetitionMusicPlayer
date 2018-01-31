@@ -8,12 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.alisonjc.compmusicplayer.BR;
 import com.alisonjc.compmusicplayer.R;
+import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemModel;
-import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
     private Context mContext;
     private OnItemClickListener mListener;
     private int selectedItem = -1;
-    private static final String TAG = "TracksAdapter";
 
     public interface OnItemClickListener {
         void onItemClick(Object item, int position);
@@ -60,8 +59,6 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
     }
 
     public void recyclerViewSelector(int position) {
-        Log.i(TAG, "recyclerViewSelector");
-
         notifyItemChanged(selectedItem);
         selectedItem = position;
         notifyItemChanged(selectedItem);

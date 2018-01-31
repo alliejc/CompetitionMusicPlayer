@@ -10,6 +10,7 @@ public class TrackRecyclerItemModel extends BaseObservable {
 
     private String mHeaderText;
     private String mSubHeaderText;
+    private String mImage;
     private TrackItemInterface mTrackItem;
 
     public TrackRecyclerItemModel(TrackItemModel trackItemModel) {
@@ -36,5 +37,15 @@ public class TrackRecyclerItemModel extends BaseObservable {
     public void setSubHeaderText(String subHeaderText){
         this.mSubHeaderText = subHeaderText;
         notifyPropertyChanged(BR.subHeaderText);
+    }
+
+    public String getImage() {
+        mImage = mTrackItem.getImage();
+        return this.mImage;
+    }
+
+    public void setImage(String image) {
+        this.mImage = image;
+//        notifyPropertyChanged(BR.image);
     }
 }

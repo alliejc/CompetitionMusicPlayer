@@ -73,7 +73,7 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.recyclerview_list, container, false);
+        rootView = inflater.inflate(R.layout.list, container, false);
         ButterKnife.bind(this, rootView);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
@@ -88,11 +88,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     }
 
     private void recyclerViewSetup() {
-
-        Drawable dividerDrawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_view_divider);
-        RecyclerView.ItemDecoration dividerItemDecoration = new RecyclerDivider(dividerDrawable);
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
         mPlaylistTracksList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);

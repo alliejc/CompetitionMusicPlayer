@@ -8,4 +8,6 @@ public interface TrackItemInterface {
 
     String getUri();
 
+    String getImage();
+
 }

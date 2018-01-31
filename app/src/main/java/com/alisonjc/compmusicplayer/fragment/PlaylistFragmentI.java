@@ -45,7 +45,7 @@ public class PlaylistFragmentI extends Fragment implements IOnPlaylistSelected {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.recyclerview_list, container, false);
+        View rootView = inflater.inflate(R.layout.list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         return rootView;
