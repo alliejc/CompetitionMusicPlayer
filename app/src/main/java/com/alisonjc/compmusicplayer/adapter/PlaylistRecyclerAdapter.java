@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.viewholder.PlaylistViewHolder;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
@@ -46,7 +47,15 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHo
 
         Item item = mPlaylistItemList.get(position);
 
-        holder.bind(item, listener);
+        List<Object> o = item.getImages();
+        LinkedTreeMap map = new LinkedTreeMap();
+        if(o.get(0) != null){
+            map = (LinkedTreeMap) o.get(0);
+        }
+
+        String url = (String) map.get("url");
+
+        holder.bind(item, url, listener);
     }
 
     public void updateAdapter(List<Item> items) {
