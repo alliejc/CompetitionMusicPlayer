@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.spotify.SpotifyMusicPlayer;
-import com.alisonjc.compmusicplayer.tracks.OnControllerTrackChangeListener;
+import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.Spotify;

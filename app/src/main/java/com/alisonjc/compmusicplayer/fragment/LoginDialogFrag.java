@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer;
+package com.alisonjc.compmusicplayer.fragment;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alisonjc.compmusicplayer.BuildConfig;
+import com.alisonjc.compmusicplayer.R;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -16,7 +18,7 @@ public class LoginDialogFrag extends DialogFragment {
     private static final String REDIRECT_URI = "comp-music-player-login://callback";
     private static final String CLIENT_ID = BuildConfig.CLIENT_ID;
 
-    static LoginDialogFrag newInstance() {
+    public static LoginDialogFrag newInstance() {
         return new LoginDialogFrag();
     }
 
@@ -29,7 +31,6 @@ public class LoginDialogFrag extends DialogFragment {
         View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
         mLoginButton.setVisibility(View.VISIBLE);
         mLoginButton.setOnClickListener(view ->  {
-
                 AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
                 builder.setScopes(new String[]{"playlist-read-private", "playlist-read-collaborative", "playlist-modify-public", "playlist-modify-private", "streaming",
                         "user-follow-modify", "user-follow-read", "user-library-read", "user-library-modify", "user-read-private", "user-read-birthdate", "user-read-email"});

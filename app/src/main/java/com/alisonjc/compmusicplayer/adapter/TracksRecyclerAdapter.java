@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.tracks;
+package com.alisonjc.compmusicplayer.adapter;
 
 
 import android.content.Context;
@@ -13,11 +13,12 @@ import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemModel;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
+import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
 
 import java.util.List;
 
 
-public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecyclerAdapter<T>.GenericViewHolder> {
+public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
 
     private List<TrackItemModel> mList;
     private Context mContext;
@@ -67,33 +68,7 @@ public class TracksRecyclerAdapter<T> extends RecyclerView.Adapter<TracksRecycle
     }
 
     public void updateAdapter(List<TrackItemModel> items) {
-
         mList.addAll(items);
         notifyDataSetChanged();
-    }
-
-    public class GenericViewHolder extends RecyclerView.ViewHolder {
-
-        private RecyclerviewItemBinding mRecyclerviewItemBinding;
-
-        public GenericViewHolder(RecyclerviewItemBinding itemBinding) {
-            super(itemBinding.getRoot());
-            this.mRecyclerviewItemBinding = itemBinding;
-        }
-
-        public void bindItem(TrackRecyclerItemModel trackRecyclerItemModel) {
-            mRecyclerviewItemBinding.setVariable(BR.recycler_view_item, trackRecyclerItemModel);
-            mRecyclerviewItemBinding.executePendingBindings();
-        }
-
-        public void bindItemListener(TrackItemModel item, final TracksRecyclerAdapter.OnItemClickListener listener) {
-
-            itemView.setOnClickListener(view -> {
-                Log.i(TAG, "itemView OnClick");
-
-                listener.onItemClick(item, getAdapterPosition());
-                recyclerViewSelector(getLayoutPosition());
-            });
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.playlists;
+package com.alisonjc.compmusicplayer.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,12 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.RecyclerDivider;
+import com.alisonjc.compmusicplayer.adapter.PlaylistRecyclerAdapter;
+import com.alisonjc.compmusicplayer.util.RecyclerDivider;
+import com.alisonjc.compmusicplayer.callbacks.OnPlaylistInteractionListener;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 
@@ -60,15 +63,13 @@ public class PlaylistFragment extends Fragment implements OnPlaylistInteractionL
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState == null) {
-            dividerDrawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_view_divider);
             mPlaylistItemList = new ArrayList<>();
-            mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            RecyclerView.ItemDecoration dividerItemDecoration = new RecyclerDivider(dividerDrawable);
-            mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setHasFixedSize(true);
 
             mAdapter = new PlaylistRecyclerAdapter(getContext(), mPlaylistItemList, item ->  {
-
                     String userId = item.getOwner().getId();
                     String playlistId = item.getId();
                     String playlistTitle = item.getName();

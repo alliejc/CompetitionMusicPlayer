@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.spotify;
+package com.alisonjc.compmusicplayer.callbacks;
 
 
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;

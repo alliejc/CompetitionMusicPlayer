@@ -5,7 +5,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.alisonjc.compmusicplayer.BR;
-import com.alisonjc.compmusicplayer.tracks.TrackItemInterface;
+import com.alisonjc.compmusicplayer.callbacks.TrackItemInterface;
 
 public class TrackRecyclerItemModel extends BaseObservable {
 

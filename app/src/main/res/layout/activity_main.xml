@@ -19,12 +19,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@drawable/side_nav_bar"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/color_white"
-        app:itemTextColor="@color/color_white"
-        app:itemTextAppearance="@color/color_white"
+        app:itemIconTint="@color/color_default"
+        app:itemTextColor="@color/color_default"
+        app:itemTextAppearance="@color/color_default"
         app:menu="@menu/activity_main_drawer">
 
     </android.support.design.widget.NavigationView>

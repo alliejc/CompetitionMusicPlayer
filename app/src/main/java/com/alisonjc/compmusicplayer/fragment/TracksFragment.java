@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.tracks;
+package com.alisonjc.compmusicplayer.fragment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alisonjc.compmusicplayer.EndlessScrollListener;
+import com.alisonjc.compmusicplayer.adapter.TracksRecyclerAdapter;
+import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.RecyclerDivider;
+import com.alisonjc.compmusicplayer.util.RecyclerDivider;
+import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
+import com.alisonjc.compmusicplayer.callbacks.OnTrackSelectedListener;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 
@@ -25,46 +28,29 @@ import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class PlaylistTracksFragment extends Fragment implements OnControllerTrackChangeListener, OnTrackSelectedListener {
 
-//    @BindView(R.id.recycler_view)
-//    RecyclerView mRecyclerView;
+public class TracksFragment extends Fragment implements OnControllerTrackChangeListener, OnTrackSelectedListener {
 
     private OnTrackSelectedListener mListener;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private List<TrackItemModel> mPlaylistTracksList;
+    private List<TrackItemModel> mTracksList;
     private TracksRecyclerAdapter mAdapter;
     private View rootView;
-    private String mPlaylistId;
-    private String mUserId;
     private int mItemPosition = 0;
     private int mTotalTracks = 0;
     private int mOffset;
     private int mLimit = 20;
-
-    private static final String TAG = "PlaylistTracksFragment";
+    private static final String TAG = "TracksFragment";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
-    public PlaylistTracksFragment() {
+    public TracksFragment() {
     }
 
-    public static PlaylistTracksFragment newInstance(String userId, String playlistId) {
-
-        PlaylistTracksFragment fragment = new PlaylistTracksFragment();
-        Bundle args = new Bundle();
-        args.putString("userId", userId);
-        args.putString("playlistId", playlistId);
-        fragment.setArguments(args);
+    public static TracksFragment newInstance() {
+        TracksFragment fragment = new TracksFragment();
 
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPlaylistId = getArguments().getString("playlistId");
-        mUserId = getArguments().getString("userId");
     }
 
     @Override
@@ -90,15 +76,16 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
         RecyclerView.ItemDecoration dividerItemDecoration = new RecyclerDivider(dividerDrawable);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mPlaylistTracksList = new ArrayList<>();
+        mTracksList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        loadMoreDataFromApi(mOffset);
+        loadDataFromApi(mOffset);
 
-        mAdapter = new TracksRecyclerAdapter<>(mPlaylistTracksList, getContext(), (item, position) -> {
-            mItemPosition = position;
-            setCurrentPlayingSong(mItemPosition);
+        mAdapter = new TracksRecyclerAdapter<>(mTracksList, getContext(), (item, position)-> {
+
+                mItemPosition = position;
+                setCurrentPlayingSong(position);
         });
 
         mRecyclerView.setAdapter(mAdapter);
@@ -107,24 +94,23 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
             @Override
             public void onLoadMore(int offset) {
                 mOffset = offset;
-                loadMoreDataFromApi(mOffset);
+                loadDataFromApi(mOffset);
             }
         });
     }
 
-    public void loadMoreDataFromApi(final int offset) {
-
-        mSpotifyService.getPlaylistTracks(mUserId, mPlaylistId, offset, mLimit)
-                .flatMapIterable(playlistTracksList -> {
-                    mTotalTracks = playlistTracksList.getTotal();
-                    return playlistTracksList.getItems();
+    public void loadDataFromApi(final int offset) {
+        mSpotifyService.getUserTracks(offset, mLimit)
+                .flatMapIterable(userTracks -> {
+                    mTotalTracks = userTracks.getTotal();
+                    return userTracks.getItems();
                 })
                 .map(item -> new TrackItemModel(item))
                 .toList()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playlistTracksList -> {
-                        mAdapter.updateAdapter(playlistTracksList);
+                .subscribe(userTracks -> {
+                    mAdapter.updateAdapter(userTracks);
                 }, throwable -> {
                     mSpotifyService.userLogout(getContext());
                 }, () -> {
@@ -132,19 +118,17 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     }
 
     private void setCurrentPlayingSong(int itemPosition) {
-        Log.i(TAG, "setCurrentPlayingSong");
         this.mItemPosition = itemPosition;
         mAdapter.recyclerViewSelector(mItemPosition);
         mRecyclerView.smoothScrollToPosition(mItemPosition);
-        onSongSelected(mPlaylistTracksList.get(itemPosition).getSongName(), mPlaylistTracksList.get(itemPosition).getArtist(), mPlaylistTracksList.get(itemPosition).getUri());
+        onSongSelected(mTracksList.get(itemPosition).getSongName(), mTracksList.get(itemPosition).getArtist(), mTracksList.get(itemPosition).getUri());
     }
 
     public void onSongSelected(String songName, String artistName, String uri) {
-        Log.i(TAG, "onSongSelected");
         if (mListener != null) {
             mListener.onTrackSelected(songName, artistName, uri);
         }
-
+        Log.i(TAG, "onSongSelected");
     }
 
     @Override
@@ -162,32 +146,33 @@ public class PlaylistTracksFragment extends Fragment implements OnControllerTrac
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Log.d(TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
     }
 
     @Override
     public void onControllerTrackChange(boolean skipforward) {
+
         if (skipforward) {
             if (mAdapter.getItemCount() <= mItemPosition + 1) {
                 mItemPosition = 0;
                 setCurrentPlayingSong(mItemPosition);
             } else {
                 setCurrentPlayingSong(mItemPosition + 1);
-                Log.i(TAG, "onControllerTrackChangeFORWARD");
             }
+
         } else {
             if (mItemPosition < 1) {
                 mItemPosition = 0;
                 setCurrentPlayingSong(mItemPosition);
             } else {
                 setCurrentPlayingSong(mItemPosition - 1);
-                Log.i(TAG, "onControllerTrackChangeBACK");
             }
         }
+        Log.i(TAG, "onControllerTackChange");
     }
 
     @Override
     public void onTrackSelected(String trackName, String artistName, String uri) {
-        Log.i(TAG, "onTrackSelected");
+        Log.i(TAG, "onTackSelected");
     }
 }

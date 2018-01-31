@@ -1,7 +1,7 @@
 package com.alisonjc.compmusicplayer.databinding;
 
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Item;
-import com.alisonjc.compmusicplayer.tracks.TrackItemInterface;
+import com.alisonjc.compmusicplayer.callbacks.TrackItemInterface;
 
 
 public class TrackItemModel implements TrackItemInterface {

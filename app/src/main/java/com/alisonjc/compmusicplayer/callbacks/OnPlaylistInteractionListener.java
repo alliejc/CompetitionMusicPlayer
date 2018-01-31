@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.playlists;
+package com.alisonjc.compmusicplayer.callbacks;
 
 
 public interface OnPlaylistInteractionListener {

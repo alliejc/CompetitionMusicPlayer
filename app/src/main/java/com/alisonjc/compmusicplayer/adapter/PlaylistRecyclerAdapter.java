@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer.playlists;
+package com.alisonjc.compmusicplayer.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +9,11 @@ import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.viewholder.PlaylistViewHolder;
 
 import java.util.List;
 
-public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistRecyclerAdapter.PlaylistViewHolder> {
+public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistViewHolder> {
 
     private List<Item> mPlaylistItemList;
     private Context mContext;
@@ -66,24 +67,5 @@ public class PlaylistRecyclerAdapter extends RecyclerView.Adapter<PlaylistRecycl
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-    }
-
-    public class PlaylistViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView playlistTitle;
-        public TextView songCount;
-
-        public PlaylistViewHolder(View itemView) {
-            super(itemView);
-
-            playlistTitle = (TextView) itemView.findViewById(R.id.recyclerview_header_text);
-            songCount = (TextView) itemView.findViewById(R.id.recyclerview_sub_text);
-        }
-
-        public void bind(final Item item, final onItemClickListener listener) {
-            itemView.setOnClickListener(view ->
-
-                    listener.onItemClick(item));
-            }
     }
 }

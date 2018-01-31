@@ -3,10 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/color_default</item>
+        <item name="colorPrimary">@color/color_white</item>
         <item name="colorPrimaryDark">@color/color_dark_gray</item>
         <item name="colorAccent">@color/color_light_pink</item>
         <item name="android:fitsSystemWindows">true</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,8 +18,13 @@
 
     <style name="ToolbarText" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/color_white</item>
-        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:textColor">@color/color_default</item>
+        <item name="android:background">@color/color_white</item>
+    </style>
+
+    <style name="Widget.AppCompat.Toolbar." parent="Widget.AppCompat.Toolbar.">
+        <item name="android:background">@color/color_white</item>
+        <item name="android:elevation">2dp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

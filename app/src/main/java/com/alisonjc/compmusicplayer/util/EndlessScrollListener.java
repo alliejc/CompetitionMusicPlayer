@@ -1,4 +1,4 @@
-package com.alisonjc.compmusicplayer;
+package com.alisonjc.compmusicplayer.util;
 
 
 import android.support.v7.widget.LinearLayoutManager;

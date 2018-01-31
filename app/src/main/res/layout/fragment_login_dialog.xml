@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/color_default"
+    android:background="@color/color_white"
     >
     <ImageButton
         android:id="@+id/spotifyLoginButton"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="DUE TO SPOTIFY LIMITATIONS YOUR LOGIN WILL EXPIRE EVERY HOUR, SORRY FOR THE INCONVENIENCE"
             android:textColor="@color/color_light_gray"
-            android:background="@color/color_default"
+            android:background="@color/color_white"
             android:textSize="20dp"
             android:textAlignment="center"
             android:padding="10dp"

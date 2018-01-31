@@ -19,13 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.alisonjc.compmusicplayer.playlists.OnPlaylistInteractionListener;
-import com.alisonjc.compmusicplayer.playlists.PlaylistFragment;
+import com.alisonjc.compmusicplayer.callbacks.OnPlaylistInteractionListener;
+import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
+import com.alisonjc.compmusicplayer.fragment.PlaylistFragment;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.alisonjc.compmusicplayer.tracks.OnControllerTrackChangeListener;
-import com.alisonjc.compmusicplayer.tracks.OnTrackSelectedListener;
-import com.alisonjc.compmusicplayer.tracks.PlaylistTracksFragment;
-import com.alisonjc.compmusicplayer.tracks.TracksFragment;
+import com.alisonjc.compmusicplayer.callbacks.OnControllerTrackChangeListener;
+import com.alisonjc.compmusicplayer.callbacks.OnTrackSelectedListener;
+import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
+import com.alisonjc.compmusicplayer.fragment.TracksFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
@@ -69,12 +70,11 @@ public class MainActivity extends AppCompatActivity
         if (mSpotifyService.isLoggedIn()) {
             userLogin();
         }
-
         toolbarSetup();
+        navigationDrawerSetup();
     }
 
     private void navigationDrawerSetup() {
-
         mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void userLogin() {
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment dialogFragment = LoginDialogFrag.newInstance();
         dialogFragment.show(ft, "dialog");
@@ -117,7 +116,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.main_overflow, menu);
         return true;
     }
@@ -148,14 +146,12 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_playlists) {
-
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
             mActionBar.setTitle(R.string.playlists_drawer);
 
         } else if (id == R.id.nav_songs) {
-
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             mTracksFragment = TracksFragment.newInstance();
             mOnControllerTrackChangeListener = mTracksFragment;
@@ -169,9 +165,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void toolbarSetup() {
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mActionBar = getSupportActionBar();
         mActionBar = getSupportActionBar();
         mActionBar.setTitle(R.string.app_name);
         mActionBar.setDisplayShowTitleEnabled(true);
@@ -201,7 +197,6 @@ public class MainActivity extends AppCompatActivity
 
                                 FragmentManager fragmentManager = getSupportFragmentManager();
                                 PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
-
 
                                 fragmentManager.beginTransaction()
                                         .replace(R.id.main_framelayout, playlistFragment, "playlistTracksFragment").addToBackStack(null)
