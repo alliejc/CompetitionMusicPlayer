@@ -16,6 +16,13 @@
         <item name="android:fitsSystemWindows">true</item>
     </style>
 
+    <style name="Tabs" parent="Base.Widget.Design.TabLayout">
+        <item name="tabBackground">@color/color_white</item>
+        <item name="tabIndicatorColor">@color/color_dark_pink</item>
+        <item name="tabSelectedTextColor">@color/color_dark_pink</item>
+        <item name="tabTextAppearance">@color/color_dark_gray</item>
+    </style>
+
     <style name="ToolbarText" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/color_default</item>

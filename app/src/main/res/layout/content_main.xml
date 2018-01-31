@@ -20,6 +20,31 @@
         android:layout_height="0dp"
         android:layout_weight="10"/>
 
+    <android.support.design.widget.TabLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/Tabs"
+        android:id="@+id/tablayout">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_one"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/tab_one"/>
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_two"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/tab_two" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_three"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/tab_three" />
+    </android.support.design.widget.TabLayout>
+
     <FrameLayout
         android:id="@+id/main_framelayout"
         android:layout_width="match_parent"

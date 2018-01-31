@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     private OnControllerTrackChangeListener mOnControllerTrackChangeListener;
     private static final String TAG = "MainActivity";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity
             userLogin();
         }
         toolbarSetup();
+        setUpTabs();
         navigationDrawerSetup();
     }
 
@@ -143,20 +146,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         int id = item.getItemId();
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (id == R.id.nav_playlists) {
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
-            fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
-            mActionBar.setTitle(R.string.playlists_drawer);
+           getPlaylists();
 
         } else if (id == R.id.nav_songs) {
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            mTracksFragment = TracksFragment.newInstance();
-            mOnControllerTrackChangeListener = mTracksFragment;
-            fragmentManager.beginTransaction().replace(R.id.main_framelayout, mTracksFragment, "tracksFragment").addToBackStack(null).commit();
-            mActionBar.setTitle(R.string.songs_drawer);
+            getAllSongs();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -172,6 +167,53 @@ public class MainActivity extends AppCompatActivity
         mActionBar.setTitle(R.string.app_name);
         mActionBar.setDisplayShowTitleEnabled(true);
         mActionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setUpTabs(){
+        mTabLayout = (TabLayout) findViewById(R.id.tablayout);
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                getTabData(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                getTabData(tab.getPosition());
+            }
+        });
+    }
+
+    private void getTabData(int tabPosition){
+        switch (tabPosition){
+            case 0:
+                getPlaylists();
+                break;
+            case 1:
+                getAllSongs();
+                break;
+        }
+    }
+
+    private void getAllSongs() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        mTracksFragment = TracksFragment.newInstance();
+        mOnControllerTrackChangeListener = mTracksFragment;
+        fragmentManager.beginTransaction().replace(R.id.main_framelayout, mTracksFragment, "tracksFragment").addToBackStack(null).commit();
+        mActionBar.setTitle(R.string.songs_drawer);
+    }
+
+    private void getPlaylists() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
+        fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
+        mActionBar.setTitle(R.string.playlists_drawer);
     }
 
     @Override
@@ -225,7 +267,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPlaylistSelected(String userId, String playlistId, String playlistTitle) {
-
         mPlaylistTitle = playlistTitle;
         mActionBar.setTitle(mPlaylistTitle);
 

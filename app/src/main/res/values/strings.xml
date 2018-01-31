@@ -33,6 +33,10 @@
     <string name="play_song">Play song</string>
     <string name="pause_song">Pause song</string>
 
+    <string name="tab_one">Playlists</string>
+    <string name="tab_two">All Songs</string>
+    <string name="tab_three">Artists</string>
+
     <string-array name="nav_drawer_array">
         <item>Playlists</item>
         <item>Songs</item>
