@@ -30,12 +30,10 @@ public class SpotifyMusicPlayer implements Player.NotificationCallback {
     }
 
     public SpotifyPlayer getPlayer(Context context) {
-
         if (mPlayer != null) {
             return mPlayer;
 
         } else {
-
             final Config playerConfig = mSpotifyService.getPlayerConfig(context);
             playerConfig.useCache(false);
 
@@ -54,7 +52,6 @@ public class SpotifyMusicPlayer implements Player.NotificationCallback {
             });
 
             mPlayer.isInitialized();
-            Log.i("SpotifyMusicPlayer", "Initialized");
 
             return mPlayer;
         }

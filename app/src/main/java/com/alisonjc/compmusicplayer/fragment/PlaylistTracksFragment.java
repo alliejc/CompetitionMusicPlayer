@@ -24,17 +24,17 @@ import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged, IOnTrackSelected {
 
-//    @BindView(R.id.recycler_view)
-//    RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     private IOnTrackSelected mListener;
-    private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private List<TrackItemModel> mPlaylistTracksList;
     private TracksAdapter mAdapter;
@@ -75,7 +75,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.list, container, false);
         ButterKnife.bind(this, rootView);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         return rootView;
     }

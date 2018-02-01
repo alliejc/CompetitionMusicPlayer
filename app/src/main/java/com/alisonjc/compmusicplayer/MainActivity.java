@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
-import com.alisonjc.compmusicplayer.fragment.PlaylistFragmentI;
+import com.alisonjc.compmusicplayer.fragment.PlaylistFragment;
 import com.alisonjc.compmusicplayer.spotify.SpotifyMusicPlayer;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
@@ -50,8 +50,6 @@ import butterknife.Unbinder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static java.security.AccessController.getContext;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IOnPlaylistSelected, IOnTrackChanged, IOnTrackSelected {
@@ -67,61 +65,64 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.song_title)
     TextView mSongView;
-    //
+
     @BindView(R.id.artist)
     TextView mArtistView;
-    //
+
     @BindView(R.id.play)
     ImageButton mPlayButton;
-    //
+
     @BindView(R.id.pause)
     ImageButton mPauseButton;
-    //
+
     @BindView(R.id.seekerBarView)
     SeekBar mSeekBar;
-    //
+
     @BindView(R.id.musicCurrentLoc)
     TextView mSongLocationView;
-    //
+
     @BindView(R.id.musicDuration)
     TextView mSongDurationView;
-    //
+
     @BindView(R.id.radio_group)
     RadioGroup mRadioGroup;
-    //
+
     @BindView(R.id.one_minute_thirty)
     RadioButton mOneThirtyMin;
-    //
+
     @BindView(R.id.two_minutes)
     RadioButton mTwoMin;
 
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private ActionBar mActionBar;
-    private String mPlaylistTitle;
-    private String mUserName;
-    private String mUserEmail;
+    private static final int REQUEST_CODE = 1337;
+    private static final String TAG = "MainActivity";
+
+    private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
+    private SpotifyMusicPlayer mSpotifyMusicPlayer = SpotifyMusicPlayer.getmSpotifyMusicPlayer();
+    private SpotifyPlayer mPlayer;
+
     private PlaylistTracksFragment mPlaylistTracksFragment;
     private TracksFragment mTracksFragment;
-    private static final int REQUEST_CODE = 1337;
     private IOnTrackChanged mIOnTrackChanged;
-    private static final String TAG = "MainActivity";
-    private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
-    private TabLayout mTabLayout;
-    private View mBottomSheet;
-    private BottomSheetBehavior bottomSheetBehavior;
-    private Unbinder unbinder;
-    private View mPlayerControls;
-    private SpotifyPlayer mPlayer;
-    private SpotifyMusicPlayer mSpotifyMusicPlayer = SpotifyMusicPlayer.getmSpotifyMusicPlayer();
-    private boolean mBeepPlayed = false;
 
-    private int mSongLocation = 0;
     private Handler mSeekBarHandler = new Handler();
     private Handler mMusicTimerHandler = new Handler();
+
+    private boolean mBeepPlayed = false;
+    private int mSongLocation = 0;
     private int mEndSongAt = 90000;
     private int mSeconds = 0;
     private int mMinutes = 0;
+    private String mPlaylistTitle;
+    private String mUserName;
+    private String mUserEmail;
 
+    /*VIEWS*/
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private ActionBar mActionBar;
+    private View mPlayerControls;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private TabLayout mTabLayout;
+    private Unbinder unbinder;
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
         @Override
@@ -168,8 +169,8 @@ public class MainActivity extends AppCompatActivity
     private void setUpMediaPlayerUI(){
         final View mBottomSheet = findViewById(R.id.bottom_sheet) ;
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet) ;
-        bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setPeekHeight(150);
+        bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
@@ -222,7 +223,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case R.id.nav_logout:
                 mSpotifyService.userLogout(getApplicationContext());
                 mNavigationView.setCheckedItem(R.id.nav_playlists);
@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void playSong(){
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         mBeepPlayed = false;
         setMusicTimer();
         showPauseButton();
@@ -387,13 +388,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onSkipNextClicked() {
-        Log.i(TAG, "onSkipClicked");
-
         if (mPlayer != null) {
             resetHandlers();
             mPlayer.skipToNext(mOperationCallback);
             onControllerTrackChange(true);
-
         } else {
             Log.i(TAG, "onSkipNextClickedPLAYERNULL");
         }
@@ -484,7 +482,7 @@ public class MainActivity extends AppCompatActivity
     private void getPlaylists() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
+        PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
         mActionBar.setTitle(R.string.playlists_drawer);
     }
@@ -533,7 +531,7 @@ public class MainActivity extends AppCompatActivity
 
     private void startPlaylistFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
+        PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
 
         fragmentManager.beginTransaction()
                 .replace(R.id.main_framelayout, playlistFragment, "playlistTracksFragment").addToBackStack(null)

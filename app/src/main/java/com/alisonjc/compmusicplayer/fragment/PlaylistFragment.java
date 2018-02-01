@@ -22,7 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class PlaylistFragmentI extends Fragment implements IOnPlaylistSelected {
+public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
 
     private RecyclerView mRecyclerView;
     private PlaylistAdapter mAdapter;
@@ -30,11 +30,11 @@ public class PlaylistFragmentI extends Fragment implements IOnPlaylistSelected {
     private IOnPlaylistSelected mListener;
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
-    public PlaylistFragmentI() {
+    public PlaylistFragment() {
     }
 
-    public static PlaylistFragmentI newInstance() {
-        return new PlaylistFragmentI();
+    public static PlaylistFragment newInstance() {
+        return new PlaylistFragment();
     }
 
     public void onCreate(Bundle savedInstanceState) {

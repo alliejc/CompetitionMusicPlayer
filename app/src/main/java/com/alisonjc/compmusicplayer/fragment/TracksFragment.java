@@ -123,7 +123,6 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
         if (mListener != null) {
             mListener.onTrackSelected(songName, artistName, uri);
         }
-        Log.i(TAG, "onSongSelected");
     }
 
     @Override
@@ -141,12 +140,10 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        Log.i(TAG, "onDestroy");
     }
 
     @Override
     public void onControllerTrackChange(boolean skipforward) {
-
         if (skipforward) {
             if (mAdapter.getItemCount() <= mItemPosition + 1) {
                 mItemPosition = 0;
@@ -163,11 +160,9 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
                 setCurrentPlayingSong(mItemPosition - 1);
             }
         }
-        Log.i(TAG, "onControllerTackChange");
     }
 
     @Override
     public void onTrackSelected(String trackName, String artistName, String uri) {
-        Log.i(TAG, "onTackSelected");
     }
 }

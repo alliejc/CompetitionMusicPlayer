@@ -43,12 +43,12 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
 
     @Override
     public void onBindViewHolder(final GenericViewHolder holder, final int position) {
-        TrackItemModel item = mList.get(position);
+        TrackItemModel item = mList.get(holder.getAdapterPosition());
         TrackRecyclerItemModel trackRecyclerItemModel = new TrackRecyclerItemModel(item);
 
         holder.bindItem(trackRecyclerItemModel);
         holder.bindItemListener(item, mListener);
-        holder.itemView.setSelected(selectedItem == position);
+        holder.itemView.setSelected(selectedItem == holder.getAdapterPosition());
     }
 
     @Override
