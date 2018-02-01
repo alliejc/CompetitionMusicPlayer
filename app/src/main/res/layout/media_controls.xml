@@ -1,38 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@drawable/player_background"
-    >
-
-<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background"
-    android:weightSum="100"
-    >
-
-    <include
-        android:id="@+id/seeker_bar"
-        layout="@layout/seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="33.3"/>
-
-    <include
-        android:id="@+id/music_player"
-        layout="@layout/music_player"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="33.3"/>
+    android:background="@color/transparent">
     <include
         android:id="@+id/nowplaying"
         layout="@layout/nowplaying"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="33.3"/>
+        android:layout_height="30dp" />
+    <include
+        android:id="@+id/seeker_bar"
+        layout="@layout/seekbar"
+        android:layout_below="@+id/nowplaying"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+    <include
+        android:id="@+id/music_player"
+        layout="@layout/music_player"
+        android:layout_below="@+id/seeker_bar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp" />
+</RelativeLayout>
 
-</LinearLayout>
-</FrameLayout>

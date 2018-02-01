@@ -4,7 +4,10 @@ package com.alisonjc.compmusicplayer;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -18,11 +21,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
 import com.alisonjc.compmusicplayer.fragment.PlaylistFragmentI;
+import com.alisonjc.compmusicplayer.spotify.SpotifyMusicPlayer;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
@@ -30,11 +39,18 @@ import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.fragment.TracksFragment;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static java.security.AccessController.getContext;
 
 
 public class MainActivity extends AppCompatActivity
@@ -49,12 +65,41 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
+    @BindView(R.id.song_title)
+    TextView mSongView;
+    //
+    @BindView(R.id.artist)
+    TextView mArtistView;
+    //
+    @BindView(R.id.play)
+    ImageButton mPlayButton;
+    //
+    @BindView(R.id.pause)
+    ImageButton mPauseButton;
+    //
+    @BindView(R.id.seekerBarView)
+    SeekBar mSeekBar;
+    //
+    @BindView(R.id.musicCurrentLoc)
+    TextView mSongLocationView;
+    //
+    @BindView(R.id.musicDuration)
+    TextView mSongDurationView;
+    //
+    @BindView(R.id.radio_group)
+    RadioGroup mRadioGroup;
+    //
+    @BindView(R.id.one_minute_thirty)
+    RadioButton mOneThirtyMin;
+    //
+    @BindView(R.id.two_minutes)
+    RadioButton mTwoMin;
+
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ActionBar mActionBar;
     private String mPlaylistTitle;
     private String mUserName;
     private String mUserEmail;
-    private MediaI mMediaController;
     private PlaylistTracksFragment mPlaylistTracksFragment;
     private TracksFragment mTracksFragment;
     private static final int REQUEST_CODE = 1337;
@@ -62,19 +107,70 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
     private TabLayout mTabLayout;
+    private View mBottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private Unbinder unbinder;
+    private View mPlayerControls;
+    private SpotifyPlayer mPlayer;
+    private SpotifyMusicPlayer mSpotifyMusicPlayer = SpotifyMusicPlayer.getmSpotifyMusicPlayer();
+    private boolean mBeepPlayed = false;
+
+    private int mSongLocation = 0;
+    private Handler mSeekBarHandler = new Handler();
+    private Handler mMusicTimerHandler = new Handler();
+    private int mEndSongAt = 90000;
+    private int mSeconds = 0;
+    private int mMinutes = 0;
+
+
+    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
+        @Override
+        public void onSuccess() {
+        }
+
+        @Override
+        public void onError(Error error) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mPlayerControls = findViewById(R.id.music_player);
+        unbinder = ButterKnife.bind(this);
 
         if (mSpotifyService.isLoggedIn()) {
             userLogin();
         }
+
         toolbarSetup();
         setUpTabs();
         navigationDrawerSetup();
+        setUpMediaPlayerUI();
+        playerControlsSetup();
+    }
+
+//    private void setUpUI(){
+//        mPlayerControls = findViewById(R.id.music_player);
+//        mSongView = (TextView) findViewById(R.id.song_title);
+//        mArtistView = (TextView) findViewById(R.id.artist);
+//        mPlayButton = (ImageButton) findViewById(R.id.play);
+//        mPauseButton = (ImageButton) findViewById(R.id.pause);
+//        mSeekBar = (SeekBar) findViewById(R.id.seekerBarView);
+//        mSongDurationView = (TextView) findViewById(R.id.musicDuration);
+//        mSongLocationView = (TextView) findViewById(R.id.musicCurrentLoc);
+//        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
+//        mOneThirtyMin = (RadioButton) findViewById(R.id.one_minute_thirty);
+//        mTwoMin = (RadioButton) findViewById(R.id.two_minutes);
+//    }
+
+    private void setUpMediaPlayerUI(){
+        final View mBottomSheet = findViewById(R.id.bottom_sheet) ;
+        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet) ;
+        bottomSheetBehavior.setHideable(false);
+        bottomSheetBehavior.setPeekHeight(150);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void navigationDrawerSetup() {
@@ -130,7 +226,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_logout:
                 mSpotifyService.userLogout(getApplicationContext());
                 mNavigationView.setCheckedItem(R.id.nav_playlists);
-                mMediaController.clearPlayer();
+                clearPlayer();
                 userLogin();
                 break;
 
@@ -157,6 +253,183 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void playSong(){
+        mBeepPlayed = false;
+        setMusicTimer();
+        showPauseButton();
+        setSeekBar();
+    }
+
+    private void setMusicTimer() {
+        if (mPlayer != null && mPlayer.getPlaybackState() != null) {
+            mSongLocation = (int) mPlayer.getPlaybackState().positionMs;
+            if (mSongLocation >= mEndSongAt - 10000 && !mBeepPlayed) {
+                playBeep();
+                mBeepPlayed = true;
+
+            } else if (mSongLocation >= mEndSongAt) {
+                onSkipNextClicked();
+            }
+            mMusicTimerHandler.postDelayed(musicTimerRun, 1000);
+        }
+    }
+
+    private Runnable musicTimerRun = () -> {
+        setMusicTimer();
+    };
+
+    private void setSeekBar() {
+        if (mPlayer != null) {
+            mSeekBar.setProgress(mSongLocation);
+            mSeekBar.setMax(mEndSongAt);
+
+            mSeconds = ((mSongLocation / 1000) % 60);
+            mMinutes = ((mSongLocation / 1000) / 60);
+
+            mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
+        }
+        mSeekBarHandler.postDelayed(seekrun, 1000);
+
+    }
+
+    private void playerControlsSetup() {
+        mSongLocationView.setText(R.string.start_time);
+        mSongDurationView.setText(R.string.one_thirty_radio_button);
+
+        mPlayerControls.findViewById(R.id.skip_previous).setOnClickListener(view -> {
+            onPreviousClicked();
+        });
+
+        mPlayerControls.findViewById(R.id.play).setOnClickListener(view -> {
+            onPlayClicked();
+        });
+
+        mPlayerControls.findViewById(R.id.pause).setOnClickListener(view -> {
+            onPauseClicked();
+        });
+
+        mPlayerControls.findViewById(R.id.skip_next).setOnClickListener(view -> {
+            onSkipNextClicked();
+        });
+
+        mRadioGroup.setOnCheckedChangeListener((radioGroup, i) -> {
+            onRadioButtonClicked(i);
+        });
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Log.i("Seekbar", "onProgressChanged" + progress);
+
+                if (mPlayer != null && fromUser) {
+                    mSeekBarHandler.removeCallbacks(seekrun);
+
+                    mPlayer.seekToPosition(mOperationCallback, progress);
+                    seekBar.setProgress(mSongLocation);
+                    mSongLocationView.setText(String.format("%2d:%02d", mMinutes, mSeconds, 0));
+
+                    mSongLocation = progress;
+                    setSeekBar();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.i("Seekbar", "START" + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i("Seekbar", "STOP" + seekBar.getProgress());
+                //onProgressChanged(seekBar, seekBar.getProgress(), true);
+            }
+        });
+    }
+
+    private void playBeep() {
+        final MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.beep);
+
+        mediaPlayer.setOnPreparedListener(mediaPlayer1 -> {
+            mediaPlayer.start();
+        });
+
+        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+            mediaPlayer.release();
+        });
+    }
+
+    private void onPauseClicked() {
+        if (mPlayer != null) {
+            mPlayer.pause(mOperationCallback);
+            showPlayButton();
+        } else {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showPauseButton() {
+        mPlayButton.setVisibility(View.GONE);
+        mPauseButton.setVisibility(View.VISIBLE);
+    }
+
+    private void showPlayButton() {
+        mPauseButton.setVisibility(View.GONE);
+        mPlayButton.setVisibility(View.VISIBLE);
+    }
+
+    private void onPlayClicked() {
+        if (mPlayer != null) {
+            mPlayer.resume(mOperationCallback);
+            showPauseButton();
+        }
+    }
+
+    private void onSkipNextClicked() {
+        Log.i(TAG, "onSkipClicked");
+
+        if (mPlayer != null) {
+            resetHandlers();
+            mPlayer.skipToNext(mOperationCallback);
+            onControllerTrackChange(true);
+
+        } else {
+            Log.i(TAG, "onSkipNextClickedPLAYERNULL");
+        }
+    }
+
+    private void resetHandlers() {
+        mSeekBarHandler.removeCallbacks(seekrun);
+        mMusicTimerHandler.removeCallbacks(musicTimerRun);
+    }
+
+    Runnable seekrun = () -> {
+        setSeekBar();
+    };
+
+    private void onPreviousClicked() {
+        if (mPlayer != null) {
+            mPlayer.skipToPrevious(mOperationCallback);
+            onControllerTrackChange(false);
+        }
+    }
+
+    public void onRadioButtonClicked(int id) {
+        switch (id) {
+            case R.id.one_minute_thirty:
+                if (mOneThirtyMin.isChecked()) {
+                    mSongDurationView.setText(R.string.one_thirty_radio_button);
+                    mEndSongAt = 90000;
+                }
+                break;
+            case R.id.two_minutes:
+                if (mTwoMin.isChecked()) {
+                    mSongDurationView.setText(R.string.two_minute_radio_button);
+                    mEndSongAt = 120000;
+                }
+                break;
+        }
     }
 
     private void toolbarSetup() {
@@ -236,18 +509,11 @@ public class MainActivity extends AppCompatActivity
                                 mUserName = spotifyUser.getDisplayName();
                                 mUserEmail = spotifyUser.getEmail();
                                 navigationDrawerSetup();
+                                startPlaylistFragment();
 
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
-
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.main_framelayout, playlistFragment, "playlistTracksFragment").addToBackStack(null)
-                                        .commit();
-
-                                mMediaController = MediaI.newInstance();
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.media_controls_frame, mMediaController, "mediaController")
-                                        .commit();
+                                if (mPlayer == null) {
+                                    mPlayer = mSpotifyMusicPlayer.getPlayer(this);
+                                }
 
                                 mActionBar.setTitle(R.string.playlists_drawer);
                             }, throwable -> {
@@ -265,6 +531,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void startPlaylistFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        PlaylistFragmentI playlistFragment = PlaylistFragmentI.newInstance();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_framelayout, playlistFragment, "playlistTracksFragment").addToBackStack(null)
+                .commit();
+    }
+
     @Override
     public void onPlaylistSelected(String userId, String playlistId, String playlistTitle) {
         mPlaylistTitle = playlistTitle;
@@ -278,14 +553,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTrackSelected(String songName, String artistName, String uri) {
-        Log.i(TAG, "onTracksSelected");
-        mMediaController.playSong(songName, artistName, uri);
+        playSong();
+        mPlayer.playUri(mOperationCallback, uri, 0, 0);
+        mSongView.setText(songName + " - ");
+        mArtistView.setText(artistName);
+    }
+
+    public void clearPlayer() {
+        resetHandlers();
+        setSeekBar();
+        setMusicTimer();
+        showPlayButton();
+
+        if (mPlayer != null) {
+            mPlayer.pause(mOperationCallback);
+            Spotify.destroyPlayer(mPlayer);
+        }
     }
 
     @Override
     public void onControllerTrackChange(boolean skipforward) {
         if (mIOnTrackChanged != null) {
-            Log.i(TAG, "onControllerTackChangeNOTNULL");
             mIOnTrackChanged.onControllerTrackChange(skipforward);
         } else {
             Log.i(TAG, "onControllerTrackChangeNULL");

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     tools:context="com.alisonjc.compmusicplayer.MainActivity">
 
@@ -13,13 +13,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
-
     </android.support.design.widget.AppBarLayout>
 
     <include
         layout="@layout/content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent">
+            <include
+                android:id="@+id/seeker_bar"
+                layout="@layout/seekbar"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <include
+                android:id="@+id/music_player"
+                layout="@layout/music_player"
+                android:layout_below="@+id/seeker_bar"
+                android:layout_width="match_parent"
+                android:layout_height="45dp" />
+            <include
+                android:id="@+id/nowplaying"
+                layout="@layout/nowplaying"
+                android:layout_below="@+id/music_player"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                />
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
 
