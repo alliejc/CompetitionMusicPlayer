@@ -12,6 +12,7 @@ import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemModel;
 import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,6 +50,12 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
         holder.bindItem(trackRecyclerItemModel);
         holder.bindItemListener(item, mListener);
         holder.itemView.setSelected(selectedItem == holder.getAdapterPosition());
+
+        if(selectedItem == holder.getAdapterPosition()) {
+            holder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.vector_equalizer));
+        } else {
+            Picasso.with(holder.itemView.getContext()).load(item.getImage()).error(R.drawable.ic_menu_gallery).into(holder.imageView);
+        }
     }
 
     @Override

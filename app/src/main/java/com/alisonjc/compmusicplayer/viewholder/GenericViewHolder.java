@@ -29,8 +29,6 @@ public class GenericViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindItemListener(TrackItemModel item, final TracksAdapter.OnItemClickListener listener) {
-        Picasso.with(itemView.getContext()).load(item.getImage()).error(R.drawable.ic_menu_gallery).into(imageView);
-
         itemView.setOnClickListener(view -> {
             listener.onItemClick(item, getAdapterPosition());
         });

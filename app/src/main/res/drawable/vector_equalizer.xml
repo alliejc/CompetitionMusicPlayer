@@ -1,0 +1,15 @@
+<vector android:height="24dp"
+    android:viewportHeight="128.0"
+    android:viewportWidth="128.0"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/color_light_pink"
+        android:pathData="M48,65l0,63 16,0 16,0 0,-63 0,-63 -16,0 -16,0 0,63z"
+        android:strokeColor="@color/color_light_pink" />
+    <path android:fillColor="@color/color_light_pink"
+        android:pathData="M94.2,83.7l0.3,43.8 15.6,0.3c12.4,0.2 15.9,0 16.8,-1.1 0.8,-1.1 1.1,-12.9 0.9,-43.8l-0.3,-42.4 -16.8,-0.3 -16.7,-0.2 0.2,43.7z"
+        android:strokeColor="@color/color_light_pink" />
+    <path android:fillColor="@color/color_light_pink"
+        android:pathData="M2,96l0,32.1 15.8,-0.3 15.7,-0.3 0.3,-31.8 0.2,-31.7 -16,0 -16,0 0,32z"
+        android:strokeColor="@color/color_light_pink" />
+</vector>
