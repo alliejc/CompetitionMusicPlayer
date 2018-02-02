@@ -12,6 +12,5 @@
         android:layout_gravity="center"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
-
 </FrameLayout>
 

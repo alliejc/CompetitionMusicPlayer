@@ -60,7 +60,6 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
             mPlaylistItemList = new ArrayList<>();
             recyclerViewSetup();
             loadDataFromApi();
-
         }
     }
 
@@ -76,22 +75,22 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
             mListener.onPlaylistSelected(userId, playlistId, playlistTitle);
         });
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.updateAdapter(mPlaylistItemList);
-    }
+   }
 
     private void loadDataFromApi(){
-        mSpotifyService.getUserPlayLists()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userPlaylists -> {
-                    if (userPlaylists != null) {
-                        mAdapter.updateAdapter(userPlaylists.getItems());
-                    } else {
-                        mSpotifyService.userLogout(getContext());
-                    }
-                }, throwable -> {
-                }, () -> {
-                });
+            mSpotifyService.getUserPlayLists()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(userPlaylists -> {
+                        if (userPlaylists != null) {
+                            mPlaylistItemList.addAll(userPlaylists.getItems());
+                            mAdapter.updateAdapter(mPlaylistItemList);
+                        } else {
+                            mSpotifyService.userLogout(getContext());
+                        }
+                    }, throwable -> {
+                    }, () -> {
+                    });
     }
 
     @Override
