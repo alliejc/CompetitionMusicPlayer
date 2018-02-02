@@ -43,6 +43,13 @@
     <item name="android:fitsSystemWindows">true</item>
     </style>
 
+    <style name="Widget.Design.FloatingActionButton." parent="Widget.Design.FloatingActionButton.">
+        <item name="android:icon">@drawable/ic_add</item>
+        <item name="android:shadowColor">@color/color_dark_gray</item>
+    </style>
+
+    <style name="FAB" parent="@style/Widget.Design.FloatingActionButton.">
+    </style>
 
     <style name="scrollbar_style">
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>

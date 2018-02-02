@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.util.RecyclerDivider;
@@ -86,6 +87,17 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         recyclerViewSetup();
     }
 
+    public Item addPlaylist(){
+        List<Object> addImage = new ArrayList<>();
+        addImage.add(getContext().getString(R.string.add_a_playlist_image));
+
+        Item item = new Item();
+        item.setName("Add a Playlist");
+        item.setImages(addImage);
+
+        return item;
+    }
+
     private void recyclerViewSetup() {
         mPlaylistTracksList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -93,7 +105,7 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         mRecyclerView.setHasFixedSize(true);
         loadMoreDataFromApi(mOffset);
 
-        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), (item, position) -> {
+        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), (Object item, int position) -> {
             mItemPosition = position;
             setCurrentPlayingSong(mItemPosition);
         });
@@ -110,7 +122,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     }
 
     public void loadMoreDataFromApi(final int offset) {
-
         mSpotifyService.getPlaylistTracks(mUserId, mPlaylistId, offset, mLimit)
                 .flatMapIterable(playlistTracksList -> {
                     mTotalTracks = playlistTracksList.getTotal();
@@ -141,7 +152,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         if (mListener != null) {
             mListener.onTrackSelected(songName, artistName, uri);
         }
-
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Owner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,25 +58,28 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
 
         if (savedInstanceState == null) {
             mPlaylistItemList = new ArrayList<>();
-
-            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setHasFixedSize(true);
-
-            mAdapter = new PlaylistAdapter(getContext(), mPlaylistItemList, item ->  {
-                    String userId = item.getOwner().getId();
-                    String playlistId = item.getId();
-                    String playlistTitle = item.getName();
-                    mListener.onPlaylistSelected(userId, playlistId, playlistTitle);
-            });
-            mRecyclerView.setAdapter(mAdapter);
-            mAdapter.updateAdapter(mPlaylistItemList);
-
             recyclerViewSetup();
+            loadDataFromApi();
+
         }
     }
 
     private void recyclerViewSetup() {
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new PlaylistAdapter(getContext(), mPlaylistItemList, item ->  {
+            String userId = item.getOwner().getId();
+            String playlistId = item.getId();
+            String playlistTitle = item.getName();
+            mListener.onPlaylistSelected(userId, playlistId, playlistTitle);
+        });
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.updateAdapter(mPlaylistItemList);
+    }
+
+    private void loadDataFromApi(){
         mSpotifyService.getUserPlayLists()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

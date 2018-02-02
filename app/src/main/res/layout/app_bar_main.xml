@@ -51,7 +51,6 @@
                 android:layout_height="30dp"
                 />
         </RelativeLayout>
-
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

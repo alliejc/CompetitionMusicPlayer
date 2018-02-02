@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Add To Playlist" android:id="@+id/add_to_playlist"
+        android:icon="@android:drawable/btn_plus" />
+    <item android:title="Remove From Playlist" android:id="@+id/remove_from_playlist"
+        android:icon="@android:drawable/btn_minus"/>
+</menu>

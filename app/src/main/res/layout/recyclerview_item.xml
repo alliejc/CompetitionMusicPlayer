@@ -40,7 +40,7 @@
             android:text="@{recycler_view_item.headerText}"/>
 
         <ImageView
-            android:id="@+id/menu_icon"
+            android:id="@+id/track_overflow_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="2dp"

@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Owner;
 import com.alisonjc.compmusicplayer.viewholder.PlaylistViewHolder;
 import com.google.gson.internal.LinkedTreeMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistViewHolder> {
@@ -44,24 +46,43 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistViewHolder> {
 
     @Override
     public void onBindViewHolder(PlaylistViewHolder holder, int position) {
-
         Item item = mPlaylistItemList.get(position);
 
         List<Object> o = item.getImages();
-        LinkedTreeMap map = new LinkedTreeMap();
-        if(o.get(0) != null){
-            map = (LinkedTreeMap) o.get(0);
+        String url = "";
+        if(item.getName().equals("Add a Playlist")) {
+            LinkedTreeMap map = new LinkedTreeMap();
+            if (o.get(0) != null) {
+                map = (LinkedTreeMap) o.get(0);
+            }
+
+            url = (String) map.get("url");
+        } else {
+            url = o.get(holder.getAdapterPosition()).toString();
         }
-
-        String url = (String) map.get("url");
-
         holder.bind(item, url, listener);
     }
 
     public void updateAdapter(List<Item> items) {
-
+        mPlaylistItemList.add(addPlaylist());
         mPlaylistItemList.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public Item addPlaylist(){
+        List<Object> addImage = new ArrayList<>();
+        addImage.add(mContext.getString(R.string.add_a_playlist_image));
+
+        Owner owner = new Owner();
+        owner.setId("Add a Playlist");
+
+        Item item = new Item();
+        item.setName("Add a Playlist");
+        item.setId("Add a Playlist");
+        item.setOwner(owner);
+        item.setImages(addImage);
+
+        return item;
     }
 
     @Override

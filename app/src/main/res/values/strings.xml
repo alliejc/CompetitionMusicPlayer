@@ -2,6 +2,8 @@
     <string name="app_name">CompMusicPlayer</string>
     <string name="app_subtitle">Select a Playlist</string>
 
+    <string name="add_a_playlist_image">"android.resource://com.alisonjc.compmusicplayer/drawable/ic_add.png"</string>
+
     <!--Navigation-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

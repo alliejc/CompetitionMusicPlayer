@@ -27,10 +27,19 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(final Item item, String url, final PlaylistAdapter.onItemClickListener listener) {
-        playlistTitle.setText(item.getName());
-        songCount.setText(item.getTracks().getTotal().toString() + " songs");
-
-        Picasso.with(itemView.getContext()).load(url).error(R.drawable.ic_menu_gallery).into(image);
+        if(item != null){
+//            if(item.getName() != null){
+//                playlistTitle.setText(item.getName());
+//            }
+//            if(url == null){
+//                Picasso.with(itemView.getContext()).load(String.valueOf(item.getImages().get(getAdapterPosition()))).error(R.drawable.ic_menu_gallery).into(image);
+//            } else {
+//                Picasso.with(itemView.getContext()).load(url).error(R.drawable.ic_menu_gallery).into(image);
+//            }
+//            if(item.getTracks() != null){
+//                songCount.setText(item.getTracks().getTotal().toString() + " songs");
+//            }
+        }
 
         itemView.setOnClickListener(view ->
                 listener.onItemClick(item));
