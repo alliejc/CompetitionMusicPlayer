@@ -14,8 +14,7 @@
             android:id="@+id/add_a_playlist_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/ic_add"
+            android:layout_margin="10dp"
             android:tint="@color/color_dark_gray"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"/>
