@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.spotify.SpotifyHelper;
 import com.alisonjc.compmusicplayer.spotify.action_models.RemoveTracks;
 import com.alisonjc.compmusicplayer.spotify.action_models.Track;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
@@ -23,6 +24,7 @@ import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.alisonjc.compmusicplayer.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,17 +94,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         recyclerViewSetup();
     }
 
-    public Item addPlaylist(){
-        List<Object> addImage = new ArrayList<>();
-        addImage.add(getContext().getString(R.string.add_a_playlist_image));
-
-        Item item = new Item();
-        item.setName("Add a Playlist");
-        item.setImages(addImage);
-
-        return item;
-    }
-
     private void recyclerViewSetup() {
         mPlaylistTracksList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -110,19 +101,13 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         mRecyclerView.setHasFixedSize(true);
         loadMoreDataFromApi(mOffset);
 
-        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), new TracksAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Object item, int position) {
-                mItemPosition = position;
-                PlaylistTracksFragment.this.setCurrentPlayingSong(mItemPosition);
-            }
-        }, new IOnOverflowSelected() {
-            @Override
-            public void onOverflowClicked(int action, TrackItemModel item, int position, String songTitle) {
-                mSongtitle = songTitle;
-                if (action == Constants.REMOVE){
-                    removeTrackFromPlaylist(mPlaylistId, item.getUri(), mPlaylistTitle);
-                }
+        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), (item, position) -> {
+            mItemPosition = position;
+            PlaylistTracksFragment.this.setCurrentPlayingSong(mItemPosition);
+        }, (action, item, position, songTitle) -> {
+            mSongtitle = songTitle;
+            if (action == Constants.REMOVE){
+                SpotifyHelper.removeTrackFromPlaylist(getActivity(), mPlaylistId, item.getUri(), mPlaylistTitle, mSongtitle, mSpotifyService);
             }
         });
 
@@ -136,31 +121,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
             }
         });
     }
-
-    private void removeTrackFromPlaylist(String id, String uri, String playlistTitle){
-        Track track = new Track();
-        track.setUri(uri);
-        List<Track> list = new ArrayList<>();
-        list.add(track);
-        RemoveTracks tracks = new RemoveTracks();
-        tracks.setTracks(list);
-
-        mSpotifyService.removeTrackFromPlaylist(id, tracks)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    if(response != null){
-                        String message = mSongtitle + " was removed from " + playlistTitle;
-                        Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), message, Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
-                }, throwable -> {
-                    Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), "Remove failed, please check your network connection", Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }, () -> {
-                });
-    }
-
 
     public void loadMoreDataFromApi(final int offset) {
         mSpotifyService.getPlaylistTracks(mUserId, mPlaylistId, offset, mLimit)

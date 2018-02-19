@@ -3,6 +3,7 @@ package com.alisonjc.compmusicplayer.util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -19,6 +20,13 @@ public class Util {
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.getView().setBackgroundDrawable(context.getResources().getDrawable(R.drawable.player_background));
         toast.show();
+    }
+
+    public static void showSnackBar(Activity activity, String message) {
+        if(activity != null && message != null) {
+            Snackbar snackbar = Snackbar.make(activity.getCurrentFocus(), message, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     public static void closeKeyboard(Activity activity){

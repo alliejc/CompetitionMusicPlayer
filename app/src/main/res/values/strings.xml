@@ -40,6 +40,7 @@
     <string name="tab_three">Artists</string>
     <string name="please_select_a_song">Please select a song</string>
     <string name="choose_a_playlist">Choose A Playlist</string>
+    <string name="check_network">Remove failed, please check your network connection</string>
 
     <string-array name="nav_drawer_array">
         <item>Playlists</item>

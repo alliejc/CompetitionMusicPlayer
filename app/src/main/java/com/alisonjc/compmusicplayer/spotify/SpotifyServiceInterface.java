@@ -49,7 +49,6 @@ public interface SpotifyServiceInterface {
     Observable<Object> removeTrackFromPlaylist(@Header("Authorization") String bearerToken,
                                           @Path("user_id") String userId, @Path("playlist_id") String playlistId, @Body RemoveTracks tracks);
 
-//    @HTTP(method = "POST", path = "/v1/users/{user_id}/playlists", hasBody = true)
     @POST("/v1/users/{user_id}/playlists")
     Observable<Object> createPlaylist(@Header("Authorization") String bearerToken, @Path("user_id") String userId, @Body CreatePlaylist item);
 

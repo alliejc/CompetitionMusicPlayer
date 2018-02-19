@@ -15,6 +15,7 @@ import android.view.Window;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
+import com.alisonjc.compmusicplayer.spotify.SpotifyHelper;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.action_models.CreatePlaylist;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
@@ -89,35 +90,22 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
             @Override
             public void onCreateClick(String title) {
                 CreatePlaylist item = new CreatePlaylist();
-                item.setName(title);
-                item.setPublic(false);
+                    if (title != null && !title.isEmpty()){
+                        item.setName(title);
+                        item.setPublic(false);
 
-                Util.closeKeyboard(getActivity());
-               createPlaylist(item);
+                        Util.closeKeyboard(getActivity());
+                        SpotifyHelper.createPlaylist(mSpotifyService, getActivity(), item);
+                     } else {
+                        Util.closeKeyboard(getActivity());
+                        String message = "Please enter a playlist title";
+                        Util.showSnackBar(getActivity(), message);
+                    }
 
             }
         });
         mRecyclerView.setAdapter(mAdapter);
    }
-
-    private void createPlaylist(CreatePlaylist item){
-        mSpotifyService.createPlaylist(item)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    if (response != null) {
-                        String message = item.getName() + " was successfully created";
-                        Snackbar snackbar = Snackbar.make(PlaylistFragment.this.getActivity().getCurrentFocus(), message, Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                        Log.e("response", String.valueOf(response));
-                    }
-                }, throwable -> {
-                    Snackbar snackbar = Snackbar.make(PlaylistFragment.this.getActivity().getCurrentFocus(), "Add failed, please check your network connection", Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                }, () -> {
-                });
-
-    }
 
     private void loadDataFromApi(){
             mSpotifyService.getUserPlayLists()
