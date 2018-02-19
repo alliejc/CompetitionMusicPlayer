@@ -11,8 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
+import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
@@ -21,8 +25,10 @@ import com.alisonjc.compmusicplayer.util.RecyclerDivider;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.alisonjc.compmusicplayer.util.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -83,7 +89,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         recyclerViewSetup();
     }
 
@@ -105,9 +110,18 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         mRecyclerView.setHasFixedSize(true);
         loadMoreDataFromApi(mOffset);
 
-        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), (Object item, int position) -> {
-            mItemPosition = position;
-            setCurrentPlayingSong(mItemPosition);
+        mAdapter = new TracksAdapter<>(mPlaylistTracksList, getContext(), new TracksAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Object item, int position) {
+                mItemPosition = position;
+                PlaylistTracksFragment.this.setCurrentPlayingSong(mItemPosition);
+            }
+        }, new IOnOverflowSelected() {
+            @Override
+            public void onOverflowClicked(int action, TrackItemModel item, int position, String songTitle) {
+                mItemPosition = position;
+                Log.e("onOverflowClicked", String.valueOf(position));
+            }
         });
 
         mRecyclerView.setAdapter(mAdapter);

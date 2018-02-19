@@ -2,9 +2,11 @@ package com.alisonjc.compmusicplayer;
 
 
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
@@ -37,12 +39,15 @@ import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.fragment.TracksFragment;
+import com.alisonjc.compmusicplayer.util.Util;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -169,7 +174,7 @@ public class MainActivity extends AppCompatActivity
     private void setUpMediaPlayerUI(){
         final View mBottomSheet = findViewById(R.id.bottom_sheet) ;
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet) ;
-        bottomSheetBehavior.setPeekHeight(150);
+        bottomSheetBehavior.setPeekHeight(15);
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
@@ -366,7 +371,7 @@ public class MainActivity extends AppCompatActivity
             mPlayer.pause(mOperationCallback);
             showPlayButton();
         } else {
-            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+            Util.showToast(this, getString(R.string.please_select_a_song));
         }
     }
 

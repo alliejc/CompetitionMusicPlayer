@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
-import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
-import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.squareup.picasso.Picasso;
 

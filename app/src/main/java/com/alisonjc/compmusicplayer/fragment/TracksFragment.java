@@ -1,27 +1,39 @@
 package com.alisonjc.compmusicplayer.fragment;
 
+
+import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
+import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Track;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.util.RecyclerDivider;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.alisonjc.compmusicplayer.util.Util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -66,21 +78,26 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         recyclerViewSetup();
     }
 
     private void recyclerViewSetup() {
         mTracksList = new ArrayList<>();
-        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         loadDataFromApi(mOffset);
 
-        mAdapter = new TracksAdapter<>(mTracksList, getContext(), (item, position)-> {
-
+        mAdapter = new TracksAdapter<>(mTracksList, getActivity(), (item, position) -> {
+            mItemPosition = position;
+            setCurrentPlayingSong(position);
+        }, new IOnOverflowSelected() {
+            @Override
+            public void onOverflowClicked(int action, TrackItemModel item, int position, String songTitle) {
                 mItemPosition = position;
-                setCurrentPlayingSong(position);
+                showPlaylistActionDialog(item.getUri(), action, songTitle);
+                Log.e("onOverflowClicked", String.valueOf(position));
+            }
         });
 
         mRecyclerView.setAdapter(mAdapter);
@@ -92,6 +109,18 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
                 loadDataFromApi(mOffset);
             }
         });
+    }
+
+    private void showPlaylistActionDialog(String uri, int action, String songTitle){
+        FragmentManager manager = getFragmentManager();
+        Bundle bundle = new Bundle();
+        bundle.putString("uri", uri);
+        bundle.putInt("action", action);
+        bundle.putString("songTitle", songTitle);
+
+        PlaylistActionDialog frag = PlaylistActionDialog.newInstance(uri, action, songTitle);
+        frag.setArguments(bundle);
+        frag.show(manager, "dialog");
     }
 
     public void loadDataFromApi(final int offset) {
@@ -107,7 +136,7 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
                 .subscribe(userTracks -> {
                     mAdapter.updateAdapter(userTracks);
                 }, throwable -> {
-                    mSpotifyService.userLogout(getContext());
+                    mSpotifyService.userLogout(getActivity());
                 }, () -> {
                 });
     }

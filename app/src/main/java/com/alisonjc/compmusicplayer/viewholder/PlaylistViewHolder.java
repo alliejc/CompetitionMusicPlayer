@@ -18,6 +18,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
     public TextView songCount;
     public ImageView image;
     public View itemView;
+    public ImageView overflow;
 
     public PlaylistViewHolder(View itemView) {
         super(itemView);
@@ -26,6 +27,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
         playlistTitle = (TextView) itemView.findViewById(R.id.playlist_header_text);
         songCount = (TextView) itemView.findViewById(R.id.playlist_sub_text);
         image = (ImageView) itemView.findViewById(R.id.playlist_image);
+        overflow = (ImageView) itemView.findViewById(R.id.menu_icon);
     }
 
     public void bind(final Item item, String url, final PlaylistAdapter.onItemClickListener listener) {

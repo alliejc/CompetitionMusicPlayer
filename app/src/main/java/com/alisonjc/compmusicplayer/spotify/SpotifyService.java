@@ -3,6 +3,8 @@ package com.alisonjc.compmusicplayer.spotify;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.util.Log;
 
 import com.alisonjc.compmusicplayer.BuildConfig;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
@@ -11,9 +13,14 @@ import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Pl
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 import com.spotify.sdk.android.player.Config;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -69,6 +76,10 @@ public class SpotifyService {
 
     public Observable<UserTracks> getUserTracks(int offset, int limit) {
         return mSpotifyServiceInterface.getUserTracks("Bearer " + mToken, offset, limit);
+    }
+
+    public Observable<Object> addTrackToPlaylist(String playlistId, String uri) {
+        return mSpotifyServiceInterface.addTrackToPlaylist("Bearer " + mToken, mUserId, playlistId, uri);
     }
 
     public Config getPlayerConfig(Context context) {

@@ -12,6 +12,7 @@ import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Owner;
 import com.alisonjc.compmusicplayer.viewholder.AddPlaylistViewHolder;
+import com.alisonjc.compmusicplayer.viewholder.PlaylistActionViewHolder;
 import com.alisonjc.compmusicplayer.viewholder.PlaylistViewHolder;
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -22,17 +23,18 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static final int ITEM_VIEW_TYPE_HEADER = 0;
     private static final int ITEM_VIEW_TYPE_ITEM = 1;
+    private static final int ITEM_ACTION_VIEW = 2;
 
     private List<Item> mPlaylistItemList;
     private Context mContext;
     private final onItemClickListener listener;
+    private String mTag;
 
     public interface onItemClickListener {
         void onItemClick(Item item);
     }
 
     public PlaylistAdapter(Context context, List<Item> playlistItemList, onItemClickListener listener) {
-
         this.mPlaylistItemList = playlistItemList;
         this.mContext = context;
         this.listener = listener;
@@ -47,10 +49,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             v = inflater.inflate(R.layout.item_add_playlist, parent, false);
             return new AddPlaylistViewHolder(v);
         } else {
-            v = inflater.inflate(R.layout.item_playlist, parent, false);
-             return new PlaylistViewHolder(v);
+                v = inflater.inflate(R.layout.item_playlist, parent, false);
+                return new PlaylistViewHolder(v);
         }
-
     }
 
     @Override
@@ -88,8 +89,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return isHeader(mPlaylistItemList.get(position)) ?
-                ITEM_VIEW_TYPE_HEADER : ITEM_VIEW_TYPE_ITEM;
+            return isHeader(mPlaylistItemList.get(position)) ?
+                    ITEM_VIEW_TYPE_HEADER : ITEM_VIEW_TYPE_ITEM;
     }
 
         public void addPlaylist(){

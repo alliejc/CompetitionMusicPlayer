@@ -1,13 +1,22 @@
 package com.alisonjc.compmusicplayer.spotify;
 
 
+import android.net.Uri;
+
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -34,6 +43,10 @@ public interface SpotifyServiceInterface {
     @GET("/v1/users/{user_id}/playlists/{playlist_id}/tracks")
     Observable<PlaylistTracksList> getPlaylistTracks(@Header("Authorization") String bearerToken,
                                                @Path("user_id") String userId, @Path("playlist_id") String playlistId, @Query("offset") int offset, @Query("limit") int limit);
+
+    @POST("/v1/users/{user_id}/playlists/{playlist_id}/tracks")
+    Observable<Object> addTrackToPlaylist(@Header("Authorization") String bearerToken,
+                                            @Path("user_id") String userId, @Path("playlist_id") String playlistId, @Query("uris")String uris);
 
 //    //logged in users albums
 //    @GET("v1/me/albums")

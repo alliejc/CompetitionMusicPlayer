@@ -24,6 +24,7 @@ import rx.schedulers.Schedulers;
 
 
 public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
+    private static final String TAG = PlaylistFragment.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
     private PlaylistAdapter mAdapter;

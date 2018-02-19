@@ -24,6 +24,10 @@
         <item name="tabTextAppearance">@color/color_dark_gray</item>
     </style>
 
+    <style name="CustomSpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/ic_overflow</item>
+    </style>
+
     <style name="ToolbarText" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/color_default</item>

@@ -17,6 +17,12 @@
         android:layout_marginLeft="10dp"
         android:elevation="2dp">
 
+    <RelativeLayout
+        android:id="@+id/track_layout"
+        android:layout_weight="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/track_image"
             android:layout_width="35dp"
@@ -24,7 +30,7 @@
             android:src="@drawable/ic_menu_gallery"
             android:layout_margin="5dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:id="@+id/track_header_text"
@@ -38,21 +44,6 @@
             android:layout_toRightOf="@+id/track_image"
             android:layout_toLeftOf="@+id/menu_icon"
             android:text="@{recycler_view_item.headerText}"/>
-
-        <ImageView
-            android:id="@+id/track_overflow_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="2dp"
-            android:tint="@color/color_default"
-            android:src="@drawable/ic_overflow"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_above="@+id/playlist_sub_text"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            />
-
         <TextView
             android:id="@+id/track_sub_text"
             android:layout_width="wrap_content"
@@ -66,5 +57,18 @@
             android:layout_marginBottom="2dp"
             android:layout_below="@+id/track_header_text"
             android:text="@{recycler_view_item.subHeaderText}"/>
+    </RelativeLayout>
+        <ImageView
+            android:id="@+id/track_menu_icon"
+            android:src="@drawable/ic_overflow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center">
+        </ImageView>
     </RelativeLayout>
 </layout>

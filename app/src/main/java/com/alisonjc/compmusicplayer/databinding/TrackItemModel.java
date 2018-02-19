@@ -2,6 +2,8 @@ package com.alisonjc.compmusicplayer.databinding;
 
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Item;
 
+import java.io.Serializable;
+
 
 public class TrackItemModel implements TrackItemInterface {
 

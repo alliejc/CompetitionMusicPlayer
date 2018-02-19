@@ -1,16 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_grey"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/choose_a_playlist"
+            android:background="@color/background_grey"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="2dp"
+            android:padding="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="20dp"
+            android:textColor="@color/color_default"
+            android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         style="@style/scrollbar_style"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/background_grey"
+        android:layout_below="@+id/title"
         android:fadeScrollbars="true"
         android:layout_gravity="center"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
-</FrameLayout>
+</RelativeLayout>
 
