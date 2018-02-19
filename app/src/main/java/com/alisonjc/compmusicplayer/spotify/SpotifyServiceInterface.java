@@ -3,6 +3,7 @@ package com.alisonjc.compmusicplayer.spotify;
 
 import android.net.Uri;
 
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
@@ -54,6 +55,10 @@ public interface SpotifyServiceInterface {
     @HTTP(method = "DELETE", path = "/v1/users/{user_id}/playlists/{playlist_id}/tracks", hasBody = true)
     Observable<Object> removeTrackFromPlaylist(@Header("Authorization") String bearerToken,
                                           @Path("user_id") String userId, @Path("playlist_id") String playlistId, @Body RemoveTracks tracks);
+
+    @HTTP(method = "POST", path = "/v1/users/{user_id}/playlists", hasBody = true)
+    Observable<Item> createPlaylist(@Header("Authorization") String bearerToken,
+                                    @Path("user_id") String userId, @Body Item item);
 
 //    //logged in users albums
 //    @GET("v1/me/albums")

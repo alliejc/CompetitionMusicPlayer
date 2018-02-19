@@ -39,6 +39,7 @@ import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.fragment.TracksFragment;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.util.Util;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -545,13 +546,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPlaylistSelected(String userId, String playlistId, String playlistTitle) {
-        mPlaylistTitle = playlistTitle;
-        mActionBar.setTitle(mPlaylistTitle);
+        if(playlistTitle.equals(Constants.ADD_PLAYLIST)){
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        mPlaylistTracksFragment = PlaylistTracksFragment.newInstance(userId, playlistId, playlistTitle);
-        mIOnTrackChanged = mPlaylistTracksFragment;
-        fragmentManager.beginTransaction().replace(R.id.main_framelayout, mPlaylistTracksFragment, "playlistTracksFragment").addToBackStack(null).commit();
+        } else {
+            mPlaylistTitle = playlistTitle;
+            mActionBar.setTitle(mPlaylistTitle);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            mPlaylistTracksFragment = PlaylistTracksFragment.newInstance(userId, playlistId, playlistTitle);
+            mIOnTrackChanged = mPlaylistTracksFragment;
+            fragmentManager.beginTransaction().replace(R.id.main_framelayout, mPlaylistTracksFragment, "playlistTracksFragment").addToBackStack(null).commit();
+        }
     }
 
     @Override

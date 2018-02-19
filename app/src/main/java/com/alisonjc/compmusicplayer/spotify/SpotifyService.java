@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.alisonjc.compmusicplayer.BuildConfig;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
@@ -85,6 +86,10 @@ public class SpotifyService {
 
     public Observable<Object> removeTrackFromPlaylist(String playlistId, RemoveTracks tracks) {
         return mSpotifyServiceInterface.removeTrackFromPlaylist("Bearer " + mToken, mUserId, playlistId, tracks);
+    }
+
+    public Observable<Item> createPlaylist(Item playlist) {
+        return mSpotifyServiceInterface.createPlaylist("Bearer " + mToken, mUserId, playlist);
     }
 
     public Config getPlayerConfig(Context context) {

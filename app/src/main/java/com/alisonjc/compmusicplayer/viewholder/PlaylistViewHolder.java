@@ -4,12 +4,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.squareup.picasso.Picasso;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder {
@@ -19,6 +22,8 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
     public ImageView image;
     public View itemView;
     public ImageView overflow;
+    public EditText addPlaylistTitle;
+    public Button createButton;
 
     public PlaylistViewHolder(View itemView) {
         super(itemView);
@@ -28,6 +33,8 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
         songCount = (TextView) itemView.findViewById(R.id.playlist_sub_text);
         image = (ImageView) itemView.findViewById(R.id.playlist_image);
         overflow = (ImageView) itemView.findViewById(R.id.menu_icon);
+        addPlaylistTitle = (EditText) itemView.findViewById(R.id.add_a_playlist_header_text);
+        createButton = (Button) itemView.findViewById(R.id.create_button);
     }
 
     public void bind(final Item item, String url, final PlaylistAdapter.onItemClickListener listener) {
@@ -35,7 +42,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
             if(item.getName() != null){
                 playlistTitle.setText(item.getName());
             }
-            if(item.getName().equals("Add a Playlist")){
+            if(item.getName().equals(Constants.ADD_PLAYLIST)){
                 Picasso.with(itemView.getContext()).load(R.drawable.ic_add_copy).error(R.drawable.ic_menu_gallery).into(image);
             } else {
                 Picasso.with(itemView.getContext()).load(url).error(R.drawable.ic_menu_gallery).into(image);

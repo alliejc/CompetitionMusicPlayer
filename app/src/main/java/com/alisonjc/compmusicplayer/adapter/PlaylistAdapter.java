@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Owner;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.viewholder.AddPlaylistViewHolder;
 import com.alisonjc.compmusicplayer.viewholder.PlaylistActionViewHolder;
 import com.alisonjc.compmusicplayer.viewholder.PlaylistViewHolder;
@@ -84,7 +85,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public boolean isHeader(Item item) {
-        return item.getName().equals("Add a Playlist");
+        return item.getName().equals(Constants.ADD_PLAYLIST);
     }
 
     @Override
@@ -98,14 +99,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         addImage.add(mContext.getString(R.string.add_a_playlist_image));
 
         Owner owner = new Owner();
-        owner.setId("Add a Playlist");
+        owner.setId(Constants.ADD_PLAYLIST);
 
         Item item = new Item();
-        item.setName("Add a Playlist");
-        item.setId("Add a Playlist");
+        item.setName(Constants.ADD_PLAYLIST);
+        item.setId(Constants.ADD_PLAYLIST);
         item.setOwner(owner);
         item.setImages(addImage);
-
             mPlaylistItemList.add(0, item);
         }
 

@@ -19,9 +19,9 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"/>
 
-        <TextView
+        <EditText
             android:id="@+id/add_a_playlist_header_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textColor="@color/color_default"
@@ -30,6 +30,15 @@
             android:layout_marginLeft="5dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/add_a_playlist_image"
-            android:text="ADD A PLAYLIST"/>
+            android:hint="ADD A PLAYLIST"/>
+
+        <Button
+            android:id="@+id/create_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_a_playlist_header_text"
+            android:text="Create"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </layout>
