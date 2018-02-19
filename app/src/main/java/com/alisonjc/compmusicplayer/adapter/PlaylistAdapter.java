@@ -29,16 +29,22 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Item> mPlaylistItemList;
     private Context mContext;
     private final onItemClickListener listener;
+    private onCreateClickListener mCreateListener;
     private String mTag;
 
     public interface onItemClickListener {
         void onItemClick(Item item);
     }
 
-    public PlaylistAdapter(Context context, List<Item> playlistItemList, onItemClickListener listener) {
+    public interface onCreateClickListener {
+        void onCreateClick(String title);
+    }
+
+    public PlaylistAdapter(Context context, List<Item> playlistItemList, onItemClickListener listener, onCreateClickListener createListener) {
         this.mPlaylistItemList = playlistItemList;
         this.mContext = context;
         this.listener = listener;
+        this.mCreateListener = createListener;
     }
 
     @Override
@@ -63,14 +69,16 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             List<Object> o = item.getImages();
 
             if (o.get(0) != null) {
-                ((AddPlaylistViewHolder) holder).bind(item, listener);
+                ((AddPlaylistViewHolder) holder).bind(mCreateListener);
             }
 
         } else if (getItemViewType(position) == ITEM_VIEW_TYPE_ITEM){
             List<Object> o = item.getImages();
             LinkedTreeMap map = new LinkedTreeMap();
-            if (o.get(0) != null) {
-                map = (LinkedTreeMap) o.get(0);
+            if(o.size() > 0) {
+                if (o.get(0) != null) {
+                    map = (LinkedTreeMap) o.get(0);
+                }
             }
 
             String url = (String) map.get("url");

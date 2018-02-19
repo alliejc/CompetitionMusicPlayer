@@ -3,26 +3,20 @@ package com.alisonjc.compmusicplayer.spotify;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.util.Log;
 
 import com.alisonjc.compmusicplayer.BuildConfig;
+import com.alisonjc.compmusicplayer.spotify.action_models.CreatePlaylist;
+import com.alisonjc.compmusicplayer.spotify.action_models.RemoveTracks;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Track;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 import com.spotify.sdk.android.player.Config;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -88,7 +82,8 @@ public class SpotifyService {
         return mSpotifyServiceInterface.removeTrackFromPlaylist("Bearer " + mToken, mUserId, playlistId, tracks);
     }
 
-    public Observable<Item> createPlaylist(Item playlist) {
+    public Observable<Object> createPlaylist(CreatePlaylist playlist) {
+        String contentType = "application/json";
         return mSpotifyServiceInterface.createPlaylist("Bearer " + mToken, mUserId, playlist);
     }
 

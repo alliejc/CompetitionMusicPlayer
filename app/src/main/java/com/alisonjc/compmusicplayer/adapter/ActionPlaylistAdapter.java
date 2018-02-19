@@ -52,9 +52,11 @@ public class ActionPlaylistAdapter extends RecyclerView.Adapter<PlaylistActionVi
 
                 List<Object> o = item.getImages();
                 LinkedTreeMap map = new LinkedTreeMap();
+            if(o.size() > 0) {
                 if (o.get(0) != null) {
                     map = (LinkedTreeMap) o.get(0);
                 }
+            }
 
                 String url = (String) map.get("url");
                 holder.bind(item, url, mAction, mListener);

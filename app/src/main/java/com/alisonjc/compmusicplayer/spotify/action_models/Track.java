@@ -1,5 +1,5 @@
 
-package com.alisonjc.compmusicplayer.spotify;
+package com.alisonjc.compmusicplayer.spotify.action_models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

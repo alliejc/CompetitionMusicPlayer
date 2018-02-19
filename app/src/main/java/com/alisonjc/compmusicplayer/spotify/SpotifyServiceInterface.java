@@ -1,22 +1,15 @@
 package com.alisonjc.compmusicplayer.spotify;
 
 
-import android.net.Uri;
-
+import com.alisonjc.compmusicplayer.spotify.action_models.CreatePlaylist;
+import com.alisonjc.compmusicplayer.spotify.action_models.RemoveTracks;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Track;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
@@ -56,9 +49,9 @@ public interface SpotifyServiceInterface {
     Observable<Object> removeTrackFromPlaylist(@Header("Authorization") String bearerToken,
                                           @Path("user_id") String userId, @Path("playlist_id") String playlistId, @Body RemoveTracks tracks);
 
-    @HTTP(method = "POST", path = "/v1/users/{user_id}/playlists", hasBody = true)
-    Observable<Item> createPlaylist(@Header("Authorization") String bearerToken,
-                                    @Path("user_id") String userId, @Body Item item);
+//    @HTTP(method = "POST", path = "/v1/users/{user_id}/playlists", hasBody = true)
+    @POST("/v1/users/{user_id}/playlists")
+    Observable<Object> createPlaylist(@Header("Authorization") String bearerToken, @Path("user_id") String userId, @Body CreatePlaylist item);
 
 //    //logged in users albums
 //    @GET("v1/me/albums")
