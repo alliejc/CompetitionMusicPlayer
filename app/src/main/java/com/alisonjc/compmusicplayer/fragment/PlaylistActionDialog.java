@@ -23,8 +23,11 @@ import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Track;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.util.Util;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -122,13 +125,9 @@ public class PlaylistActionDialog extends DialogFragment {
         mAdapter = new ActionPlaylistAdapter(getActivity(), mPlaylistItemList, mAction, new ActionPlaylistAdapter.OnPlaylistAction() {
             @Override
             public void onPlaylistAction(String uri, String playlistId, String playlistTitle, int action) {
-                //make call to Spotify adding playlist
-                addPlaylist(playlistId, uri);
-
-                String message = mSongtitle + " was successfully added to " + playlistTitle;
-                getDialog().dismiss();
-                Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), message, Snackbar.LENGTH_LONG);
-                snackbar.show();
+                if(mAction == Constants.ADD) {
+                    addTrackToPlaylist(playlistId, mTrackUri, playlistTitle);
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -150,17 +149,22 @@ public class PlaylistActionDialog extends DialogFragment {
                 });
     }
 
-    private void addPlaylist(String id, String uri){
-
+    private void addTrackToPlaylist(String id, String uri, String playlistTitle){
         mSpotifyService.addTrackToPlaylist(id, uri)
                .subscribeOn(Schedulers.newThread())
                .observeOn(AndroidSchedulers.mainThread())
                .subscribe(response -> {
                    if(response != null){
+                       String message = mSongtitle + " was successfully added to " + playlistTitle;
+                       getDialog().dismiss();
+                       Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), message, Snackbar.LENGTH_LONG);
+                       snackbar.show();
                        Log.e("response", String.valueOf(response));
                    }
                }, throwable -> {
-                   Log.e(String.valueOf(throwable), "throwable");
+                   getDialog().dismiss();
+                   Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), "Add failed, please check your network connection", Snackbar.LENGTH_LONG);
+                   snackbar.show();
                }, () -> {
                });
     }

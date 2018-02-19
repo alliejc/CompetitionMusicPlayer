@@ -549,7 +549,7 @@ public class MainActivity extends AppCompatActivity
         mActionBar.setTitle(mPlaylistTitle);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mPlaylistTracksFragment = PlaylistTracksFragment.newInstance(userId, playlistId);
+        mPlaylistTracksFragment = PlaylistTracksFragment.newInstance(userId, playlistId, playlistTitle);
         mIOnTrackChanged = mPlaylistTracksFragment;
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, mPlaylistTracksFragment, "playlistTracksFragment").addToBackStack(null).commit();
     }

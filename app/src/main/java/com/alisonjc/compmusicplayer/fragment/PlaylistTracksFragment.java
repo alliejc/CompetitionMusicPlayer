@@ -3,6 +3,7 @@ package com.alisonjc.compmusicplayer.fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +19,10 @@ import android.widget.Spinner;
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.spotify.RemoveTracks;
+import com.alisonjc.compmusicplayer.spotify.Track;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.util.RecyclerDivider;
@@ -26,6 +30,7 @@ import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.util.Util;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +57,8 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     private int mTotalTracks = 0;
     private int mOffset;
     private int mLimit = 20;
+    private String mSongtitle;
+    private String mPlaylistTitle;
 
     private static final String TAG = "PlaylistTracksFragment";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
@@ -59,12 +66,13 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     public PlaylistTracksFragment() {
     }
 
-    public static PlaylistTracksFragment newInstance(String userId, String playlistId) {
+    public static PlaylistTracksFragment newInstance(String userId, String playlistId, String playlistTitle) {
 
         PlaylistTracksFragment fragment = new PlaylistTracksFragment();
         Bundle args = new Bundle();
         args.putString("userId", userId);
         args.putString("playlistId", playlistId);
+        args.putString("playlistTitle", playlistTitle);
         fragment.setArguments(args);
 
         return fragment;
@@ -75,6 +83,7 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         super.onCreate(savedInstanceState);
         mPlaylistId = getArguments().getString("playlistId");
         mUserId = getArguments().getString("userId");
+        mPlaylistTitle = getArguments().getString("playlistTitle");
     }
 
     @Override
@@ -119,8 +128,10 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
         }, new IOnOverflowSelected() {
             @Override
             public void onOverflowClicked(int action, TrackItemModel item, int position, String songTitle) {
-                mItemPosition = position;
-                Log.e("onOverflowClicked", String.valueOf(position));
+                mSongtitle = songTitle;
+                if (action == Constants.REMOVE){
+                    removeTrackFromPlaylist(mPlaylistId, item.getUri(), mPlaylistTitle);
+                }
             }
         });
 
@@ -134,6 +145,31 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
             }
         });
     }
+
+    private void removeTrackFromPlaylist(String id, String uri, String playlistTitle){
+        Track track = new Track();
+        track.setUri(uri);
+        List<Track> list = new ArrayList<>();
+        list.add(track);
+        RemoveTracks tracks = new RemoveTracks();
+        tracks.setTracks(list);
+
+        mSpotifyService.removeTrackFromPlaylist(id, tracks)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    if(response != null){
+                        String message = mSongtitle + " was removed from " + playlistTitle;
+                        Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), message, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                }, throwable -> {
+                    Snackbar snackbar = Snackbar.make(getActivity().getCurrentFocus(), "Remove failed, please check your network connection", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }, () -> {
+                });
+    }
+
 
     public void loadMoreDataFromApi(final int offset) {
         mSpotifyService.getPlaylistTracks(mUserId, mPlaylistId, offset, mLimit)

@@ -10,6 +10,7 @@ import com.alisonjc.compmusicplayer.BuildConfig;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Track;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 import com.spotify.sdk.android.player.Config;
 
@@ -80,6 +81,10 @@ public class SpotifyService {
 
     public Observable<Object> addTrackToPlaylist(String playlistId, String uri) {
         return mSpotifyServiceInterface.addTrackToPlaylist("Bearer " + mToken, mUserId, playlistId, uri);
+    }
+
+    public Observable<Object> removeTrackFromPlaylist(String playlistId, RemoveTracks tracks) {
+        return mSpotifyServiceInterface.removeTrackFromPlaylist("Bearer " + mToken, mUserId, playlistId, tracks);
     }
 
     public Config getPlayerConfig(Context context) {
