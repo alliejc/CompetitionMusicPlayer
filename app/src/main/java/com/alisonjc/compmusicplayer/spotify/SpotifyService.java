@@ -11,7 +11,6 @@ import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.Artist;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 import com.spotify.sdk.android.player.Config;
 
@@ -86,6 +85,10 @@ public class SpotifyService {
     public Observable<Object> createPlaylist(CreatePlaylist playlist) {
         return mSpotifyServiceInterface.createPlaylist("Bearer " + mToken, mUserId, playlist);
     }
+
+//    public Observable<Album> getSavedAlbums() {
+//        return mSpotifyServiceInterface.getSavedAlbums("Bearer " + mToken, 50, 50);
+//    }
 
     public Config getPlayerConfig(Context context) {
         return new Config(context, mToken, CLIENT_ID);

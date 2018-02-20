@@ -7,6 +7,7 @@ import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.Album;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.Artist;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 
@@ -52,6 +53,9 @@ public interface SpotifyServiceInterface {
 
     @POST("/v1/users/{user_id}/playlists")
     Observable<Object> createPlaylist(@Header("Authorization") String bearerToken, @Path("user_id") String userId, @Body CreatePlaylist item);
+
+    @GET("/v1/albums")
+    Observable<Album> getSavedAlbums(@Header("Authorization") String bearerToken, @Query("offset") int offset, @Query("limit") int limit);
 
 //    @GET("/v1/me/following?type=artist")
 //    Observable<Artist> getFollowedArtists(@Header("Authorization") String bearerToken, @Query("limit") int limit);

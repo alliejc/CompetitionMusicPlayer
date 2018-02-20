@@ -458,6 +458,9 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 getAllSongs();
                 break;
+//            case 2:
+//                getAllAlbums();
+//                break;
         }
     }
 
@@ -477,6 +480,14 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
         mActionBar.setTitle(R.string.playlists_drawer);
     }
+
+//    private void getAllAlbums() {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//        AlbumFragment albumFragment = AlbumFragment.newInstance();
+//        fragmentManager.beginTransaction().replace(R.id.main_framelayout, albumFragment, "albumFragment").addToBackStack(null).commit();
+//        mActionBar.setTitle(R.string.playlists_drawer);
+//    }
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent intent) {
