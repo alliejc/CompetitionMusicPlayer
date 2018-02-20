@@ -4,6 +4,20 @@
         android:background="@color/background_grey"
         android:padding="10dp">
 
+    <TextView
+        android:id="@+id/hint_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/color_dark_gray"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif"
+        android:text="This playlist is empty, checkout the All Songs Tab to add songs"
+        android:visibility="gone"/>
+
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"

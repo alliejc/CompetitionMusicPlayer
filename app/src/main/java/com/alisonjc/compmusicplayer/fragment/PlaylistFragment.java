@@ -2,15 +2,12 @@ package com.alisonjc.compmusicplayer.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
@@ -19,16 +16,12 @@ import com.alisonjc.compmusicplayer.spotify.SpotifyHelper;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.action_models.CreatePlaylist;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Owner;
 import com.alisonjc.compmusicplayer.util.Util;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 
@@ -78,31 +71,24 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new PlaylistAdapter(getContext(), mPlaylistItemList, new PlaylistAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(Item item) {
-                String userId = item.getOwner().getId();
-                String playlistId = item.getId();
-                String playlistTitle = item.getName();
-                mListener.onPlaylistSelected(userId, playlistId, playlistTitle);
-            }
-        }, new PlaylistAdapter.onCreateClickListener() {
-            @Override
-            public void onCreateClick(String title) {
-                CreatePlaylist item = new CreatePlaylist();
-                    if (title != null && !title.isEmpty()){
-                        item.setName(title);
-                        item.setPublic(false);
+        mAdapter = new PlaylistAdapter(getContext(), mPlaylistItemList, item -> {
+            String userId = item.getOwner().getId();
+            String playlistId = item.getId();
+            String playlistTitle = item.getName();
 
-                        Util.closeKeyboard(getActivity());
-                        SpotifyHelper.createPlaylist(mSpotifyService, getActivity(), item);
-                     } else {
-                        Util.closeKeyboard(getActivity());
-                        String message = "Please enter a playlist title";
-                        Util.showSnackBar(getActivity(), message);
-                    }
-
-            }
+            mListener.onPlaylistSelected(userId, playlistId, playlistTitle);
+        }, title -> {
+            CreatePlaylist item = new CreatePlaylist();
+                if (title != null && !title.isEmpty()){
+                    item.setName(title);
+                    item.setPublic(false);
+                    Util.closeKeyboard(getActivity());
+                    SpotifyHelper.createPlaylist(mSpotifyService, getActivity(), item);
+                 } else {
+                    Util.closeKeyboard(getActivity());
+                    String message = "Please enter a playlist title";
+                    Util.showSnackBar(getActivity(), message);
+                }
         });
         mRecyclerView.setAdapter(mAdapter);
    }

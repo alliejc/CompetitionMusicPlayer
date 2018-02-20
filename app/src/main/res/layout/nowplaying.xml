@@ -13,7 +13,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_weight="50"
-    android:textColor="@color/color_light_pink"
+    android:textColor="@color/color_dark_pink"
     android:textSize="18sp"
     android:layout_gravity="center_vertical|end"
     android:gravity="center_vertical|end"/>
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="50"
-        android:textColor="@color/color_light_pink"
+        android:textColor="@color/color_dark_pink"
         android:textSize="18sp"
         android:layout_gravity="center_vertical|start"
         android:gravity="center_vertical|start"/>

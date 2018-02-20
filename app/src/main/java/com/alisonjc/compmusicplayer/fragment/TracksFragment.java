@@ -1,44 +1,35 @@
 package com.alisonjc.compmusicplayer.fragment;
 
 
-import android.app.DialogFragment;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Track;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
-import com.alisonjc.compmusicplayer.util.RecyclerDivider;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
-import com.alisonjc.compmusicplayer.util.Util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static android.view.View.GONE;
 
 
 public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrackSelected {
@@ -49,6 +40,7 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
     private List<TrackItemModel> mTracksList;
     private TracksAdapter mAdapter;
     private View rootView;
+    private TextView mHintText;
     private int mItemPosition = 0;
     private int mTotalTracks = 0;
     private int mOffset;
@@ -70,6 +62,7 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.list, container, false);
         ButterKnife.bind(this, rootView);
+        mHintText = (TextView) rootView.findViewById(R.id.hint_text);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         return rootView;
@@ -91,13 +84,9 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
         mAdapter = new TracksAdapter<>(mTracksList, getActivity(), (item, position) -> {
             mItemPosition = position;
             setCurrentPlayingSong(position);
-        }, new IOnOverflowSelected() {
-            @Override
-            public void onOverflowClicked(int action, TrackItemModel item, int position, String songTitle) {
-                mItemPosition = position;
-                showPlaylistActionDialog(item.getUri(), action, songTitle);
-                Log.e("onOverflowClicked", String.valueOf(position));
-            }
+        }, (action, item, position, songTitle) -> {
+            mItemPosition = position;
+            showPlaylistActionDialog(item.getUri(), action, songTitle);
         });
 
         mRecyclerView.setAdapter(mAdapter);
@@ -111,14 +100,38 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
         });
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        if (mTracksList.size() <= 0) {
+//            showHintText();
+//        } else {
+//            hideHintText();
+//        }
+//    }
+
+    private void showHintText() {
+        if (mHintText.getVisibility() == GONE) {
+            mHintText.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(GONE);
+        }
+    }
+
+    private void hideHintText() {
+        if (mHintText.getVisibility() == View.VISIBLE) {
+            mHintText.setVisibility(GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void showPlaylistActionDialog(String uri, int action, String songTitle){
+        PlaylistActionDialog frag = PlaylistActionDialog.newInstance(uri, action, songTitle);
         FragmentManager manager = getFragmentManager();
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
         bundle.putInt("action", action);
         bundle.putString("songTitle", songTitle);
-
-        PlaylistActionDialog frag = PlaylistActionDialog.newInstance(uri, action, songTitle);
         frag.setArguments(bundle);
         frag.show(manager, "dialog");
     }

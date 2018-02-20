@@ -58,12 +58,7 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
         holder.bindItem(trackRecyclerItemModel);
         holder.bindItemListener(item, mListener);
         holder.itemView.setSelected(selectedItem == holder.getAdapterPosition());
-        holder.menuIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(holder.menuIcon, holder.getAdapterPosition(), item);
-                    }
-                });
+        holder.menuIcon.setOnClickListener(v -> showPopup(holder.menuIcon, holder.getAdapterPosition(), item));
 
         if(selectedItem == holder.getAdapterPosition()) {
             holder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.vector_equalizer));
@@ -75,21 +70,16 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
     private void showPopup(View anchor, int position, TrackItemModel trackItemModel){
         PopupMenu popup = new PopupMenu(mContext, anchor);
         popup.inflate(R.menu.track_overflow);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.add_to_playlist:
-                        Log.e("add to playlist", "add");
-                        mOverflowSelected.onOverflowClicked(Constants.ADD, trackItemModel, position, trackItemModel.getSongName());
-                        break;
-                    case R.id.remove_from_playlist:
-                        Log.e("remove from playlist", "remove");
-                        mOverflowSelected.onOverflowClicked(Constants.REMOVE, trackItemModel, position, trackItemModel.getSongName());
-                        break;
-                }
-                return false;
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.add_to_playlist:
+                    mOverflowSelected.onOverflowClicked(Constants.ADD, trackItemModel, position, trackItemModel.getSongName());
+                    break;
+                case R.id.remove_from_playlist:
+                    mOverflowSelected.onOverflowClicked(Constants.REMOVE, trackItemModel, position, trackItemModel.getSongName());
+                    break;
             }
+            return false;
         });
         popup.show();
     }

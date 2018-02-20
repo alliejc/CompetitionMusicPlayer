@@ -5,7 +5,6 @@
         android:angle="0"
         android:startColor="@color/color_light_pink"
         android:endColor="@color/color_dark_pink" />
-
     <corners android:radius="6dp" />
 
 </shape>

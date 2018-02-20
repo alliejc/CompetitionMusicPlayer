@@ -17,11 +17,16 @@
         android:layout_marginLeft="10dp"
         android:elevation="2dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
     <RelativeLayout
         android:id="@+id/track_layout"
-        android:layout_weight="5"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="20">
 
         <ImageView
             android:id="@+id/track_image"
@@ -61,6 +66,7 @@
         <ImageView
             android:id="@+id/track_menu_icon"
             android:src="@drawable/ic_overflow"
+            android:layout_weight="1"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="2dp"
@@ -70,5 +76,6 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center">
         </ImageView>
+        </LinearLayout>
     </RelativeLayout>
 </layout>

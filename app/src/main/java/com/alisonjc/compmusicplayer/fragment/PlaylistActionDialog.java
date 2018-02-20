@@ -1,47 +1,26 @@
 package com.alisonjc.compmusicplayer.fragment;
 
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.adapter.ActionPlaylistAdapter;
-import com.alisonjc.compmusicplayer.adapter.PlaylistAdapter;
-import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
-import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
-import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
-import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.Track;
 import com.alisonjc.compmusicplayer.util.Constants;
-import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
-import com.alisonjc.compmusicplayer.util.Util;
-import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -122,12 +101,9 @@ public class PlaylistActionDialog extends DialogFragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new ActionPlaylistAdapter(getActivity(), mPlaylistItemList, mAction, new ActionPlaylistAdapter.OnPlaylistAction() {
-            @Override
-            public void onPlaylistAction(String uri, String playlistId, String playlistTitle, int action) {
-                if(mAction == Constants.ADD) {
-                    addTrackToPlaylist(playlistId, mTrackUri, playlistTitle);
-                }
+        mAdapter = new ActionPlaylistAdapter(getActivity(), mPlaylistItemList, mAction, (uri, playlistId, playlistTitle, action) -> {
+            if(mAction == Constants.ADD) {
+                addTrackToPlaylist(playlistId, mTrackUri, playlistTitle);
             }
         });
         mRecyclerView.setAdapter(mAdapter);

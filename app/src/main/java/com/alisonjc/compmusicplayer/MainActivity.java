@@ -153,47 +153,33 @@ public class MainActivity extends AppCompatActivity
 
         toolbarSetup();
         setUpTabs();
-        navigationDrawerSetup();
+//        navigationDrawerSetup();
         setUpMediaPlayerUI();
         playerControlsSetup();
     }
 
-//    private void setUpUI(){
-//        mPlayerControls = findViewById(R.id.music_player);
-//        mSongView = (TextView) findViewById(R.id.song_title);
-//        mArtistView = (TextView) findViewById(R.id.artist);
-//        mPlayButton = (ImageButton) findViewById(R.id.play);
-//        mPauseButton = (ImageButton) findViewById(R.id.pause);
-//        mSeekBar = (SeekBar) findViewById(R.id.seekerBarView);
-//        mSongDurationView = (TextView) findViewById(R.id.musicDuration);
-//        mSongLocationView = (TextView) findViewById(R.id.musicCurrentLoc);
-//        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
-//        mOneThirtyMin = (RadioButton) findViewById(R.id.one_minute_thirty);
-//        mTwoMin = (RadioButton) findViewById(R.id.two_minutes);
-//    }
-
     private void setUpMediaPlayerUI(){
         final View mBottomSheet = findViewById(R.id.bottom_sheet) ;
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet) ;
-        bottomSheetBehavior.setPeekHeight(15);
+        bottomSheetBehavior.setPeekHeight(65);
         bottomSheetBehavior.setHideable(false);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private void navigationDrawerSetup() {
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
-        mActionBarDrawerToggle.syncState();
-
-        mNavigationView.setNavigationItemSelectedListener(this);
-        View header = mNavigationView.getHeaderView(0);
-
-        TextView name = (TextView) header.findViewById(R.id.nav_header_top);
-        TextView email = (TextView) header.findViewById(R.id.nav_header_bottom);
-        name.setText(mUserName);
-        email.setText(mUserEmail);
-    }
+//    private void navigationDrawerSetup() {
+//        mActionBarDrawerToggle = new ActionBarDrawerToggle(
+//                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+//        mActionBarDrawerToggle.syncState();
+//
+//        mNavigationView.setNavigationItemSelectedListener(this);
+//        View header = mNavigationView.getHeaderView(0);
+//
+//        TextView name = (TextView) header.findViewById(R.id.nav_header_top);
+//        TextView email = (TextView) header.findViewById(R.id.nav_header_bottom);
+//        name.setText(mUserName);
+//        email.setText(mUserEmail);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -440,10 +426,9 @@ public class MainActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mActionBar = getSupportActionBar();
-        mActionBar = getSupportActionBar();
         mActionBar.setTitle(R.string.app_name);
         mActionBar.setDisplayShowTitleEnabled(true);
-        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     private void setUpTabs(){
@@ -512,7 +497,7 @@ public class MainActivity extends AppCompatActivity
                                 mSpotifyService.setToken(mToken, getBaseContext());
                                 mUserName = spotifyUser.getDisplayName();
                                 mUserEmail = spotifyUser.getEmail();
-                                navigationDrawerSetup();
+//                                navigationDrawerSetup();
                                 startPlaylistFragment();
 
                                 if (mPlayer == null) {

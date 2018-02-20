@@ -32,7 +32,7 @@
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
         android:layout_weight="65"
-        android:progressDrawable="@drawable/seekbar_progress_pink"
+        android:theme="@style/MySeekBar"
         android:layout_centerHorizontal="true"/>
 
     <TextView

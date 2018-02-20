@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="DUE TO SPOTIFY LIMITATIONS YOUR LOGIN WILL EXPIRE EVERY HOUR, SORRY FOR THE INCONVENIENCE"
+            android:text="@string/spotify_limitations"
             android:textColor="@color/color_light_gray"
             android:textSize="15dp"
             android:layout_margin="10dp"

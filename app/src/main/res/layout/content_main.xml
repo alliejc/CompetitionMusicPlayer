@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background_grey"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.alisonjc.compmusicplayer.MainActivity">
 
@@ -25,12 +26,15 @@
         android:background="@color/color_white"
         app:titleTextAppearance="@style/ToolbarText"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="2dp"
         android:layout_alignParentTop="true"/>
 
     <android.support.design.widget.TabLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:elevation="2dp"
         android:theme="@style/Tabs"
+        android:background="@color/color_white"
         android:layout_below="@+id/toolbar"
         android:id="@+id/tablayout">
 
@@ -46,11 +50,11 @@
             android:layout_height="match_parent"
             android:text="@string/tab_two" />
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_three"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/tab_three" />
+        <!--<android.support.design.widget.TabItem-->
+            <!--android:id="@+id/tab_three"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="@string/tab_three" />-->
     </android.support.design.widget.TabLayout>
 
     <FrameLayout

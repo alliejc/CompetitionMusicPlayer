@@ -11,6 +11,7 @@ import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.Item;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.SpotifyUser;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistModel.UserPlaylists;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.PlaylistTracksModel.PlaylistTracksList;
+import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.Artist;
 import com.alisonjc.compmusicplayer.spotify.spotify_model.UserTracksModel.UserTracks;
 import com.spotify.sdk.android.player.Config;
 
@@ -83,7 +84,6 @@ public class SpotifyService {
     }
 
     public Observable<Object> createPlaylist(CreatePlaylist playlist) {
-        String contentType = "application/json";
         return mSpotifyServiceInterface.createPlaylist("Bearer " + mToken, mUserId, playlist);
     }
 
@@ -97,6 +97,10 @@ public class SpotifyService {
 //
 //    public Observable<ArtistTracksList> getArtistTracksList(String albumId){
 //        return mSpotifyService.getAlbumTracks()"Bearer" + mToken, albumId;
+//    }
+
+//    public Observable<Artist> getFollowedArtists(){
+//        return mSpotifyServiceInterface.getFollowedArtists("Bearer " + mToken, 50);
 //    }
 
     public boolean isLoggedIn() {

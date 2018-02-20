@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/color_white</item>
         <item name="colorPrimaryDark">@color/color_dark_gray</item>
-        <item name="colorAccent">@color/color_light_pink</item>
+        <item name="colorAccent">@color/color_dark_pink</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
@@ -55,6 +55,8 @@
     <style name="FAB" parent="@style/Widget.Design.FloatingActionButton.">
     </style>
 
+    <style name="Base.Widget.AppCompat.SeekBar." parent="Base.Widget.AppCompat.SeekBar.">
+    </style>
     <style name="scrollbar_style">
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
         <item name="android:scrollbarStyle">outsideOverlay</item>
@@ -65,6 +67,13 @@
         <item name="android:scrollbarSize">8dp</item>
         <item name="android:scrollbarFadeDuration">800</item>
         <item name="android:scrollbarDefaultDelayBeforeFade">500</item>
+    </style>
+
+    <style name="MySeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/transparent</item>
+        <item name="android:colorControlActivated">@color/color_dark_pink</item>
+        <item name="android:progressTint">@color/color_dark_pink</item>
+        <item name="android:secondaryProgressTint">@color/color_dark_gray</item>
     </style>
 
 </resources>
