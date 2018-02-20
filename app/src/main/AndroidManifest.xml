@@ -27,6 +27,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.spotify.sdk.android.authentication.LoginActivity"/>
+        <receiver android:name=".receivers.PersistentPlayerReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PLAY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
