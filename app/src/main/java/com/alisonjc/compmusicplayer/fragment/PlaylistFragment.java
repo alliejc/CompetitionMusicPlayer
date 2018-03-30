@@ -99,8 +99,7 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(userPlaylists -> {
                         if (userPlaylists != null) {
-                            mPlaylistItemList.addAll(userPlaylists.getItems());
-                            mAdapter.updateAdapter(mPlaylistItemList);
+                            mAdapter.updateAdapter(userPlaylists.getItems());
                         } else {
                             mSpotifyService.userLogout(getContext());
                         }

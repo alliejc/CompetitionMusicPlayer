@@ -87,6 +87,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void updateAdapter(List<Item> items) {
+        notifyDataSetChanged();
         mPlaylistItemList.addAll(items);
         addPlaylist();
         notifyDataSetChanged();
