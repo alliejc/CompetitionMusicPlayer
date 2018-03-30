@@ -153,7 +153,6 @@ public class MainActivity extends AppCompatActivity
 
         toolbarSetup();
         setUpTabs();
-//        navigationDrawerSetup();
         setUpMediaPlayerUI();
         playerControlsSetup();
     }
@@ -184,19 +183,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-
-        } else if (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStackImmediate();
-
-        } else if (fragmentManager.getBackStackEntryCount() <= 1) {
-            moveTaskToBack(true);
-
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
         } else {
-            super.onBackPressed();
+            getPlaylists();
+            mTabLayout.getTabAt(0).select();
         }
     }
 
