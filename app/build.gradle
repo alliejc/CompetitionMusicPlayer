@@ -18,8 +18,8 @@ android {
         buildConfigField("String", "CLIENT_ID", CLIENT_ID)
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 5
-        versionName "2"
+        versionCode 6
+        versionName "2.1"
     }
 
     buildTypes {
