@@ -86,7 +86,7 @@ public class PlaylistFragment extends Fragment implements IOnPlaylistSelected {
                     SpotifyHelper.createPlaylist(mSpotifyService, getActivity(), item);
                  } else {
                     Util.closeKeyboard(getActivity());
-                    String message = "Please enter a playlist title";
+                    String message = getString(R.string.enter_playlist_title);
                     Util.showSnackBar(getActivity(), message);
                 }
         });

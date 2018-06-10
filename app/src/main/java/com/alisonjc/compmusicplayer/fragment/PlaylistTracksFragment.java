@@ -37,6 +37,8 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    private static final String TAG = PlaylistTracksFragment.class.getSimpleName();
+
     private IOnTrackSelected mListener;
     private LinearLayoutManager mLayoutManager;
     private List<TrackItemModel> mPlaylistTracksList;
@@ -52,7 +54,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     private String mSongtitle;
     private String mPlaylistTitle;
 
-    private static final String TAG = "PlaylistTracksFragment";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
     public PlaylistTracksFragment() {
@@ -61,9 +62,9 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     public static PlaylistTracksFragment newInstance(String userId, String playlistId, String playlistTitle) {
         PlaylistTracksFragment fragment = new PlaylistTracksFragment();
         Bundle args = new Bundle();
-        args.putString("userId", userId);
-        args.putString("playlistId", playlistId);
-        args.putString("playlistTitle", playlistTitle);
+        args.putString(Constants.USER_ID, userId);
+        args.putString(Constants.PLAYLIST_ID, playlistId);
+        args.putString(Constants.PLAYLIST_TITLE, playlistTitle);
         fragment.setArguments(args);
 
         return fragment;
@@ -72,9 +73,9 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPlaylistId = getArguments().getString("playlistId");
-        mUserId = getArguments().getString("userId");
-        mPlaylistTitle = getArguments().getString("playlistTitle");
+        mPlaylistId = getArguments().getString(Constants.PLAYLIST_ID);
+        mUserId = getArguments().getString(Constants.USER_ID);
+        mPlaylistTitle = getArguments().getString(Constants.PLAYLIST_TITLE);
     }
 
     @Override
@@ -157,6 +158,7 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(playlistTracksList -> {
+                    Log.e(TAG, playlistTracksList.toString());
                         mAdapter.updateAdapter(playlistTracksList);
                 }, throwable -> {
                     mSpotifyService.userLogout(getContext());
@@ -165,7 +167,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     }
 
     private void setCurrentPlayingSong(int itemPosition) {
-        Log.i(TAG, "setCurrentPlayingSong");
         this.mItemPosition = itemPosition;
         mAdapter.recyclerViewSelector(mItemPosition);
         mRecyclerView.smoothScrollToPosition(mItemPosition);
@@ -173,7 +174,6 @@ public class PlaylistTracksFragment extends Fragment implements IOnTrackChanged,
     }
 
     public void onSongSelected(String songName, String artistName, String uri) {
-        Log.i(TAG, "onSongSelected");
         if (mListener != null) {
             mListener.onTrackSelected(songName, artistName, uri);
         }

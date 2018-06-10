@@ -2,8 +2,10 @@ package com.alisonjc.compmusicplayer.spotify;
 
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.alisonjc.compmusicplayer.R;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.Player;

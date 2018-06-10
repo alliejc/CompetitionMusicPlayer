@@ -2,11 +2,9 @@ package com.alisonjc.compmusicplayer;
 
 
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
@@ -28,7 +26,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
 import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
@@ -48,8 +45,6 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -62,9 +57,6 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
 
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
@@ -100,7 +92,7 @@ public class MainActivity extends AppCompatActivity
     RadioButton mTwoMin;
 
     private static final int REQUEST_CODE = 1337;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
     private SpotifyMusicPlayer mSpotifyMusicPlayer = SpotifyMusicPlayer.getmSpotifyMusicPlayer();
@@ -115,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean mBeepPlayed = false;
     private int mSongLocation = 0;
-    private int mEndSongAt = 90000;
+    private int mEndSongAt = Constants.ninty_seconds;
     private int mSeconds = 0;
     private int mMinutes = 0;
     private String mPlaylistTitle;
@@ -123,7 +115,6 @@ public class MainActivity extends AppCompatActivity
     private String mUserEmail;
 
     /*VIEWS*/
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private ActionBar mActionBar;
     private View mPlayerControls;
     private BottomSheetBehavior bottomSheetBehavior;
@@ -146,9 +137,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mPlayerControls = findViewById(R.id.music_player);
         unbinder = ButterKnife.bind(this);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         if (mSpotifyService.isLoggedIn()) {
-            userLogin();
+            showUserLogin();
         }
 
         toolbarSetup();
@@ -165,33 +160,19 @@ public class MainActivity extends AppCompatActivity
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-//    private void navigationDrawerSetup() {
-//        mActionBarDrawerToggle = new ActionBarDrawerToggle(
-//                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
-//        mActionBarDrawerToggle.syncState();
-//
-//        mNavigationView.setNavigationItemSelectedListener(this);
-//        View header = mNavigationView.getHeaderView(0);
-//
-//        TextView name = (TextView) header.findViewById(R.id.nav_header_top);
-//        TextView email = (TextView) header.findViewById(R.id.nav_header_bottom);
-//        name.setText(mUserName);
-//        email.setText(mUserEmail);
-//    }
-
     @Override
     public void onBackPressed() {
+            if (getFragmentManager().getBackStackEntryCount() >= 0) {
+                getFragmentManager().popBackStackImmediate();
+            } else {
+                getPlaylists();
+                mTabLayout.getTabAt(0).select();
+            }
+            super.onBackPressed();
 
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStackImmediate();
-        } else {
-            getPlaylists();
-            mTabLayout.getTabAt(0).select();
-        }
     }
 
-    private void userLogin() {
+    private void showUserLogin() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         DialogFragment dialogFragment = LoginDialogFrag.newInstance();
         dialogFragment.show(ft, "dialog");
@@ -210,11 +191,11 @@ public class MainActivity extends AppCompatActivity
                 mSpotifyService.userLogout(getApplicationContext());
                 mNavigationView.setCheckedItem(R.id.nav_playlists);
                 clearPlayer();
-                userLogin();
+                showUserLogin();
                 break;
 
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                onBackPressed();
                 break;
         }
 
@@ -376,7 +357,7 @@ public class MainActivity extends AppCompatActivity
             mPlayer.skipToNext(mOperationCallback);
             onControllerTrackChange(true);
         } else {
-            Log.i(TAG, "onSkipNextClickedPLAYERNULL");
+            Log.i(TAG, "onSkipNextClicked-PLAYER NULL");
         }
     }
 
@@ -385,9 +366,7 @@ public class MainActivity extends AppCompatActivity
         mMusicTimerHandler.removeCallbacks(musicTimerRun);
     }
 
-    Runnable seekrun = () -> {
-        setSeekBar();
-    };
+    Runnable seekrun = this::setSeekBar;
 
     private void onPreviousClicked() {
         if (mPlayer != null) {
@@ -401,13 +380,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.one_minute_thirty:
                 if (mOneThirtyMin.isChecked()) {
                     mSongDurationView.setText(R.string.one_thirty_radio_button);
-                    mEndSongAt = 90000;
+                    mEndSongAt = Constants.ninty_seconds;
                 }
                 break;
             case R.id.two_minutes:
                 if (mTwoMin.isChecked()) {
                     mSongDurationView.setText(R.string.two_minute_radio_button);
-                    mEndSongAt = 120000;
+                    mEndSongAt = Constants.one_twenty_seconds;
                 }
                 break;
         }
@@ -456,29 +435,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getAllSongs() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        mTracksFragment = TracksFragment.newInstance();
-        mIOnTrackChanged = mTracksFragment;
-        fragmentManager.beginTransaction().replace(R.id.main_framelayout, mTracksFragment, "tracksFragment").addToBackStack(null).commit();
-        mActionBar.setTitle(R.string.songs_drawer);
+        if (mSpotifyService.isLoggedIn()) {
+            showUserLogin();
+        } else {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            mTracksFragment = TracksFragment.newInstance();
+            mIOnTrackChanged = mTracksFragment;
+            fragmentManager.beginTransaction().replace(R.id.main_framelayout, mTracksFragment, "tracksFragment").addToBackStack(null).commit();
+            mActionBar.setTitle(R.string.songs_drawer);
+        }
     }
 
     private void getPlaylists() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
-        fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
-        mActionBar.setTitle(R.string.playlists_drawer);
+        if (mSpotifyService.isLoggedIn()) {
+            showUserLogin();
+        } else {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            PlaylistFragment playlistFragment = PlaylistFragment.newInstance();
+            fragmentManager.beginTransaction().replace(R.id.main_framelayout, playlistFragment, "playlistFragment").addToBackStack(null).commit();
+            mActionBar.setTitle(R.string.playlists_drawer);
+        }
     }
-
-//    private void getAllAlbums() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//        AlbumFragment albumFragment = AlbumFragment.newInstance();
-//        fragmentManager.beginTransaction().replace(R.id.main_framelayout, albumFragment, "albumFragment").addToBackStack(null).commit();
-//        mActionBar.setTitle(R.string.playlists_drawer);
-//    }
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent intent) {
@@ -499,7 +478,6 @@ public class MainActivity extends AppCompatActivity
                                 mSpotifyService.setToken(mToken, getBaseContext());
                                 mUserName = spotifyUser.getDisplayName();
                                 mUserEmail = spotifyUser.getEmail();
-//                                navigationDrawerSetup();
                                 startPlaylistFragment();
 
                                 if (mPlayer == null) {
@@ -509,12 +487,14 @@ public class MainActivity extends AppCompatActivity
                                 mActionBar.setTitle(R.string.playlists_drawer);
                             }, throwable -> {
 
+                                Log.e(TAG, throwable.getMessage());
                             }, () -> {
 
                             });
                     break;
 
                 case ERROR:
+                    Log.e(TAG, authResponse.getType().toString());
                     break;
 
                 default:

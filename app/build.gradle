@@ -1,12 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
-
-    dataBinding.enabled = true
+    compileSdkVersion 27
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -17,7 +12,7 @@ android {
         applicationId "com.alisonjc.compmusicplayer"
         buildConfigField("String", "CLIENT_ID", CLIENT_ID)
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 6
         versionName "2.1"
     }
@@ -27,6 +22,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dataBinding {
+        enabled = true
     }
 }
     repositories {
@@ -46,25 +44,33 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile group: 'com.googlecode.totallylazy', name: 'totallylazy', version: '1.86'
 
-    compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
-    compile 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
+    implementation 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
+    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'io.reactivex:rxjava:1.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.google.dagger:dagger:2.8'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-compat:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:support-annotations:27.1.1'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'io.reactivex:rxjava:1.1'
+    implementation 'io.reactivex:rxandroid:1.1.0'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.google.dagger:dagger:2.8'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
     annotationProcessor 'com.android.databinding:compiler:2.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

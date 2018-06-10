@@ -23,10 +23,6 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by acaldwell on 2/18/18.
- */
-
 public class PlaylistActionDialog extends DialogFragment {
 
     private static final String TAG = PlaylistActionDialog.class.getSimpleName();
@@ -45,9 +41,9 @@ public class PlaylistActionDialog extends DialogFragment {
     public static PlaylistActionDialog newInstance(String uri, int action, String songtitle) {
         PlaylistActionDialog frag = new PlaylistActionDialog();
         Bundle args = new Bundle();
-        args.putString("uri", uri);
-        args.putInt("action", action);
-        args.putString("songTitle", songtitle);
+        args.putString(Constants.URI, uri);
+        args.putInt(Constants.ACTION, action);
+        args.putString(Constants.SONG_TITLE, songtitle);
 
         frag.setArguments(args);
 
@@ -58,9 +54,9 @@ public class PlaylistActionDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAction = getArguments().getInt("action");
-        mTrackUri = getArguments().getString("uri");
-        mSongtitle = getArguments().getString("songTitle");
+        mAction = getArguments().getInt(Constants.ACTION);
+        mTrackUri = getArguments().getString(Constants.URI);
+        mSongtitle = getArguments().getString(Constants.SONG_TITLE);
     }
 
     @Override
