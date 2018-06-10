@@ -30,7 +30,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
         playlistTitle = (TextView) itemView.findViewById(R.id.playlist_header_text);
         songCount = (TextView) itemView.findViewById(R.id.playlist_sub_text);
         image = (ImageView) itemView.findViewById(R.id.playlist_image);
-        overflow = (ImageView) itemView.findViewById(R.id.menu_icon);
+        overflow = (ImageView) itemView.findViewById(R.id.track_menu_icon);
     }
 
     public void bind(final Item item, String url, final PlaylistAdapter.onItemClickListener listener) {
