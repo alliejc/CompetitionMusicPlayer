@@ -10,7 +10,7 @@
     android:layout_marginTop="10dp">
 
     <TextView
-        android:id="@+id/musicCurrentLoc"
+        android:id="@+id/music_current_location"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -23,7 +23,7 @@
     </TextView>
 
     <SeekBar
-        android:id="@+id/seekerBarView"
+        android:id="@+id/seeker_bar_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:id="@+id/musicDuration"
+        android:id="@+id/music_duration"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"

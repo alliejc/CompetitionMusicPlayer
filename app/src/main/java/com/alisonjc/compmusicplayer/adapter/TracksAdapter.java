@@ -5,17 +5,15 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
+import com.alisonjc.compmusicplayer.databinding.ItemTrackRecyclerBinding;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.databinding.TrackRecyclerItemModel;
-import com.alisonjc.compmusicplayer.databinding.RecyclerviewItemBinding;
 import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
 import com.squareup.picasso.Picasso;
@@ -45,7 +43,7 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
     @Override
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        RecyclerviewItemBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.recyclerview_item, parent, false);
+        ItemTrackRecyclerBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.item_track_recycler, parent, false);
 
         return new GenericViewHolder(dataBinding);
     }

@@ -28,7 +28,7 @@ public class LoginDialogFrag extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_login_dialog, container, false);
 
         getDialog().setCanceledOnTouchOutside(false);
-        View mLoginButton = v.findViewById(R.id.spotifyLoginButton);
+        View mLoginButton = v.findViewById(R.id.spotify_login_button);
         mLoginButton.setVisibility(View.VISIBLE);
         mLoginButton.setOnClickListener(view ->  {
                 AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);

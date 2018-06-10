@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -73,13 +72,13 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.pause)
     ImageButton mPauseButton;
 
-    @BindView(R.id.seekerBarView)
+    @BindView(R.id.seeker_bar_view)
     SeekBar mSeekBar;
 
-    @BindView(R.id.musicCurrentLoc)
+    @BindView(R.id.music_current_location)
     TextView mSongLocationView;
 
-    @BindView(R.id.musicDuration)
+    @BindView(R.id.music_duration)
     TextView mSongDurationView;
 
     @BindView(R.id.radio_group)

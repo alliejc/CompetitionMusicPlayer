@@ -6,7 +6,7 @@
     android:background="@drawable/background_unselected">
 
     <ImageButton
-        android:id="@+id/spotifyLoginButton"
+        android:id="@+id/spotify_login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/login_Dialog_Fragment"
@@ -26,5 +26,5 @@
             android:layout_margin="10dp"
             android:background="@android:color/transparent"
             android:textAlignment="center"
-            android:layout_below="@+id/spotifyLoginButton"/>
+            android:layout_below="@+id/spotify_login_button"/>
 </RelativeLayout>

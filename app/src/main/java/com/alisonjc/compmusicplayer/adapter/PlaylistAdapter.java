@@ -31,7 +31,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context mContext;
     private final onItemClickListener listener;
     private onCreateClickListener mCreateListener;
-    private String mTag;
 
     public interface onItemClickListener {
         void onItemClick(Item item);

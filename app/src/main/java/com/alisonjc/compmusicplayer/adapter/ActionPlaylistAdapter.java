@@ -16,9 +16,6 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.List;
 
-/**
- * Created by acaldwell on 2/18/18.
- */
 
 public class ActionPlaylistAdapter extends RecyclerView.Adapter<PlaylistActionViewHolder>{
 

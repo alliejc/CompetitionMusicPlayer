@@ -43,6 +43,8 @@
     <string name="check_network">Remove failed, please check your network connection</string>
     <string name="spotify_limitations">DUE TO SPOTIFY LIMITATIONS YOUR LOGIN WILL EXPIRE EVERY HOUR, SORRY FOR THE INCONVENIENCE</string>
     <string name="enter_playlist_title">Please enter a playlist title</string>
+    <string name="playlist_title">Playlist Title</string>
+    <string name="add_songs">Add Songs</string>
 
     <string-array name="nav_drawer_array">
         <item>Playlists</item>

@@ -15,7 +15,7 @@
     android:layout_weight="50"
     android:textColor="@color/color_dark_pink"
     android:textSize="18sp"
-    android:maxLines="1"
+    android:singleLine="true"
     android:ellipsize="middle"
     android:layout_gravity="center_vertical|end"
     android:gravity="center_vertical|end"/>
