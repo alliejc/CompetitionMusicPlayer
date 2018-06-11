@@ -10,9 +10,6 @@ import android.widget.Toast;
 
 import com.alisonjc.compmusicplayer.R;
 
-/**
- * Created by acaldwell on 2/17/18.
- */
 
 public class Util {
 

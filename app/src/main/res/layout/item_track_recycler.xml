@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:vumeter="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="recycler_view_item"
@@ -23,14 +24,32 @@
         android:layout_height="wrap_content"
         android:layout_weight="20">
 
-        <ImageView
-            android:id="@+id/track_image"
+        <FrameLayout
+            android:id="@+id/image_layout"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@{recycler_view_item.image}"
-            android:layout_margin="5dp"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp">
+
+            <io.gresse.hugo.vumeterlibrary.VuMeterView
+                android:id="@+id/equalizer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                vumeter:vumeter_stopSize="5dp"
+                vumeter:vumeter_speed="5"
+                vumeter:vumeter_blockNumber="3"
+                vumeter:vumeter_blockSpacing="2dp"
+                vumeter:vumeter_backgroundColor="@color/color_dark_pink"
+                vumeter:vumeter_startOff="false"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/track_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/track_header_text"
@@ -41,7 +60,7 @@
             android:textSize="20sp"
             android:layout_marginTop="2dp"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/track_image"
+            android:layout_toRightOf="@+id/image_layout"
             android:layout_toLeftOf="@+id/track_menu_icon"
             android:text="@{recycler_view_item.headerText}"/>
         <TextView
@@ -52,7 +71,7 @@
             android:textColor="@color/color_dark_gray"
             android:textSize="15sp"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/track_image"
+            android:layout_toRightOf="@+id/image_layout"
             android:layout_toLeftOf="@+id/track_menu_icon"
             android:layout_marginBottom="2dp"
             android:layout_below="@+id/track_header_text"

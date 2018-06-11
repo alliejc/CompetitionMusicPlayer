@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:support-annotations:27.1.1'
+    compile 'io.gresse.hugo.vumeterlibrary:vumeterlibrary:1.0.17'
 
     implementation 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'

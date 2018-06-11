@@ -33,7 +33,6 @@ public class PlaylistActionDialog extends DialogFragment {
     private ActionPlaylistAdapter mAdapter;
     private List<Item> mPlaylistItemList;
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
     public PlaylistActionDialog(){}

@@ -1,6 +1,7 @@
 package com.alisonjc.compmusicplayer.adapter;
 
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.PopupMenu;
@@ -8,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
@@ -19,6 +22,7 @@ import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Observable;
 
 
 public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
@@ -57,10 +61,15 @@ public class TracksAdapter<T> extends RecyclerView.Adapter<GenericViewHolder> {
         holder.bindItemListener(item, mListener);
         holder.itemView.setSelected(selectedItem == holder.getAdapterPosition());
         holder.menuIcon.setOnClickListener(v -> showPopup(holder.menuIcon, holder.getAdapterPosition(), item));
-
+        
         if(selectedItem == holder.getAdapterPosition()) {
-            holder.imageView.setImageDrawable(mContext.getDrawable(R.drawable.vector_equalizer));
+            holder.equalizer.setVisibility(View.VISIBLE);
+            holder.imageView.setVisibility(View.GONE);
+            holder.equalizer.resume(true);
         } else {
+            holder.equalizer.stop(true);
+            holder.equalizer.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.VISIBLE);
             Picasso.with(holder.itemView.getContext()).load(item.getImage()).error(R.drawable.ic_menu_gallery).into(holder.imageView);
         }
     }
