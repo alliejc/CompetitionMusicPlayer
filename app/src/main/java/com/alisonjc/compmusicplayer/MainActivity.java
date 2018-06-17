@@ -3,7 +3,9 @@ package com.alisonjc.compmusicplayer;
 
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.alisonjc.compmusicplayer.callbacks.IOnPlaylistSelected;
+import com.alisonjc.compmusicplayer.databinding.MusicPlayerBinding;
 import com.alisonjc.compmusicplayer.fragment.LoginDialogFrag;
 import com.alisonjc.compmusicplayer.fragment.PlaylistFragment;
 import com.alisonjc.compmusicplayer.spotify.SpotifyMusicPlayer;
@@ -37,6 +40,7 @@ import com.alisonjc.compmusicplayer.fragment.PlaylistTracksFragment;
 import com.alisonjc.compmusicplayer.fragment.TracksFragment;
 import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.util.Util;
+import com.alisonjc.compmusicplayer.viewmodel.MediaPlayerViewModel;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Error;
@@ -54,8 +58,8 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IOnPlaylistSelected, IOnTrackChanged, IOnTrackSelected {
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar mToolbar;
 
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
@@ -119,6 +123,7 @@ public class MainActivity extends AppCompatActivity
     private BottomSheetBehavior bottomSheetBehavior;
     private TabLayout mTabLayout;
     private Unbinder unbinder;
+    private MediaPlayerViewModel mMediaPlayerViewModel;
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
         @Override
@@ -136,11 +141,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mPlayerControls = findViewById(R.id.music_player);
         unbinder = ButterKnife.bind(this);
+//        initDataBinding();
     }
 
+//    private void initDataBinding() {
+//        MusicPlayerBinding musicPlayerBinding = DataBindingUtil.setContentView(this, R.layout.music_player);
+//        mMediaPlayerViewModel = ViewModelProviders.of(this).get(MediaPlayerViewModel.class);
+//        musicPlayerBinding.setVm(mMediaPlayerViewModel);
+//    }
+
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if (mSpotifyService.isLoggedIn()) {
             showUserLogin();
         }
@@ -392,8 +404,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void toolbarSetup() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         mActionBar.setTitle(R.string.app_name);
         mActionBar.setDisplayShowTitleEnabled(true);

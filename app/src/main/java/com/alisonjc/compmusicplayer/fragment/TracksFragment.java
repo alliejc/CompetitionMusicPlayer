@@ -16,16 +16,19 @@ import android.widget.TextView;
 import com.alisonjc.compmusicplayer.adapter.TracksAdapter;
 import com.alisonjc.compmusicplayer.callbacks.IOnOverflowSelected;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackChanged;
+import com.alisonjc.compmusicplayer.util.Constants;
 import com.alisonjc.compmusicplayer.util.EndlessScrollListener;
 import com.alisonjc.compmusicplayer.R;
 import com.alisonjc.compmusicplayer.callbacks.IOnTrackSelected;
 import com.alisonjc.compmusicplayer.databinding.TrackItemModel;
 import com.alisonjc.compmusicplayer.spotify.SpotifyService;
+import com.alisonjc.compmusicplayer.viewholder.GenericViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import io.gresse.hugo.vumeterlibrary.VuMeterView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -33,6 +36,7 @@ import static android.view.View.GONE;
 
 
 public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrackSelected {
+    private static final String TAG = "TracksFragment";
 
     private IOnTrackSelected mListener;
     private RecyclerView mRecyclerView;
@@ -40,12 +44,10 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
     private List<TrackItemModel> mTracksList;
     private TracksAdapter mAdapter;
     private View rootView;
-    private TextView mHintText;
     private int mItemPosition = 0;
     private int mTotalTracks = 0;
     private int mOffset;
     private int mLimit = 20;
-    private static final String TAG = "TracksFragment";
     private SpotifyService mSpotifyService = SpotifyService.getSpotifyService();
 
     public TracksFragment() {
@@ -62,7 +64,6 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.list, container, false);
         ButterKnife.bind(this, rootView);
-        mHintText = (TextView) rootView.findViewById(R.id.hint_text);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         return rootView;
@@ -100,38 +101,13 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
         });
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        if (mTracksList.size() <= 0) {
-//            showHintText();
-//        } else {
-//            hideHintText();
-//        }
-//    }
-
-    private void showHintText() {
-        if (mHintText.getVisibility() == GONE) {
-            mHintText.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(GONE);
-        }
-    }
-
-    private void hideHintText() {
-        if (mHintText.getVisibility() == View.VISIBLE) {
-            mHintText.setVisibility(GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void showPlaylistActionDialog(String uri, int action, String songTitle){
         PlaylistActionDialog frag = PlaylistActionDialog.newInstance(uri, action, songTitle);
         FragmentManager manager = getFragmentManager();
         Bundle bundle = new Bundle();
-        bundle.putString("uri", uri);
-        bundle.putInt("action", action);
-        bundle.putString("songTitle", songTitle);
+        bundle.putString(Constants.URI, uri);
+        bundle.putInt(Constants.ACTION, action);
+        bundle.putString(Constants.SONG_TITLE, songTitle);
         frag.setArguments(bundle);
         frag.show(manager, "dialog");
     }
@@ -165,6 +141,11 @@ public class TracksFragment extends Fragment implements IOnTrackChanged, IOnTrac
         if (mListener != null) {
             mListener.onTrackSelected(songName, artistName, uri);
         }
+    }
+
+    public GenericViewHolder getTrackViewHolder() {
+        GenericViewHolder g = (GenericViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mItemPosition);
+        return g;
     }
 
     @Override

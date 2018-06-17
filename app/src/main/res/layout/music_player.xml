@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="vm"
+            type="com.alisonjc.compmusicplayer.viewmodel.MediaPlayerViewModel">
+        </variable>
+    </data>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
@@ -26,6 +32,7 @@
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/content_description_play"
+        android:onClick="@{() -> vm.onPlayClicked()}"
         android:src="@mipmap/ic_action_playback_play"
         />
 
@@ -35,6 +42,7 @@
         android:layout_height="match_parent"
         android:layout_weight="20"
         android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> vm.onPauseClicked()}"
         android:contentDescription="@string/content_description_pause"
         android:src="@mipmap/ic_action_playback_pause"
         android:visibility="gone"
@@ -87,3 +95,4 @@
 
     </RadioGroup>
 </LinearLayout>
+</layout>
