@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -12,7 +12,7 @@ android {
         applicationId "com.alisonjc.compmusicplayer"
         buildConfigField("String", "CLIENT_ID", CLIENT_ID)
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 6
         versionName "2.1"
     }
@@ -50,18 +50,18 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'android.arch.lifecycle:viewmodel:1.1.1'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-compat:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-annotations:27.1.1'
-    compile 'io.gresse.hugo.vumeterlibrary:vumeterlibrary:1.0.17'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:support-compat:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'io.gresse.hugo.vumeterlibrary:vumeterlibrary:1.0.17'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
-    implementation 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'io.reactivex:rxjava:1.1'
@@ -73,7 +73,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
-    annotationProcessor 'com.android.databinding:compiler:2.2.3'
+    annotationProcessor 'com.android.databinding:compiler:3.1.4'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
